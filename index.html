@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>ASCA</title>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/index.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="scripts/dnd-list.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+	<header>
+		<div>
+			<h1>Another Sound Change Applier</h1>
+		</div>
+	</header>
+
+	<section>
+		<div class="thirds inlex">
+			<h1>Input</h1>
+			<div id = "wrapper">
+				<textarea class="lexicon" rows="20" spellcheck="false" placeholder="Input lexicon in IPA format e.g.&#10;hɛˈləʊ&#10;ˈlɔː.ɹm̩&#10;ˈɪp.sm̩"></textarea>
+				<div class="options" >
+					Options
+					<br>
+					
+					<input type="checkbox">
+					<label>Start at Rule:</label>
+					<br>
+					<input disabled id="start_at" type="text">
+					<br>
+					<input type="checkbox">
+					<label>Stop at Rule:</label>
+					<br>
+					<input disabled id="end_at" type="text">
+					<!-- Special Characters
+					<div>
+						<button>ˈ</button>
+						<button>ˌ</button>
+						<button>ː</button>
+						<button>ˑ</button>
+						<button>◌͡◌</button>
+					</div>
+					<br>
+					Nasals
+					<div>
+						<button>ᵐ◌</button>
+						<button>ⁿ◌</button>
+						<button>ᶯ◌</button>
+						<button>ᶮ◌</button>
+						<button>ᵑ◌</button>
+						<button>ᶰ◌</button>
+					</div>
+					Secondary Arts
+					<div>
+						<button>◌ʷ</button>
+						<button>◌ʲ</button>
+						<button>◌ˠ</button>
+						<button>◌ʰ</button>
+						<button>◌ʱ</button>
+						<button>◌ˤ</button>
+						<button>◌ʼ</button>
+					</div>
+					<div>
+						<button>◌̥</button>
+						<button>◌̊</button>
+						<button>◌̰</button>
+						<button>◌̃</button>
+						<button>◌̪</button>
+						<button>◌̈</button>
+						<button>◌̽</button>
+						<button>◌̝</button>
+						<button>◌̞</button>
+						<button>◌̠</button>
+						<button>◌̆</button>
+					</div>
+					<br>
+					<br>
+					<div class= "keyblock">
+						<label>A</label>
+						<button name = "a script" title = "Alt+a">ɑ</button>
+						<button name = "ae ipa" title = "Alt+aa">&#230;</button>
+						<button name="a upside" title = "Alt+aaa">ɐ</button>
+					</div>
+
+					<div class= "keyblock">
+						<label>B</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name="B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button>ᵝ</button>
+					</div>
+
+					<div class= "keyblock">
+						<label>C</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div>
+					<div class= "keyblock">
+						<label>D</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div>
+					<div class= "keyblock">
+						<label>E</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div>
+					<div class= "keyblock">
+						<label>F</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div>
+					<div class= "keyblock">
+						<label>G</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div>
+					<div class= "keyblock">
+						<label>H</label>
+						<button name = "beta ipa" title = "Alt+b">β</button>
+						<button name = "b hook" title = "Alt+bb">ɓ</button>
+						<button name = "B small" title = "Alt+bbb">ʙ</button>
+						:
+						<button name="" >◌̯</button>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="thirds sounds">
+			<h1>Rules</h1>
+			<div id="buttons">
+				<button id="run" class="custom-button">Run</button>
+				<button id="add" class="custom-button">Add Rule</button>
+				<button id="help" class="custom-button">Help</button>
+				<button id="save" class="custom-button">Save</button>
+				<label for="load" class="custom-button">Load JSON File</label>
+				<input id="load" type="file" onchange="loadFile(event)">
+			</div>
+			<div id="demo">
+				<!-- <div class="draggable-element">
+					<div class="title">
+						<input type="text" class="name" placeholder = "Sound Change Title...">
+						<button class="delete">x</button>
+						<button class="minimise">-</button>
+						<button class="maximise invisible">+</button>
+					</div>
+					<div class="cont">
+						<textarea class="rule" spellcheck="false" placeholder="Enter rules here..."></textarea>
+						<textarea class="description" placeholder="Rule description..."></textarea>
+					</div>
+				</div> -->
+				<!-- <sound-rule class="draggable-element"></sound-rule> -->
+			</div>
+		</div>
+		<div class="thirds outlex">
+			<h1>Output</h1>
+		</div>
+	</section>
+
+	<footer>
+		If you do not have access to IPA characters, visit <a href="https://ipa.typeit.org/full/" target="_blank">Type It</a>. 
+		<br>
+		Some common characters are already dealt with implicitly by the program (such as g -> ɡ, : -> ː and ' -> ˈ)
+		<br><br>
+		If you find any bugs/errors or have in mind any additions/changes, <a href="https://github.com/Girv98/Girv98.github.io/issues" target="_blank">let me know</a>
+	</footer>
+
+	<!-- <script src="components/SoundRule.js"></script> -->
+</body>
+
+</html>

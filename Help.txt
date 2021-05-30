@@ -1,0 +1,58 @@
+
+
+
+Introduction
+
+Interface
+
+	Drag and drop allows you to reorder rules on the fly.
+
+Defining Sound Changes
+
+
+	s > [+voice] / [+voice]_[+voice]
+
+Distinctive Features
+
+ASCA allows for X features and Y Suprasegmental features. These are listed below:
+
+ROOT
+	consonantal - Obstruents, nasals and liquids are [+cons]. Vowels, glides and laryngeals are [-cons]
+	sonorant - Vowels, glides liquids and nasas
+	syll
+
+MANNER
+	continuant
+	approx
+	lateral
+	nasal
+	del rel
+	strident
+	rhotic
+
+LARYNGEAL
+	voice
+	sg
+	cg
+	stf
+	slk
+
+PLACE
+	LABIAL
+		rnd
+	CORONAL
+		ant
+		dist
+	DORSAL
+		front
+		back
+		high
+		low
+		reduced
+	PHARYNGEAL
+		atr
+		rtr
+
+
+Saving and Loading files
+
