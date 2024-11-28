@@ -101,6 +101,8 @@ $("#demo").disableSelection().animate();
 
 $("#add").click(addRule);
 
+$("#load").change((e) => loadFile(e))
+
 $("#run").click(function () {
 	
 	let rawWordList = document.querySelector(".lexicon").value;
