@@ -1,25 +1,29 @@
-@font-face {
-  font-family: CharisSILW;
-  src: url(../assets/fonts/CharisSIL-R.woff);
-}
-/* use Charis SIL - Italic in .woff format */
-@font-face {
-  font-family: CharisSILW;
-  font-style: italic;
-  src: url(../assets/fonts/CharisSIL-I.woff);
-}
-
-@font-face {
-	font-family: CharisSILW;
-	font-weight: bold;
-	src: url(../assets/fonts/CharisSIL-B.woff);
+:root {
+	--bgm: #232A2E;
+	--bgd: #2D353B;
+	--bgl: #3D484D;
+	--fg: #D3C6AA;
+	--red: #E67E80;
+	--orange: #E69875;
+	--yellow: #DBBC7F;
+	--green: #A7C080;
+	--aqua: #83C092;
+	--blue: #7FBBB3;
+	--purple: #D699B6;
 }
 
-@font-face {
-	font-family: CharisSILW;
-	font-weight: bold;
-	font-style: italic;
-	src: url(../assets/fonts/CharisSIL-BI.woff);
+
+/* 
+<weight>: from 100 to 900
+<width>: from 62.5 to 100 
+*/
+* {
+	font-family: "Noto Sans Mono", monospace;
+	font-optical-sizing: auto;
+	font-style: normal;
+	/* font-weight: 500; */
+	font-variation-settings:
+		"wdth" 80;
 }
 
 html, body {
@@ -27,16 +31,11 @@ html, body {
 	width: 100%;
 	margin: 0;
 	padding: 0;
-	color: white;
-	font-family: 'Montserrat', sans-serif;
-	
-	/* font-family: CharisSILW, sans-serif; */
+	color: var(--fg);
 }
 
 body {
-	background-color: #0e0e10;
-	background-color: #1f1f23;
-	background-color: #181818;
+	background-color: var(--bgm);
 }
 
 header {
@@ -49,28 +48,29 @@ header div {
 }
 
 section {
-
-	background-color: #2f2f33;
-	background-color: #181818;
+	/* background-color: #2f2f33; */
+	/* background-color: #181818; */
+	background-color: var(--bgm);
 	box-sizing:border-box;
 	padding: 1vh;
 	display: flex;
-	/justify-content: flex-start;
+	/* justify-content: flex-start; */
 }
 
 div.thirds{
 	padding: 1vh;
 	margin: 1vh;
 	width: 100%;
-	background-color: #212121;
+	/* background-color: #212121; */
+	background-color: var(--bgd);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 
 }
 
-label:focus-within {
+/* label:focus-within {
 	background-color: blue;
-}
+} */
 
 #wrapper {
 	display:flex;
@@ -80,12 +80,12 @@ label:focus-within {
 	display: flex;
 	flex-wrap: wrap;
 	align-content: center;
-
 }
 
 #demo .draggable-element{
 	margin: 1%;
-	background: #3D3D3D;
+	/* background: #3D3D3D; */
+	background: var(--bgl);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 }
@@ -93,7 +93,8 @@ label:focus-within {
 h1 {
 	width: 100%;
 	text-align: center;
-	font-weight: 400;
+	font-weight: 600;
+	color: var(--green);
 }
 
 #load {
@@ -101,35 +102,24 @@ h1 {
 }
 
 .custom-button {
-	color: white;
+	text-decoration: none;
+	/* color: white; */
+	color: var(--bgl);
 	border: none;
 	cursor: pointer;
 	padding: 1%;
 	margin: 1%;
-	background: #3D3D3D;
+	/* background: #3D3D3D; */
+	background: var(--green);
 	border-radius: 10px;
-	font-family: 'Montserrat', sans-serif;
-	font-size: 14px;
-	
+	font-size: 14px;	
+	/* font-weight: 700; */
 }
 
 .title, .cont {
 	padding: 2px;
 	padding:2%;
 	/*border: 2px solid white;*/
-}
-
-.name{
-	padding:0.5%;
-	height: 100%;
-	width: 70%;
-	font-size:14pt;
-	color: white;
-    outline:none;
-	border: None;
-	background: #212121;
-	border-radius: 10px;
-	font-family: 'Montserrat', sans-serif;
 }
 
 .rule {
@@ -156,6 +146,27 @@ h1 {
 	cursor: pointer;
 } */
 
+.name {
+	padding:0.5%;
+	height: 100%;
+	width: 70%;
+	font-size:14pt;
+	/* color: white; */
+	color: var(--green);
+    outline:none;
+	border: None;
+	/* background: #212121; */
+	background: var(--bgd);
+	border-radius: 10px;
+}
+
+name::placeholder {
+	/* background: var(--fg) !important; */
+	color: var(--aqua) !important;
+	opacity: 1;
+
+}
+
 .title button {
 	height: 100%;
 	margin: 0 2px;
@@ -166,73 +177,66 @@ h1 {
 	border: None;
 	background-color: Transparent;
 	box-shadow: none;
-	color: white;
+	color: var(--green);
     outline:none;
 	cursor: pointer;
 }
 
+/* Textarea is not rendering IPA characters correctly as monospace, even though the font supports them */
 textarea {
 	font-size: 16px;
     width: 100%;
+	/* field-sizing: context; */
 	resize: vertical;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
-	font-family: CharisSILW, sans-serif;
-	background: #212121;
+	font-family: "Noto Sans Mono", monospace !important;
+	font-optical-sizing: none !important;
+	font-variation-settings:
+		"wdth" 100;
+	background: var(--bgd);
+	color: var(--green);
 	border-radius: 10px;
-	color: #fff;
 	outline:none;
 	border: None;
-
-}
-
-textarea::placeholder {
-	font-family: 'Montserrat', sans-serif;
 }
 
 textarea:focus {
-	box-shadow: inset 0 0 3px 2px #181818;
+	/* box-shadow: inset 0 0 3px 2px #181818; */
+	box-shadow: inset 0 0 1px 1px var(--green);
 	outline:none;
 }
 
 textarea.lexicon {
-	background: #3D3D3D;
+	background: var(--bgl);
+	color: var(--fg);
 	border-radius: 10px;
 	width:100%;
 	
 }
 
-textarea.lexicon::placeholder {
+ textarea::placeholder {
 	color:#fff;
-	font-family: CharisSILW, sans-serif;
 }
+
 
 .options {
 	padding: 1% 0 0 2%;
-	//width:100%;
+	/* width:100%; */
 	overflow:hidden;
 	font-size: 15px;
 }
-
-.options input {
-
-}
-
-/*textarea .lexicon{
-
-}*/
 
 label {
 	margin: 0 10px 0 0 ;
 }
 
-.keyblock {
-	
-}
+/* .keyblock {
+} */
 
 a {
-	color: lightblue;
+	color: #a7c080;
 }
 
 

@@ -1,17 +1,17 @@
 
 
-const template_old = `
-	<div class="draggable-element">
-		<div class="title">
-			<input type="text" class="name" placeholder = "Sound Change Title...">
-			<button class="delete">&#x2715;</button>
-			<button class="maxmin">–</button>
-		</div>
-		<div class="cont">
-			<textarea class="rule" spellcheck="false" rows=3 placeholder="Enter rules here..."></textarea>
-			<textarea class="description" rows=5 placeholder="Rule description..."></textarea>
-		</div>
-	</div>`;
+// const template_old = `
+// 	<div class="draggable-element">
+// 		<div class="title">
+// 			<input type="text" class="name" placeholder = "Sound Change Title...">
+// 			<button class="delete">&#x2715;</button>
+// 			<button class="maxmin">–</button>
+// 		</div>
+// 		<div class="cont">
+// 			<textarea class="rule" spellcheck="false" rows=3 placeholder="Enter rules here..."></textarea>
+// 			<textarea class="description" rows=5 placeholder="Rule description..."></textarea>
+// 		</div>
+// 	</div>`;
 
 const template = `
 	<div class="draggable-element">
@@ -57,6 +57,7 @@ $(function () {
 
 		$(".div.title").off("click");
 		$("div.title").on("click", ".delete", function () {
+			console.log("dsknfdkjsdf");
 			$(this).closest("div.draggable-element").remove();
 		});
 
@@ -76,9 +77,6 @@ $(function () {
 		});
 
 	});
-	// $("#add").click(function () {
-	// 	$("#demo").append('<sound-rule></sound-rule>');
-	// });
 
 
 	$(".title").on("click", ".delete", function () {

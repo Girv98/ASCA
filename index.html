@@ -5,8 +5,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>ASCA</title>
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/index.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -17,16 +18,16 @@
 <body>
 	<header>
 		<div>
-			<h1>Another Sound Change Applier</h1>
+			<h1 class="noto-sans">ASCA Beta 0.1</h1>
 		</div>
 	</header>
 
 	<section>
-		<div class="thirds inlex">
+		<div class="thirds inlex noto-sans">
 			<h1>Input</h1>
 			<div id = "wrapper">
 				<textarea class="lexicon" rows="20" spellcheck="false" placeholder="Input lexicon in IPA format e.g.&#10;hɛˈləʊ&#10;ˈlɔː.ɹm̩&#10;ˈɪp.sm̩"></textarea>
-				<div class="options" >
+				<!-- <div class="options" >
 					Options
 					<br>
 					
@@ -39,7 +40,7 @@
 					<label>Stop at Rule:</label>
 					<br>
 					<input disabled id="end_at" type="text">
-					<!-- Special Characters
+					Special Characters
 					<div>
 						<button>ˈ</button>
 						<button>ˌ</button>
@@ -145,8 +146,8 @@
 						<button name = "B small" title = "Alt+bbb">ʙ</button>
 						:
 						<button name="" >◌̯</button>
-					</div> -->
-				</div>
+					</div>
+				</div> -->
 			</div>
 		</div>
 		<div class="thirds sounds">
@@ -154,12 +155,13 @@
 			<div id="buttons">
 				<button id="run" class="custom-button">Run</button>
 				<button id="add" class="custom-button">Add Rule</button>
-				<button id="help" class="custom-button">Help</button>
+				<a href="https://github.com/Girv98/asca-rust/blob/6ef7c9c3fc3d4edbc9d7d45ffe7a7f5b3ed7f1de/doc.md" id="help" class="custom-button" target="_blank">Documentation</a>
+				<!-- <button id="help" class="custom-button">Documentation</button> -->
 				<button id="save" class="custom-button">Save</button>
-				<label for="load" class="custom-button">Load JSON File</label>
+				<label for="load" class="custom-button">Load from JSON</label>
 				<input id="load" type="file" onchange="loadFile(event)">
 			</div>
-			<div id="demo">
+			 <div id="demo">
 				<!-- <div class="draggable-element">
 					<div class="title">
 						<input type="text" class="name" placeholder = "Sound Change Title...">
@@ -181,14 +183,13 @@
 	</section>
 
 	<footer>
-		If you do not have access to IPA characters, visit <a href="https://ipa.typeit.org/full/" target="_blank">Type It</a>. 
+		If you do not have access to an IPA keyboard, visit <a href="https://ipa.typeit.org/full/" target="_blank">Type It</a>. 
 		<br>
 		Some common characters are already dealt with implicitly by the program (such as g -> ɡ, : -> ː and ' -> ˈ)
 		<br><br>
-		If you find any bugs/errors or have in mind any additions/changes, <a href="https://github.com/Girv98/Girv98.github.io/issues" target="_blank">let me know</a>
+		If you find any bugs/errors or have in mind any additions/changes, <a href="https://github.com/Girv98/asca-rust/issues" target="_blank">check out the github</a>
 	</footer>
 
-	<!-- <script src="components/SoundRule.js"></script> -->
 </body>
 
 </html>
