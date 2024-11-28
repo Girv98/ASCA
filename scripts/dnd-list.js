@@ -116,7 +116,7 @@ $("#run").click(function () {
 			ruleList.push(rule)
 		}
 	});
-	
+
 	let flatRuleList = ruleList.flat();
 	
 	console.log(wordList);
@@ -141,6 +141,7 @@ $("#save").click(function() {
 	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(listJSON);
 	a.download = 'sound_changes.json';
 	a.click();
+	a.remove();
 });
 
 function onLoad() {
