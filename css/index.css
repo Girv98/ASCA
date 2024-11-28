@@ -72,7 +72,7 @@ div.thirds{
 	background-color: blue;
 } */
 
-#wrapper {
+.wrapper {
 	display:flex;
 }
 
@@ -196,7 +196,8 @@ textarea {
 	border: None;
 }
 
-textarea.lexicon {
+textarea.lexicon,
+textarea.output {
 	background: var(--bgl);
 	color: var(--fg);
 	border-radius: 5px;

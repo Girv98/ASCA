@@ -1,19 +1,23 @@
+import init, { run } from '../libasca/asca.js'
+await init()
+
+
 const template = `
 	<div class="draggable-element">
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
-			<button class="maxmin"><i class="fas fa-plus"></i></button>
+			<button class="maxmin"><i class="fas fa-minus"></i></button>
 			<button class="delete"><i class="fas fa-times"></i></button>
 			</div>
 		</div>
-		<div class="cont invisible">
+		<div class="cont">
 			<textarea class="rule" spellcheck="false" rows=2 placeholder="Enter rule(s) here..."></textarea>
 			<textarea class="description" rows=3 placeholder="Rule description..."></textarea>
 		</div>
 	</div>`;
 
-
+const outlexTemplate = `<textarea class="output" rows="20" spellcheck="false" readonly></textarea>`;
 
 function addRule() {
 	$("#demo").append(template);
@@ -99,15 +103,14 @@ $("#add").click(addRule);
 
 $("#run").click(function () {
 	
-	let rawWordList = $(".lexicon").val();
+	let rawWordList = document.querySelector(".lexicon").value;
 	let rawRuleList = getRules();
 
 	console.log("Storing to local storage")
 	localStorage.setItem("words", rawWordList);	
 	localStorage.setItem("rules", JSON.stringify(rawRuleList));
-
-	let wordList = rawWordList;
-	wordList.split('\n').filter(w => w);
+	
+	let wordList = rawWordList.split('\n')
 
 	var ruleList = [];
 	rawRuleList.forEach((r) => {
@@ -118,14 +121,29 @@ $("#run").click(function () {
 	});
 
 	let flatRuleList = ruleList.flat();
-	
-	console.log(wordList);
-	console.log(ruleList);
-	console.log(flatRuleList);
 
-	// TODO: call to ASCA will go here
 
-	// run(wordList, flatRuleList)
+	if (flatRuleList.length === 0 || wordList.length === 0) {
+		return;
+	}
+
+	let res = run(flatRuleList, wordList);
+	console.log(res);
+
+	let outlex = document.querySelector(".outlex").querySelector(".wrapper");
+
+	outlex.innerHTML = outlexTemplate;
+
+	document.querySelector('.output').value = res.join('\n');
+
+	console.log(outlex)
+
+	res.forEach(e => {
+		console.log(e);
+
+	})
+
+
 });
 
 // Saving to JSON
@@ -154,8 +172,7 @@ function onLoad() {
 	}
 	
 	$('.draggable-element').remove();
-	console.log(rules.length)
-	for (i = 0; i < rules.length; i++) {
+	for (let i = 0; i < rules.length; i++) {
 		makeRules(rules[i].name, rules[i].rule, rules[i].description);
 	}
 	console.log(words)
