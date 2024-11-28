@@ -102,23 +102,27 @@ h1 {
 }
 
 .custom-button {
+	float: left;
 	text-decoration: none;
-	/* color: white; */
-	color: var(--bgl);
+	color: var(--bgm);
 	border: none;
 	cursor: pointer;
 	padding: 1%;
 	margin: 1%;
-	/* background: #3D3D3D; */
 	background: var(--green);
 	border-radius: 10px;
-	font-size: 14px;	
+	font-size: 1rem;	
 	/* font-weight: 700; */
 }
 
+.custom-button:focus-visible {
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
+}
+
 .title, .cont {
-	padding: 2px;
-	padding:2%;
+	/* padding: 2px; */
+	padding: 2%;
 	/*border: 2px solid white;*/
 }
 
@@ -126,31 +130,11 @@ h1 {
 	white-space:nowrap;
 }
 
-/* .maxmin {
-	float:right;
-	border: None;
-	background-color: Transparent;
-	box-shadow: none;
-	color: white;
-    outline:none;
-	cursor: pointer;
-}
-
-.delete {
-	float:right;
-	border: None;
-	background-color: Transparent;
-	box-shadow: none;
-	color: white;
-    outline:none;
-	cursor: pointer;
-} */
-
 .name {
 	padding:0.5%;
 	height: 100%;
 	width: 70%;
-	font-size:14pt;
+	font-size: 1.2rem;
 	/* color: white; */
 	color: var(--green);
     outline:none;
@@ -160,20 +144,26 @@ h1 {
 	border-radius: 10px;
 }
 
-name::placeholder {
+/* name::placeholder { */
 	/* background: var(--fg) !important; */
-	color: var(--aqua) !important;
-	opacity: 1;
+	/* color: var(--aqua) !important; */
+	/* opacity: 1; */
 
+/* } */
+
+.title-btns {
+	float: right;
+	height: 100%;
+	/* text-align: right; */
 }
 
 .title button {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
-	font-size: 20px;
+	font-size: 1.2rem;
 	text-align: center;
-	float:right;
+	float:left;
 	border: None;
 	background-color: Transparent;
 	box-shadow: none;
@@ -182,9 +172,13 @@ name::placeholder {
 	cursor: pointer;
 }
 
+.title button:focus-visible {
+	color: var(--orange);
+}
+
 /* Textarea is not rendering IPA characters correctly as monospace, even though the font supports them */
 textarea {
-	font-size: 16px;
+	font-size: 1.2rem;
     width: 100%;
 	/* field-sizing: context; */
 	resize: vertical;
@@ -194,7 +188,7 @@ textarea {
 	font-family: "Noto Sans Mono", monospace !important;
 	font-optical-sizing: none !important;
 	font-variation-settings:
-		"wdth" 100;
+		"wdth" 80;
 	background: var(--bgd);
 	color: var(--green);
 	border-radius: 10px;
@@ -202,22 +196,24 @@ textarea {
 	border: None;
 }
 
+textarea.lexicon {
+	background: var(--bgl);
+	color: var(--fg);
+	border-radius: 5px;
+	width:100%;
+	font-size: 1.2rem;	
+}
+
+input:focus,
 textarea:focus {
 	/* box-shadow: inset 0 0 3px 2px #181818; */
 	box-shadow: inset 0 0 1px 1px var(--green);
 	outline:none;
 }
 
-textarea.lexicon {
-	background: var(--bgl);
-	color: var(--fg);
-	border-radius: 10px;
-	width:100%;
-	
-}
-
- textarea::placeholder {
-	color:#fff;
+input::placeholder,
+textarea::placeholder {
+	color:var(--fg);
 }
 
 
