@@ -21,3 +21,10 @@ jobs:
         with:
           name: libasca-out
           path: ./libasca/*
+  merge:
+    - uses: actions/checkout@v4
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: libasca-out
+      -run: ls -al
