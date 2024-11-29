@@ -17,4 +17,5 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - run: wasm-pack build --release --target web --out-dir libasca
+      - run: cd ..
       - run: ls -al
