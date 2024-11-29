@@ -12,18 +12,17 @@ const template = `
 			</div>
 		</div>
 		<div class="cont">
-			<textarea class="rule" spellcheck="false" rows=2 placeholder="Enter rule(s) here..."></textarea>
+			<textarea class="rule" spellcheck="false" rows=4 placeholder="Enter rule(s) here..."></textarea>
 			<textarea class="description" rows=3 placeholder="Rule description..."></textarea>
 		</div>
 	</div>`;
 
-const outlexTemplate = `<textarea class="output" rows="20" spellcheck="false" readonly></textarea>`;
+const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></textarea>`;
 
 function addRule() {
 	$("#demo").append(template);
 	createRuleEvents();
 }
-
 
 function getRules() {
 	let list = [];
@@ -80,7 +79,7 @@ function onReaderLoad(event) {
 	}
 
 	if (obj.words !== null) {
-		document.querySelector('.lexicon').value = obj.words.join('\n');
+		document.querySelector('#lexicon').value = obj.words.join('\n');
 	}
 };
 
@@ -109,7 +108,7 @@ $("#load").change((e) => loadFile(e))
 
 $("#run").click(function () {
 	
-	let rawWordList = document.querySelector(".lexicon").value;
+	let rawWordList = document.querySelector("#lexicon").value;
 	let rawRuleList = getRules();
 
 	console.log("Storing to local storage")
@@ -140,7 +139,7 @@ $("#run").click(function () {
 
 	outlex.innerHTML = outlexTemplate;
 
-	document.querySelector('.output').value = res.join('\n');
+	document.querySelector('#output').value = res.join('\n');
 
 	console.log(outlex)
 
@@ -155,7 +154,7 @@ $("#run").click(function () {
 // Saving to JSON
 
 $("#save").click(function() {
-	let wordList = document.querySelector(".lexicon").value;
+	let wordList = document.querySelector("#lexicon").value;
 	let list = getRules();
 
 	let obj = {
@@ -181,7 +180,7 @@ function onLoad() {
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	
 	if (words !== null) {
-		document.querySelector('.lexicon').value = words;
+		document.querySelector('#lexicon').value = words;
 	}
 	
 	$('.draggable-element').remove();

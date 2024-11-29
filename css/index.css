@@ -178,9 +178,8 @@ h1 {
 
 /* Textarea is not rendering IPA characters correctly as monospace, even though the font supports them */
 textarea {
-	font-size: 1.2rem;
+	font-size: 1rem;
     width: 100%;
-	/* field-sizing: context; */
 	resize: vertical;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -196,13 +195,15 @@ textarea {
 	border: None;
 }
 
-textarea.lexicon,
-textarea.output {
+#lexicon,
+#output {
 	background: var(--bgl);
 	color: var(--fg);
 	border-radius: 5px;
 	width:100%;
 	font-size: 1.2rem;	
+	field-sizing: content;
+	min-height: 80%;
 }
 
 input:focus,
