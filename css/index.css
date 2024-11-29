@@ -228,6 +228,8 @@ footer {
 	margin: 2vh;
 }
 
+
+
 /* Firefox */
 ::-moz-selection { 
 	background: #543A48 !important;
@@ -235,6 +237,17 @@ footer {
   
 ::selection {
 	background: #543A48 !important;
+}
+
+/* Firefox */
+.custom-button::-moz-selection { 
+	background: #543A48 !important;
+	color: var(--green);
+}
+  
+.custom-button::selection {
+	background: #543A48 !important;
+	color: var(--green);
 }
 
 @media screen and (max-width: 900px) {
