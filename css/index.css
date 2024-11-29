@@ -228,6 +228,14 @@ footer {
 	margin: 2vh;
 }
 
+/* Firefox */
+::-moz-selection { 
+	background: #543A48 !important;
+}
+  
+::selection {
+	background: #543A48 !important;
+}
 
 @media screen and (max-width: 900px) {
 	section {
