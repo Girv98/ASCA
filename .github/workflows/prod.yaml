@@ -27,14 +27,14 @@ jobs:
           name: libasca-out
           path: ./libasca
 
-  DeployVercel:
+  deploy_vercel:
     runs-on: ubuntu-latest
     needs: [build_lib]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download artifacts
+      - name: Download libasca
         uses: actions/download-artifact@v4
         with:
           name: libasca-out
