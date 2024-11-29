@@ -32,7 +32,7 @@ function getRules() {
 	x.each(function () {
 		let obj = {
 			name: $(this).find(".name").val(),
-			rule: $(this).find(".rule").val(),
+			rule: $(this).find(".rule").val().split('\n'),
 			description: $(this).find(".description").val()
 		};
 		list.push(obj);
@@ -75,8 +75,12 @@ function onReaderLoad(event) {
 	console.log(event.target.result);
 	var obj = JSON.parse(event.target.result);
 	$('.draggable-element').remove();
-	for (i = 0; i < obj.length; i++) {
-		makeRules(obj[i].name, obj[i].rule, obj[i].description);
+	for (let i = 0; i < obj.rules.length; i++) {
+		makeRules(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description);
+	}
+
+	if (obj.words !== null) {
+		document.querySelector('.lexicon').value = obj.words.join('\n');
 	}
 };
 
@@ -87,7 +91,7 @@ function loadFile(event) {
 	document.getElementById("load").value = null;
 };
 
-// ------------ On load events ------------
+// ------------ On page load events ------------
 
 // TODO: Move off JQuery, it's 2024!
 // TODO: doesn't work on mobile
@@ -116,7 +120,7 @@ $("#run").click(function () {
 
 	var ruleList = [];
 	rawRuleList.forEach((r) => {
-		let rule = r.rule.split('\n').filter(r => r);
+		let rule = r.rule.filter(r => r);
 		if (rule.length !== 0) {
 			ruleList.push(rule)
 		}
@@ -151,14 +155,21 @@ $("#run").click(function () {
 // Saving to JSON
 
 $("#save").click(function() {
+	let wordList = document.querySelector(".lexicon").value;
 	let list = getRules();
-	console.log(list);
 
-	let listJSON = JSON.stringify(list);
-	console.log(listJSON);
+	let obj = {
+		words: wordList.split('\n'),
+		rules: list
+	}
+	
+	console.log(obj);
+
+	let objJSON = JSON.stringify(obj);
+	console.log(objJSON);
 
 	let a = document.createElement('a');
-	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(listJSON);
+	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
 	a.download = 'sound_changes.json';
 	a.click();
 	a.remove();
@@ -175,7 +186,7 @@ function onLoad() {
 	
 	$('.draggable-element').remove();
 	for (let i = 0; i < rules.length; i++) {
-		makeRules(rules[i].name, rules[i].rule, rules[i].description);
+		makeRules(rules[i].name, rules[i].rule.join('\n'), rules[i].description);
 	}
 	console.log(words)
 	console.log(rules)
