@@ -12,13 +12,17 @@
 	--purple: #D699B6;
 }
 
+@font-face {
+    font-family: FontNoto;
+    src: url(../assets/fonts/NotoSansMono-VariableFont_wdth\,wght.ttf);
+}
 
 /* 
 <weight>: from 100 to 900
 <width>: from 62.5 to 100 
 */
 * {
-	font-family: "Noto Sans Mono", monospace;
+	font-family: FontNoto;
 	font-optical-sizing: auto;
 	font-style: normal;
 	/* font-weight: 500; */
@@ -48,29 +52,20 @@ header div {
 }
 
 section {
-	/* background-color: #2f2f33; */
-	/* background-color: #181818; */
 	background-color: var(--bgm);
 	box-sizing:border-box;
 	padding: 1vh;
 	display: flex;
-	/* justify-content: flex-start; */
 }
 
-div.thirds{
+div.thirds {
 	padding: 1vh;
 	margin: 1vh;
 	width: 100%;
-	/* background-color: #212121; */
 	background-color: var(--bgd);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
-
 }
-
-/* label:focus-within {
-	background-color: blue;
-} */
 
 .wrapper {
 	display:flex;
@@ -82,9 +77,8 @@ div.thirds{
 	align-content: center;
 }
 
-#demo .draggable-element{
+#demo .draggable-element {
 	margin: 1%;
-	/* background: #3D3D3D; */
 	background: var(--bgl);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
@@ -112,7 +106,6 @@ h1 {
 	background: var(--green);
 	border-radius: 10px;
 	font-size: 1rem;	
-	/* font-weight: 700; */
 }
 
 .custom-button:focus-visible {
@@ -121,9 +114,7 @@ h1 {
 }
 
 .title, .cont {
-	/* padding: 2px; */
 	padding: 2%;
-	/*border: 2px solid white;*/
 }
 
 .rule {
@@ -134,27 +125,17 @@ h1 {
 	padding:0.5%;
 	height: 100%;
 	width: 70%;
-	font-size: 1.2rem;
-	/* color: white; */
-	color: var(--green);
+	font-size: 1rem;
     outline:none;
 	border: None;
-	/* background: #212121; */
+	color: var(--green);
 	background: var(--bgd);
 	border-radius: 10px;
 }
 
-/* name::placeholder { */
-	/* background: var(--fg) !important; */
-	/* color: var(--aqua) !important; */
-	/* opacity: 1; */
-
-/* } */
-
 .title-btns {
 	float: right;
 	height: 100%;
-	/* text-align: right; */
 }
 
 .title button {
@@ -184,7 +165,7 @@ textarea {
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
-	font-family: "Noto Sans Mono", monospace !important;
+	font-family: FontNoto !important;
 	font-optical-sizing: none !important;
 	font-variation-settings:
 		"wdth" 80;
