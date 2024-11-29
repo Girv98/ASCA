@@ -20,7 +20,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: libasca-out
-          path: ./libasca/
+          path: ./libasca
 
   merge:
     runs-on: ubuntu-latest
