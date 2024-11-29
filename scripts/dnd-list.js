@@ -71,7 +71,6 @@ function makeRules(name, rule, desc) {
 };
 
 function onReaderLoad(event) {
-	console.log(event.target.result);
 	var obj = JSON.parse(event.target.result);
 	$('.draggable-element').remove();
 	for (let i = 0; i < obj.rules.length; i++) {
@@ -127,28 +126,18 @@ $("#run").click(function () {
 
 	let flatRuleList = ruleList.flat();
 
-
 	if (flatRuleList.length === 0 || wordList.length === 0) {
 		return;
 	}
 
+	console.log("Running ASCA...");
 	let res = run(flatRuleList, wordList);
-	console.log(res);
+	console.log("Done");
 
 	let outlex = document.querySelector(".outlex").querySelector(".wrapper");
-
 	outlex.innerHTML = outlexTemplate;
 
 	document.querySelector('#output').value = res.join('\n');
-
-	console.log(outlex)
-
-	res.forEach(e => {
-		console.log(e);
-
-	})
-
-
 });
 
 // Saving to JSON
@@ -162,10 +151,7 @@ $("#save").click(function() {
 		rules: list
 	}
 	
-	console.log(obj);
-
 	let objJSON = JSON.stringify(obj);
-	console.log(objJSON);
 
 	let a = document.createElement('a');
 	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
@@ -187,16 +173,8 @@ function onLoad() {
 	for (let i = 0; i < rules.length; i++) {
 		makeRules(rules[i].name, rules[i].rule.join('\n'), rules[i].description);
 	}
-	console.log(words)
-	console.log(rules)
-	console.log("Done")
 }
 
 
 $('.draggable-element').remove();
 onLoad()
-
-
-
-
-
