@@ -61,12 +61,33 @@ function createRuleEvents() {
 	});
 }
 
+function getRuleBoxStates() {
+	let closedList = [];
+	let x = $(".draggable-element");
+	x.each(function() {
+		if ($(this).find(".maxmin").find("i").hasClass('fa-plus')) {
+			closedList.push(true)
+		} else {
+			closedList.push(false)
+		}
+	})
+	return closedList
+}
+
 
 // ------------ Loading rules from JSON ------------
 
-function makeRules(name, rule, desc) {
-	$("#demo").append(template)
-		.children().last().find(".name").val(name).closest(".draggable-element").find(".rule").val(rule).closest(".draggable-element").find(".description").val(desc);
+function makeRule(name, rule, desc, ruleStates) {
+	$("#demo").append(template);
+	let de = $("#demo").children().last();
+	de.find(".name").val(name);
+	de.find(".rule").val(rule);
+	de.find(".description").val(desc);
+
+	if (ruleStates === true) {
+		de.find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
+		de.find(".cont").toggleClass('invisible');
+	}
 	createRuleEvents();
 };
 
@@ -74,7 +95,7 @@ function onReaderLoad(event) {
 	var obj = JSON.parse(event.target.result);
 	$('.draggable-element').remove();
 	for (let i = 0; i < obj.rules.length; i++) {
-		makeRules(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description);
+		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, null);
 	}
 
 	if (obj.words !== null) {
@@ -99,20 +120,22 @@ $("#demo").sortable({
 	},
 	cancel: "input, textarea"
 });
-$("#demo").disableSelection().animate();
 
 $("#add").click(addRule);
 
 $("#load").change((e) => loadFile(e))
 
+// Command to run ASCA
 $("#run").click(function () {
 	
 	let rawWordList = document.querySelector("#lexicon").value;
 	let rawRuleList = getRules();
+	let ruleStates = getRuleBoxStates();
 
 	console.log("Storing to local storage")
 	localStorage.setItem("words", rawWordList);	
 	localStorage.setItem("rules", JSON.stringify(rawRuleList));
+	localStorage.setItem("closedRules", JSON.stringify(ruleStates))
 	
 	let wordList = rawWordList.split('\n')
 
@@ -134,21 +157,20 @@ $("#run").click(function () {
 	let res = run(flatRuleList, wordList);
 	console.log("Done");
 
-	let outlex = document.querySelector(".outlex").querySelector(".wrapper");
-	outlex.innerHTML = outlexTemplate;
+	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
+	outlexWrapper.innerHTML = outlexTemplate;
 
-	let output = document.querySelector('#output');
-	output.value = res.join('\n');
+	let outputArea = document.querySelector('#output');
+	outputArea.value = res.join('\n');
 
+	// Firefox and Safari do not have the field-sizing property yet
 	if (window.navigator.userAgent.includes("Firefox") || window.navigator.userAgent.includes("Safari")) {
-		output.style.height = "1px";
-		output.style.height = (output.scrollHeight)+"px";
+		outputArea.style.height = "1px";
+		outputArea.style.height = (outputArea.scrollHeight)+"px";
 	}
-
 });
 
 // Saving to JSON
-
 $("#save").click(function() {
 	let wordList = document.querySelector("#lexicon").value;
 	let list = getRules();
@@ -157,7 +179,6 @@ $("#save").click(function() {
 		words: wordList.split('\n'),
 		rules: list
 	}
-	
 	let objJSON = JSON.stringify(obj);
 
 	let a = document.createElement('a');
@@ -171,6 +192,7 @@ function onLoad() {
 	console.log("Loading local storage")
 	let words = localStorage.getItem("words");
 	let rules = JSON.parse(localStorage.getItem("rules"));
+	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	
 	if (words !== null) {
 		document.querySelector('#lexicon').value = words;
@@ -178,10 +200,14 @@ function onLoad() {
 	
 	$('.draggable-element').remove();
 	for (let i = 0; i < rules.length; i++) {
-		makeRules(rules[i].name, rules[i].rule.join('\n'), rules[i].description);
+		// Otherwise, this would be a breaking change
+		if (ruleStates === null) {
+			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, null);
+		} else {
+			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
+		}
 	}
 }
-
 
 $('.draggable-element').remove();
 onLoad()
