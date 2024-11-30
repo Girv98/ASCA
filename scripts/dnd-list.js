@@ -140,9 +140,9 @@ $("#run").click(function () {
 	let output = document.querySelector('#output');
 	output.value = res.join('\n');
 
-	if (window.navigator.userAgent.includes("Firefox")) {
+	if (window.navigator.userAgent.includes("Firefox") || window.navigator.userAgent.includes("Safari")) {
 		output.style.height = "1px";
-		output.style.height = (25+output.scrollHeight)+"px";
+		output.style.height = (output.scrollHeight)+"px";
 	}
 
 });
