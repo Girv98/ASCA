@@ -118,7 +118,7 @@ h1 {
 }
 
 .rule {
-	white-space:nowrap;
+	white-space: pre !important;
 }
 
 .name {
