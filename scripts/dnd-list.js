@@ -199,12 +199,15 @@ function onLoad() {
 	}
 	
 	$('.draggable-element').remove();
-	for (let i = 0; i < rules.length; i++) {
-		// Otherwise, this would be a breaking change
-		if (ruleStates === null) {
-			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, null);
-		} else {
-			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
+
+	if (rules !== null) {
+		for (let i = 0; i < rules.length; i++) {
+			// Otherwise, this would be a breaking change
+			if (ruleStates === null) {
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, null);
+			} else {
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
+			}
 		}
 	}
 }
