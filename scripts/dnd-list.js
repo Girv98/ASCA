@@ -137,7 +137,14 @@ $("#run").click(function () {
 	let outlex = document.querySelector(".outlex").querySelector(".wrapper");
 	outlex.innerHTML = outlexTemplate;
 
-	document.querySelector('#output').value = res.join('\n');
+	let output = document.querySelector('#output');
+	output.value = res.join('\n');
+
+	if (window.navigator.userAgent.includes("Firefox")) {
+		output.style.height = "1px";
+		output.style.height = (25+output.scrollHeight)+"px";
+	}
+
 });
 
 // Saving to JSON
