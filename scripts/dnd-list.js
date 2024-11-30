@@ -198,6 +198,16 @@ function onLoad() {
 	}
 }
 
+function collapseRules() {
+	let x = $(".draggable-element");
+
+	x.each(function() {
+		$(this).find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
+		$(this).find(".cont").addClass('invisible');
+	})
+
+}
+
 // ------------ On page load events ------------
 
 // TODO: Move off JQuery, it's 2024!
@@ -216,6 +226,8 @@ $("#save").click(saveFile);
 $("#load").change((e) => loadFile(e))
 
 $("#run").click(runASCA);
+
+$("#collapse").click(collapseRules)
 
 $('.draggable-element').remove();
 onLoad()
