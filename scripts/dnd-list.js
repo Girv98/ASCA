@@ -1,7 +1,6 @@
 import init, { run } from '../libasca/asca.js'
 await init()
 
-
 const template = `
 	<div class="draggable-element">
 		<div class="title">
@@ -60,7 +59,9 @@ function createRuleEvents() {
 		}
 	});
 }
-
+/** 
+ * @returns	{boolean[]}
+ */
 function getRuleBoxStates() {
 	let closedList = [];
 	let x = $(".draggable-element");
@@ -73,10 +74,11 @@ function getRuleBoxStates() {
 	})
 	return closedList
 }
-
-
-// ------------ Loading rules from JSON ------------
-
+/**
+ *
+ * @param {string} name @param {string} rule
+ * @param {string} desc @param {boolean} ruleStates
+ */
 function makeRule(name, rule, desc, ruleStates) {
 	$("#demo").append(template);
 	let de = $("#demo").children().last();
@@ -95,7 +97,7 @@ function onReaderLoad(event) {
 	var obj = JSON.parse(event.target.result);
 	$('.draggable-element').remove();
 	for (let i = 0; i < obj.rules.length; i++) {
-		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, null);
+		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false);
 	}
 
 	if (obj.words !== null) {
@@ -110,24 +112,26 @@ function loadFile(event) {
 	document.getElementById("load").value = null;
 };
 
-// ------------ On page load events ------------
+// Saving to JSON
+function saveFile() {
+	let wordList = document.querySelector("#lexicon").value;
+	let list = getRules();
 
-// TODO: Move off JQuery, it's 2024!
-// TODO: doesn't work on mobile
-$("#demo").sortable({
-	start: function (event, ui) {
-		$(ui.helper).css('width',`${$(event.target).width()}px`);
-	},
-	cancel: "input, textarea"
-});
+	let obj = {
+		words: wordList.split('\n'),
+		rules: list
+	}
+	let objJSON = JSON.stringify(obj);
 
-$("#add").click(addRule);
+	let a = document.createElement('a');
+	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
+	a.download = 'sound_changes.json';
+	a.click();
+	a.remove();
+}
 
-$("#load").change((e) => loadFile(e))
-
-// Command to run ASCA
-$("#run").click(function () {
-	
+// Run ASCA
+function runASCA() {
 	let rawWordList = document.querySelector("#lexicon").value;
 	let rawRuleList = getRules();
 	let ruleStates = getRuleBoxStates();
@@ -168,25 +172,7 @@ $("#run").click(function () {
 		outputArea.style.height = "1px";
 		outputArea.style.height = (outputArea.scrollHeight)+"px";
 	}
-});
-
-// Saving to JSON
-$("#save").click(function() {
-	let wordList = document.querySelector("#lexicon").value;
-	let list = getRules();
-
-	let obj = {
-		words: wordList.split('\n'),
-		rules: list
-	}
-	let objJSON = JSON.stringify(obj);
-
-	let a = document.createElement('a');
-	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
-	a.download = 'sound_changes.json';
-	a.click();
-	a.remove();
-});
+}
 
 function onLoad() {
 	console.log("Loading local storage")
@@ -204,13 +190,32 @@ function onLoad() {
 		for (let i = 0; i < rules.length; i++) {
 			// Otherwise, this would be a breaking change
 			if (ruleStates === null) {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, null);
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false);
 			} else {
 				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
 			}
 		}
 	}
 }
+
+// ------------ On page load events ------------
+
+// TODO: Move off JQuery, it's 2024!
+// TODO: doesn't work on mobile
+$("#demo").sortable({
+	start: function (event, ui) {
+		$(ui.helper).css('width',`${$(event.target).width()}px`);
+	},
+	cancel: "input, textarea"
+});
+
+$("#add").click(addRule);
+
+$("#save").click(saveFile);
+
+$("#load").change((e) => loadFile(e))
+
+$("#run").click(runASCA);
 
 $('.draggable-element').remove();
 onLoad()
