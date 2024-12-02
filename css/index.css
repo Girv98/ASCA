@@ -184,7 +184,7 @@ textarea {
 	width:100%;
 	font-size: 1.2rem;	
 	field-sizing: content;
-	min-height: 80%;
+	min-height: 18lh;
 }
 
 input:focus,
@@ -259,5 +259,10 @@ footer {
 
 	.thirds {
 		width: auto !important;
+	}
+
+	#lexicon,
+	#output {
+		min-height: 100%;
 	}
 }
