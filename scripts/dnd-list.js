@@ -23,6 +23,12 @@ function addRule() {
 	createRuleEvents();
 }
 
+function clearRules() {
+	if (confirm("Are you sure you want to remove all rules?") === true) {
+		$('.draggable-element').remove();
+	}
+}
+
 function getRules() {
 	let list = [];
 	// document.querySelectorAll(".draggable-element").forEach(function(el){
@@ -41,7 +47,7 @@ function getRules() {
 function createRuleEvents() {
 	$("div.title").off("click");
 	$("div.title").on("click", ".delete", function () {
-		if (confirm("Are you sure you want to delete this rule?") == true) {
+		if (confirm("Are you sure you want to remove this rule?") === true) {
 			$(this).closest("div.draggable-element").remove();
 		}
 	});
@@ -228,6 +234,8 @@ $("#load").change((e) => loadFile(e))
 $("#run").click(runASCA);
 
 $("#collapse").click(collapseRules)
+
+$("#clearall").click(clearRules)
 
 $('.draggable-element').remove();
 onLoad()
