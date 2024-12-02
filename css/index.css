@@ -119,6 +119,12 @@ h1 {
 
 .rule {
 	white-space: pre !important;
+	min-height: 3lh;
+	/* max-height: 6lh; */
+}
+
+.description {
+	min-height: 3lh;
 }
 
 .name {
@@ -157,7 +163,6 @@ h1 {
 	color: var(--orange);
 }
 
-/* Textarea is not rendering IPA characters correctly as monospace, even though the font supports them */
 textarea {
 	font-size: 1rem;
     width: 100%;
@@ -183,7 +188,7 @@ textarea {
 	border-radius: 5px;
 	width:100%;
 	font-size: 1.2rem;	
-	field-sizing: content;
+	white-space: pre !important;
 	min-height: 18lh;
 }
 
@@ -263,6 +268,6 @@ footer {
 
 	#lexicon,
 	#output {
-		min-height: 100%;
+		min-height: 4lh;
 	}
 }

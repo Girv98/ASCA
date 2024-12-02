@@ -11,8 +11,8 @@ const template = `
 			</div>
 		</div>
 		<div class="cont">
-			<textarea class="rule" spellcheck="false" rows=4 placeholder="Enter rule(s) here..."></textarea>
-			<textarea class="description" rows=3 placeholder="Rule description..."></textarea>
+			<textarea class="rule" spellcheck="false" placeholder="Enter rule(s) here..."></textarea>
+			<textarea class="description" placeholder="Rule description..."></textarea>
 		</div>
 	</div>`;
 
@@ -54,16 +54,28 @@ function createRuleEvents() {
 
 	$(".maxmin").off("click");
 	$(".maxmin").click(function () {
-		if ($(this).find("i").hasClass('fa-minus')) {
-			$(this).find("i").removeClass('fa-minus');
-			$(this).find("i").addClass('fa-plus');
+		let i = $(this).find("i");
+		if (i.hasClass('fa-minus')) {
+			i.removeClass('fa-minus');
+			i.addClass('fa-plus');
 			$(this).closest(".draggable-element").find(".cont").toggleClass('invisible');
 		} else {
-			$(this).find("i").removeClass('fa-plus');
-			$(this).find("i").addClass('fa-minus');
+			i.removeClass('fa-plus');
+			i.addClass('fa-minus');
 			$(this).closest(".draggable-element").find(".cont").toggleClass('invisible');
 		}
 	});
+	
+	// So that the boxes expand/contract fit to content (between the values of min-height and max-height)
+	$(".rule").on('input', function() {
+		this.style.height = "1px";
+		this.style.height = (this.scrollHeight)+"px";
+	})
+	$(".description").on('input', function() {
+		this.style.height = "1px";
+		this.style.height = (this.scrollHeight)+"px";
+	})
+
 }
 /** 
  * @returns	{boolean[]}
@@ -88,9 +100,17 @@ function getRuleBoxStates() {
 function makeRule(name, rule, desc, ruleStates) {
 	$("#demo").append(template);
 	let de = $("#demo").children().last();
+
 	de.find(".name").val(name);
-	de.find(".rule").val(rule);
-	de.find(".description").val(desc);
+
+	let r = de.find(".rule");
+	r.val(rule);
+	r.height("1px");
+	r.height((r[0].scrollHeight)+"px");
+	let d = de.find(".description");
+	d.val(desc);
+	d.height("1px");
+	d.height((d[0].scrollHeight)+"px");
 
 	if (ruleStates === true) {
 		de.find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
@@ -107,7 +127,10 @@ function onReaderLoad(event) {
 	}
 
 	if (obj.words !== null) {
-		document.querySelector('#lexicon').value = obj.words.join('\n');
+		let lex = document.querySelector('#lexicon');
+		lex.value = obj.words.join('\n');
+		lex.style.height = "1px";
+		lex.style.height = (lex.scrollHeight)+"px";
 	}
 };
 
@@ -172,12 +195,9 @@ function runASCA() {
 
 	let outputArea = document.querySelector('#output');
 	outputArea.value = res.join('\n');
-
-	// Firefox and Safari do not have the field-sizing property yet
-	if (window.navigator.userAgent.includes("Firefox") || window.navigator.userAgent.includes("Safari")) {
-		outputArea.style.height = "1px";
-		outputArea.style.height = (outputArea.scrollHeight)+"px";
-	}
+	outputArea.style.height = "1px";
+	outputArea.style.height = (outputArea.scrollHeight)+"px";
+	
 }
 
 function onLoad() {
@@ -187,7 +207,10 @@ function onLoad() {
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	
 	if (words !== null) {
-		document.querySelector('#lexicon').value = words;
+		let lex = document.querySelector('#lexicon');
+		lex.value = words;
+		lex.style.height = "1px";
+		lex.style.height = (lex.scrollHeight)+"px";
 	}
 	
 	$('.draggable-element').remove();
@@ -236,6 +259,11 @@ $("#run").click(runASCA);
 $("#collapse").click(collapseRules)
 
 $("#clearall").click(clearRules)
+
+$("#lexicon").on('input', function() {
+	this.style.height = "1px";
+	this.style.height = (this.scrollHeight)+"px";
+})
 
 $('.draggable-element').remove();
 onLoad()
