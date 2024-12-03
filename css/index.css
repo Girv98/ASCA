@@ -30,7 +30,11 @@
 		"wdth" 80;
 }
 
-html, body {
+/* html {
+	scrollbar-width: thin;
+} */
+
+body {
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -179,6 +183,7 @@ textarea {
 	border-radius: 10px;
 	outline:none;
 	border: None;
+	scrollbar-width: thin;
 }
 
 #lexicon,
@@ -204,7 +209,6 @@ textarea::placeholder {
 	color:var(--fg);
 }
 
-
 .options {
 	padding: 1% 0 0 2%;
 	/* width:100%; */
@@ -216,13 +220,9 @@ label {
 	margin: 0 10px 0 0 ;
 }
 
-/* .keyblock {
-} */
-
 a {
 	color: #a7c080;
 }
-
 
 .invisible{
     display:none !important;
@@ -232,8 +232,6 @@ a {
 footer {
 	margin: 2vh;
 }
-
-
 
 /* Firefox */
 ::-moz-selection { 
