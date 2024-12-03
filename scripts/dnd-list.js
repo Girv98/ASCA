@@ -66,16 +66,19 @@ function createRuleEvents() {
 		}
 	});
 	
-	// So that the boxes expand/contract fit to content (between the values of min-height and max-height)
-	$(".rule").on('input', function() {
-		this.style.height = "1px";
-		this.style.height = (this.scrollHeight)+"px";
-	})
-	$(".description").on('input', function() {
-		this.style.height = "1px";
-		this.style.height = (this.scrollHeight)+"px";
-	})
+	// Custom field-sizing
+	$(".rule").off("input");
+	$(".rule").on('input', e=> resize(e.target))
+	$(".rule").on('mousedown', function() { mouseIsDown = true })
+	$(".rule").on('mouseup', function() { mouseIsDown = false })
 
+	$(".description").off("input");
+	$(".description").on('input', e=> resize(e.target))
+	$(".description").on('mousedown', function() { mouseIsDown = true })
+	$(".description").on('mouseup', function() { mouseIsDown = false })
+
+	ro.observe(document.querySelector('.rule'))
+	ro.observe(document.querySelector('.description'))
 }
 /** 
  * @returns	{boolean[]}
@@ -248,22 +251,42 @@ $("#demo").sortable({
 	cancel: "input, textarea"
 });
 
+// Button click events
 $("#add").click(addRule);
-
 $("#save").click(saveFile);
-
 $("#load").change((e) => loadFile(e))
-
 $("#run").click(runASCA);
-
 $("#collapse").click(collapseRules)
-
 $("#clearall").click(clearRules)
 
-$("#lexicon").on('input', function() {
-	this.style.height = "1px";
-	this.style.height = (this.scrollHeight)+"px";
-})
+// ------------ Resizing ------------
+// Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
 
-$('.draggable-element').remove();
+function resize(el) {
+	if (!el.classList.contains("user-resized")) {
+		el.style.height = "1px";
+		el.style.height = (el.scrollHeight)+"px";
+	}
+}
+
+// Lets us check if the resize was done by using the resize dragger
+let mouseIsDown = false;
+
+// Events for the input box
+$("#lexicon").on('input', e=> resize(e.target))
+$("#lexicon").on('mousedown', function() { mouseIsDown = true })
+$("#lexicon").on('mouseup', function() { mouseIsDown = false })
+
+let ro = new ResizeObserver((e) => {
+	if (mouseIsDown) {
+		e[0].target.classList.add("user-resized");
+	}
+});
+
+ro.observe(document.querySelector('#lexicon'));
+
+
+// ----------------------------------
+
+// NOTE: Must be called after assigning ResizeObserver
 onLoad()
