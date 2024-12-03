@@ -1,3 +1,4 @@
+/*  Based on Everforest theme https://github.com/sainnhe/everforest */
 :root {
 	--bgm: #232A2E;
 	--bgd: #2D353B;
@@ -252,6 +253,13 @@ footer {
 	background: #543A48 !important;
 	color: var(--green);
 }
+
+/* @media screen and (max-width: 1150px) and (min-width: 900px) {
+	#buttons {
+		justify-content: stretch;
+	}
+} */
+
 
 @media screen and (max-width: 900px) {
 	section {
