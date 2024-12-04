@@ -18,6 +18,9 @@ const template = `
 
 const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></textarea>`;
 
+
+// ------------ Rule Functions ------------
+
 function addRule() {
 	$("#demo").append(template);
 	createRuleEvents();
@@ -27,6 +30,16 @@ function clearRules() {
 	if (confirm("Are you sure you want to remove all rules?") === true) {
 		$('.draggable-element').remove();
 	}
+}
+
+function collapseRules() {
+	let x = $(".draggable-element");
+
+	x.each(function() {
+		$(this).find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
+		$(this).find(".cont").addClass('invisible');
+	})
+
 }
 
 function getRules() {
@@ -121,6 +134,8 @@ function makeRule(name, rule, desc, ruleStates) {
 	}
 	createRuleEvents();
 };
+
+// --------------------------------------------------
 
 function onReaderLoad(event) {
 	var obj = JSON.parse(event.target.result);
@@ -230,16 +245,6 @@ function onLoad() {
 	}
 }
 
-function collapseRules() {
-	let x = $(".draggable-element");
-
-	x.each(function() {
-		$(this).find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
-		$(this).find(".cont").addClass('invisible');
-	})
-
-}
-
 // ------------ On page load events ------------
 
 // TODO: Move off JQuery, it's 2024!
@@ -284,7 +289,6 @@ let ro = new ResizeObserver((e) => {
 });
 
 ro.observe(document.querySelector('#lexicon'));
-
 
 // ----------------------------------
 
