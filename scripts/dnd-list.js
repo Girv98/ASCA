@@ -22,85 +22,78 @@ const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></text
 // ------------ Rule Functions ------------
 
 function addRule() {
-	$("#demo").append(template);
-	createRuleEvents();
+	let demo = document.getElementById("demo");
+	demo.insertAdjacentHTML( "beforeend", template);
+	createRuleEvents(demo.lastChild);
 }
 
 function clearRules() {
 	if (confirm("Are you sure you want to remove all rules?") === true) {
-		$('.draggable-element').remove();
+		document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	}
 }
 
 function collapseRules() {
-	let x = $(".draggable-element");
-
-	x.each(function() {
-		$(this).find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
-		$(this).find(".cont").addClass('invisible');
+	let els = document.querySelectorAll(".draggable-element");
+	els.forEach(el => {
+		el.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
+		el.querySelector(".cont").classList.add('invisible');
 	})
-
 }
 
 function getRules() {
 	let list = [];
-	// document.querySelectorAll(".draggable-element").forEach(function(el){
-	let x = $(".draggable-element");
-	x.each(function () {
+	let els = document.querySelectorAll(".draggable-element");
+
+	els.forEach(el => {
+		let name = el.querySelector('.name').value;
+		let rule = el.querySelector('.rule').value.split('\n');
+		let description = el.querySelector('.description').value;
 		let obj = {
-			name: $(this).find(".name").val(),
-			rule: $(this).find(".rule").val().split('\n'),
-			description: $(this).find(".description").val()
+			name,
+			rule,
+			description
 		};
 		list.push(obj);
 	})
+
 	return list
 }
 
-function createRuleEvents() {
-	$("div.title").off("click");
-	$("div.title").on("click", ".delete", function () {
+function createRuleEvents(ruleEl) {
+	// x button
+	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
-			$(this).closest("div.draggable-element").remove();
+			this.closest(".draggable-element").remove();
 		}
-	});
-
-	$(".maxmin").off("click");
-	$(".maxmin").click(function () {
-		let i = $(this).find("i");
-		if (i.hasClass('fa-minus')) {
-			i.removeClass('fa-minus');
-			i.addClass('fa-plus');
-			$(this).closest(".draggable-element").find(".cont").toggleClass('invisible');
+	})
+	// +/- button
+	ruleEl.querySelector('.maxmin').addEventListener('click', function() {
+		let i = this.querySelector('i');
+		if (i.classList.contains('fa-minus')) {
+			i.classList.replace('fa-minus', 'fa-plus');
 		} else {
-			i.removeClass('fa-plus');
-			i.addClass('fa-minus');
-			$(this).closest(".draggable-element").find(".cont").toggleClass('invisible');
+			i.classList.replace('fa-plus', 'fa-minus');
 		}
-	});
-	
+		this.closest(".draggable-element").querySelector(".cont").classList.toggle('invisible')
+	})
+
 	// Custom field-sizing
-	$(".rule").off("input");
-	$(".rule").on('input', e=> resize(e.target))
-	$(".rule").on('mousedown', function() { mouseIsDown = true })
-	$(".rule").on('mouseup', function() { mouseIsDown = false })
-
-	$(".description").off("input");
-	$(".description").on('input', e=> resize(e.target))
-	$(".description").on('mousedown', function() { mouseIsDown = true })
-	$(".description").on('mouseup', function() { mouseIsDown = false })
-
-	ro.observe(document.querySelector('.rule'))
-	ro.observe(document.querySelector('.description'))
+	let rule = ruleEl.querySelector('.rule')
+	let desc = ruleEl.querySelector('.description')
+	
+	addResizeEvents(rule)
+	addResizeEvents(desc)
 }
 /** 
  * @returns	{boolean[]}
  */
 function getRuleBoxStates() {
 	let closedList = [];
-	let x = $(".draggable-element");
-	x.each(function() {
-		if ($(this).find(".maxmin").find("i").hasClass('fa-plus')) {
+	let els = [...document.querySelectorAll(".draggable-element")];
+
+	els.forEach(el => {
+		if (el.querySelector('.maxmin').querySelector('i').classList.contains('fa-plus')) {
 			closedList.push(true)
 		} else {
 			closedList.push(false)
@@ -114,38 +107,39 @@ function getRuleBoxStates() {
  * @param {string} desc @param {boolean} ruleStates
  */
 function makeRule(name, rule, desc, ruleStates) {
-	$("#demo").append(template);
-	let de = $("#demo").children().last();
+	let demo = document.getElementById("demo");
+	demo.insertAdjacentHTML( "beforeend", template);
+	let ruleElement = demo.lastChild;
 
-	de.find(".name").val(name);
+	ruleElement.querySelector(".name").value = name;
 
-	let r = de.find(".rule");
-	r.val(rule);
-	r.height("1px");
-	r.height((r[0].scrollHeight)+"px");
-	let d = de.find(".description");
-	d.val(desc);
-	d.height("1px");
-	d.height((d[0].scrollHeight)+"px");
+	let r = ruleElement.querySelector(".rule");
+	r.value = rule;
+	r.style.height = "1px";
+	r.style.height = (r.scrollHeight)+"px";
+	let d = ruleElement.querySelector(".description");
+	d.value = desc;
+	d.style.height = "1px";
+	d.style.height = (d.scrollHeight)+"px";
 
 	if (ruleStates === true) {
-		de.find(".maxmin").find("i").removeClass('fa-minus').addClass('fa-plus');
-		de.find(".cont").toggleClass('invisible');
+		ruleElement.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
+		ruleElement.querySelector(".cont").classList.toggle('invisible');
 	}
-	createRuleEvents();
+	createRuleEvents(ruleElement);
 };
 
 // --------------------------------------------------
 
 function onReaderLoad(event) {
 	var obj = JSON.parse(event.target.result);
-	$('.draggable-element').remove();
+	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	for (let i = 0; i < obj.rules.length; i++) {
 		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false);
 	}
 
 	if (obj.words !== null) {
-		let lex = document.querySelector('#lexicon');
+		let lex = document.getElementById('lexicon');
 		lex.value = obj.words.join('\n');
 		lex.style.height = "1px";
 		lex.style.height = (lex.scrollHeight)+"px";
@@ -161,7 +155,7 @@ function loadFile(event) {
 
 // Saving to JSON
 function saveFile() {
-	let wordList = document.querySelector("#lexicon").value;
+	let wordList = document.getElementById("lexicon").value;
 	let list = getRules();
 
 	let obj = {
@@ -179,11 +173,11 @@ function saveFile() {
 
 // Run ASCA
 function runASCA() {
-	let rawWordList = document.querySelector("#lexicon").value;
+	let rawWordList = document.getElementById("lexicon").value;
 	let rawRuleList = getRules();
 	let ruleStates = getRuleBoxStates();
 
-	console.log("Storing to local storage")
+	console.log("Saving to local storage")
 	localStorage.setItem("words", rawWordList);	
 	localStorage.setItem("rules", JSON.stringify(rawRuleList));
 	localStorage.setItem("closedRules", JSON.stringify(ruleStates))
@@ -211,7 +205,7 @@ function runASCA() {
 	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
 	outlexWrapper.innerHTML = outlexTemplate;
 
-	let outputArea = document.querySelector('#output');
+	let outputArea = document.getElementById('output');
 	outputArea.value = res.join('\n');
 	outputArea.style.height = "1px";
 	outputArea.style.height = (outputArea.scrollHeight)+"px";
@@ -219,19 +213,21 @@ function runASCA() {
 }
 
 function onLoad() {
+	addResizeEvents(document.getElementById("lexicon"))
+
 	console.log("Loading local storage")
 	let words = localStorage.getItem("words");
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	
 	if (words !== null) {
-		let lex = document.querySelector('#lexicon');
+		let lex = document.getElementById("lexicon");
 		lex.value = words;
 		lex.style.height = "1px";
 		lex.style.height = (lex.scrollHeight)+"px";
 	}
 	
-	$('.draggable-element').remove();
+	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
 	if (rules !== null) {
 		for (let i = 0; i < rules.length; i++) {
@@ -257,15 +253,31 @@ $("#demo").sortable({
 });
 
 // Button click events
-$("#add").click(addRule);
-$("#save").click(saveFile);
-$("#load").change((e) => loadFile(e))
-$("#run").click(runASCA);
-$("#collapse").click(collapseRules)
-$("#clearall").click(clearRules)
+document.getElementById("add").addEventListener("click", addRule);
+document.getElementById("save").addEventListener("click", saveFile);
+document.getElementById("load").addEventListener("change", e => loadFile(e));
+document.getElementById("run").addEventListener("click", runASCA);
+document.getElementById("collapse").addEventListener("click", collapseRules);
+document.getElementById("clearall").addEventListener("click", clearRules);
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
+
+let resizeObserver = new ResizeObserver(e => {
+	if (mouseIsDown) {
+		e[0].target.classList.add("user-resized");
+	}
+});
+// Lets us check if the resize was done by using the resize dragger
+let mouseIsDown = false;
+
+function addResizeEvents(el) {
+	el.addEventListener("input", e=> resize(e.target));
+	el.addEventListener("mousedown", function() { mouseIsDown = true });
+	el.addEventListener("mouseup",   function() { mouseIsDown = false });
+
+	resizeObserver.observe(el)
+}
 
 function resize(el) {
 	if (!el.classList.contains("user-resized")) {
@@ -274,23 +286,6 @@ function resize(el) {
 	}
 }
 
-// Lets us check if the resize was done by using the resize dragger
-let mouseIsDown = false;
-
-// Events for the input box
-$("#lexicon").on('input', e=> resize(e.target))
-$("#lexicon").on('mousedown', function() { mouseIsDown = true })
-$("#lexicon").on('mouseup', function() { mouseIsDown = false })
-
-let ro = new ResizeObserver((e) => {
-	if (mouseIsDown) {
-		e[0].target.classList.add("user-resized");
-	}
-});
-
-ro.observe(document.querySelector('#lexicon'));
-
 // ----------------------------------
 
-// NOTE: Must be called after assigning ResizeObserver
 onLoad()
