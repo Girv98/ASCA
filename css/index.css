@@ -31,10 +31,6 @@
 		"wdth" 80;
 }
 
-/* html {
-	scrollbar-width: thin;
-} */
-
 body {
 	height: 100%;
 	width: 100%;
@@ -253,13 +249,6 @@ footer {
 	background: #543A48 !important;
 	color: var(--green);
 }
-
-/* @media screen and (max-width: 1150px) and (min-width: 900px) {
-	#buttons {
-		justify-content: stretch;
-	}
-} */
-
 
 @media screen and (max-width: 900px) {
 	section {
