@@ -221,12 +221,12 @@ function onLoad() {
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	
+	let lex = document.getElementById("lexicon");
 	if (words !== null) {
-		let lex = document.getElementById("lexicon");
 		lex.value = words;
-		lex.style.height = "1px";
-		lex.style.height = (lex.scrollHeight)+"px";
 	}
+	lex.style.height = "1px";
+	lex.style.height = (lex.scrollHeight)+"px";
 	
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
