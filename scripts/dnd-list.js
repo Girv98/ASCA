@@ -1,3 +1,5 @@
+// import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/+esm'
+import Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@latest/+esm"
 import init, { run } from '../libasca/asca.js'
 await init()
 
@@ -61,6 +63,7 @@ function getRules() {
 }
 
 function createRuleEvents(ruleEl) {
+
 	// x button
 	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
@@ -241,14 +244,19 @@ function onLoad() {
 
 // ------------ On page load events ------------
 
-// TODO: Move off JQuery, it's 2024!
-// TODO: doesn't work on mobile
-$("#demo").sortable({
-	start: function (event, ui) {
-		$(ui.helper).css('width',`${$(event.target).width()}px`);
-	},
-	cancel: "input, textarea"
+// Drag and drop
+Sortable.create(document.getElementById('demo'), {
+	handle: ".title",
+	filter: "button, input",
+	direction: 'horizontal',
+	preventOnFilter: false,
+	animation: 100,
+	easing: "cubic-bezier(1, 0, 0, 1)",
+	ghostClass: "sortable-ghost",
+	dragClass: "sortable-drag",
+	forceFallback: true,
 });
+
 
 // Button click events
 document.getElementById("add").addEventListener("click", addRule);

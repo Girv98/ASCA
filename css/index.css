@@ -114,6 +114,10 @@ h1 {
 	outline-offset: 2px;
 }
 
+.title {
+	cursor: move;
+}
+
 .title, .cont {
 	padding: 2%;
 }
@@ -142,6 +146,14 @@ h1 {
 	color: var(--green);
 	background: var(--bgd);
 	border-radius: 10px;
+}
+
+.sortable-ghost {
+	visibility: hidden !important;
+}
+
+.sortable-drag {
+	opacity: 1 !important;
 }
 
 .title-btns {
@@ -254,11 +266,21 @@ footer {
 	color: var(--green);
 }
 
+@media screen and (max-width: 1250px) {
+	.name {
+		max-width: 60%;
+	}
+}
+
 @media screen and (max-width: 900px) {
 	section {
 		flex-direction: column;
 		padding: 1vw;
 		width: 100%;
+	}
+
+	.name {
+		max-width: auto;
 	}
 
 	.thirds {
@@ -268,5 +290,11 @@ footer {
 	#lexicon,
 	#output {
 		min-height: 4lh;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.name {
+		max-width: 26ch;
 	}
 }
