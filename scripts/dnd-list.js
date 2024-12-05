@@ -78,12 +78,9 @@ function createRuleEvents(ruleEl) {
 		this.closest(".draggable-element").querySelector(".cont").classList.toggle('invisible')
 	})
 
-	// Custom field-sizing
-	let rule = ruleEl.querySelector('.rule')
-	let desc = ruleEl.querySelector('.description')
-	
-	addResizeEvents(rule)
-	addResizeEvents(desc)
+	// Custom field-sizing	
+	addResizeEvents(ruleEl.querySelector('.rule'))
+	addResizeEvents(ruleEl.querySelector('.description'))
 }
 /** 
  * @returns	{boolean[]}
@@ -132,6 +129,7 @@ function makeRule(name, rule, desc, ruleStates) {
 // --------------------------------------------------
 
 function onReaderLoad(event) {
+	console.log("Loading from file")
 	var obj = JSON.parse(event.target.result);
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	for (let i = 0; i < obj.rules.length; i++) {
