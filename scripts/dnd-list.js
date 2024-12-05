@@ -2,7 +2,7 @@ import init, { run } from '../libasca/asca.js'
 await init()
 
 const template = `
-	<div class="draggable-element">
+	<div class="draggable-element" draggable="true">
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
@@ -61,6 +61,19 @@ function getRules() {
 }
 
 function createRuleEvents(ruleEl) {
+
+	ruleEl.addEventListener('dragstart', function() {
+		setTimeout(() => this.classList.add('dragging'),0)
+	})
+
+	ruleEl.addEventListener('dragend', function() {
+		this.classList.remove('dragging');
+	})
+
+	ruleEl.addEventListener('dragover', e => function(e) {
+		e.preventDefault()
+	})
+
 	// x button
 	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
@@ -243,14 +256,20 @@ function onLoad() {
 
 // ------------ On page load events ------------
 
-// TODO: Move off JQuery, it's 2024!
-// TODO: doesn't work on mobile
-$("#demo").sortable({
-	start: function (event, ui) {
-		$(ui.helper).css('width',`${$(event.target).width()}px`);
-	},
-	cancel: "input, textarea"
-});
+document.getElementById("demo").addEventListener('dragover', function(e) {
+	e.preventDefault()
+	const draggable = document.querySelector('.dragging');
+	const rest = [...this.querySelectorAll(".draggable-element:not(.dragging)")]
+
+	let nextSib = rest.find(sib => {
+		return e.clientY <= sib.offsetTop + sib.offsetHeight / 2
+	})
+
+	// console.log(nextSib)
+	this.insertBefore(draggable,nextSib)
+})
+
+document.getElementById("demo").addEventListener('dragenter', e => e.preventDefault())
 
 // Button click events
 document.getElementById("add").addEventListener("click", addRule);

@@ -140,6 +140,11 @@ h1 {
 	border-radius: 10px;
 }
 
+
+.dragging {
+	opacity: 0;
+}
+
 .title-btns {
 	float: right;
 	height: 100%;
