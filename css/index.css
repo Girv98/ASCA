@@ -78,6 +78,34 @@ div.thirds {
 	align-content: center;
 }
 
+a:focus-visible {
+	border: transparent solid 0px;
+  	border-radius: 1rem;
+	outline: var(--green) 2px solid;
+	outline-offset: 5px;
+	text-decoration: none;
+}
+
+#modal-open {
+	background: none;
+	font: inherit;
+	color: inherit;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	outline: none;
+	text-decoration: underline;
+}
+
+#modal-open:focus-visible {
+	border: transparent solid 0px;
+  	border-radius: 1rem;
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
+	text-decoration: none;
+
+}
+
 #demo .draggable-element {
 	margin: 1%;
 	background: var(--bgl);
@@ -157,7 +185,7 @@ h1 {
 	height: 100%;
 }
 
-.title button {
+.maxmin, .delete {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
@@ -172,7 +200,7 @@ h1 {
 	cursor: pointer;
 }
 
-.title button:focus-visible {
+.maxmin:focus-visible, .delete:focus-visible {
 	color: var(--orange);
 }
 
@@ -229,14 +257,67 @@ label {
 	margin: 0 10px 0 0 ;
 }
 
-a {
+a,b {
 	color: #a7c080;
+}
+
+p {
+    word-break: break-all;
+    white-space: normal;
 }
 
 .invisible{
     display:none !important;
 }
 
+dialog {
+	z-index: 10;
+	background: var(--bgl);
+	color: var(--fg);
+	border:none;
+	padding: 0;
+	border-radius: 1rem;
+	/* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
+	min-width: 40%;
+	max-width: 80%;
+	top: 20%;
+	bottom: auto;
+	font-size: 1.05rem;
+}
+
+.modal-wrapper {
+	padding: 1rem;
+}
+
+.modal-content {
+	max-height: 45vh;	
+	overflow-y: auto;
+	scrollbar-color: var(--green)  var(--bgl) !important;
+	scrollbar-gutter: stable both-edges;
+	scrollbar-width: thin;
+	
+}
+
+dialog::backdrop {
+	background-color: var(--bgm);
+	opacity: .5;
+}
+
+dialog header {
+	display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+dialog header h2 {
+    margin-block: 0px;
+	color: var(--green);
+}
+
+dialog h3 {
+	color: var(--green);
+}
 
 footer {
 	margin: 2vh;
@@ -262,13 +343,19 @@ footer {
 	color: var(--green);
 }
 
-@media screen and (max-width: 1250px) {
-	.name {
-		max-width: 60%;
+@media screen and (max-width: 1600px) {
+	dialog {
+		min-width: 50%;
 	}
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1250px) {
+	.name {
+		max-width: 70%;
+	}
+}
+
+@media screen and (max-width: 920px) {
 	section {
 		flex-direction: column;
 		padding: 1vw;
@@ -286,6 +373,10 @@ footer {
 	#lexicon,
 	#output {
 		min-height: 4lh;
+	}
+	dialog {
+		min-width: 70%;
+		max-width: 95%;
 	}
 }
 

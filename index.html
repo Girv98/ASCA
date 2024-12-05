@@ -14,9 +14,42 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA Beta 0.8</h1>
+			<h1 class="noto-sans">ASCA Beta <button id="modal-open">0.8</button></h1>
 		</div>
 	</header>
+
+	<dialog id="version-modal">
+		<div class="modal-wrapper">
+			<header>
+				<h2>What's new</h2>
+				<button id="modal-close" class="delete"><i class="fas fa-times"></i></button>
+			</header>
+			<div class="modal-content">
+				<h3>0.8</h3>
+				<ul>
+					<li><b>Ui:</b> This modal!</li>
+					<li><b>Ui:</b> Working drag and drop on mobile</li>
+				</ul>
+				
+				<h3>0.7</h3>
+				<ul>
+					<li><b>Lib:</b> Some common Americanist characters such as ƛ can now be used (see doc)</li>
+					<li><b>Lib:</b> Rules with just whitespace no longer crash</li>
+					<li><b>Ui:</b> Removed behavioural differences between chromium and firefox</li>
+				</ul>
+
+				<h3>0.6 ></h3>
+				<ul>
+					<li><b>Lib:</b> Palatal lateral fricatives and affricates now use ExtIPA characters, matching their retroflex and velar counterparts</li>
+					<li><b>Lib:</b> Updated distinction between glides and their approximant counterparts</li>
+					<li><b>Lib:</b> Fixed neighbouring matches sometimes being skipped in substitution rule</li>
+					<li><b>Lib:</b> Added Strident diacritic to help catch possible errors when converting +strid consonants</li>
+					<li><b>Ui:</b> Added collapse and clear buttons</li>
+					<li><b>Ui:</b> Now require confirmation before deleting rules</li>
+				</ul>
+			</div>
+		</div>
+	</dialog>
 
 	<section>
 		<div class="thirds inlex noto-sans">
@@ -49,7 +82,7 @@
 				<label for="load" class="custom-button" tabindex=0>Load</label>
 				<input id="load" type="file"">
 				<button id="collapse" class="custom-button">Collapse</button>
-				<button id="clearall" class="custom-button">Clear</button>
+				<button id="clear-all" class="custom-button">Clear</button>
 			</div>
 			 <div id="demo">
 				<!-- Rules live here -->

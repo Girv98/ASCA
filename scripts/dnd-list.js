@@ -266,7 +266,15 @@ document.getElementById("save").addEventListener("click", saveFile);
 document.getElementById("load").addEventListener("change", e => loadFile(e));
 document.getElementById("run").addEventListener("click", runASCA);
 document.getElementById("collapse").addEventListener("click", collapseRules);
-document.getElementById("clearall").addEventListener("click", clearRules);
+document.getElementById("clear-all").addEventListener("click", clearRules);
+
+document.getElementById("modal-open").addEventListener("click", () => document.getElementById('version-modal').showModal())
+document.getElementById("modal-close").addEventListener("click", () => document.getElementById('version-modal').close());
+document.querySelector('dialog').addEventListener('mousedown', event => {
+    if (event.target === event.currentTarget) {
+        event.currentTarget.close()
+    }
+})
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
