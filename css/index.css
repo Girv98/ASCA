@@ -290,7 +290,7 @@ dialog {
 }
 
 .modal-content {
-	max-height: 45vh;	
+	max-height: 50vh;	
 	overflow-y: auto;
 	scrollbar-color: var(--green)  var(--bgl) !important;
 	scrollbar-gutter: stable both-edges;
@@ -343,15 +343,21 @@ footer {
 	color: var(--green);
 }
 
+@media screen and (max-width: 2000px) {
+	dialog {
+		max-width: 60%;
+	}
+}
+
 @media screen and (max-width: 1600px) {
 	dialog {
-		min-width: 50%;
+		max-width: 80%;
 	}
 }
 
 @media screen and (max-width: 1250px) {
 	.name {
-		max-width: 70%;
+		max-width: 90%;
 	}
 }
 
