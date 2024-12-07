@@ -145,7 +145,7 @@ function onReaderLoad(event) {
 		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false);
 	}
 
-	if (obj.words !== null) {
+	if (obj.words) {
 		let lex = document.getElementById('lexicon');
 		lex.value = obj.words.join('\n');
 		lex.style.height = "1px";
@@ -228,7 +228,7 @@ function onLoad() {
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	
 	let lex = document.getElementById("lexicon");
-	if (words !== null) {
+	if (words) {
 		lex.value = words;
 	}
 	lex.style.height = "1px";
@@ -236,10 +236,10 @@ function onLoad() {
 	
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
-	if (rules !== null) {
+	if (rules) {
 		for (let i = 0; i < rules.length; i++) {
 			// Otherwise, this would be a breaking change
-			if (ruleStates === null) {
+			if (!ruleStates) {
 				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false);
 			} else {
 				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
