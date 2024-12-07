@@ -134,6 +134,12 @@ function makeRule(name, rule, desc, ruleStates) {
 function onReaderLoad(event) {
 	console.log("Loading from file")
 	var obj = JSON.parse(event.target.result);
+
+	if (!obj.words && !obj.rules) {
+		alert("Not able to parse json")
+		return
+	} 
+
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	for (let i = 0; i < obj.rules.length; i++) {
 		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false);
