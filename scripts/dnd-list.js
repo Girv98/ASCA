@@ -1,6 +1,6 @@
 // import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/+esm'
 import Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@latest/+esm"
-import init, { run } from '../libasca/asca.js'
+import init, { run_asca } from '../libasca/asca.js'
 await init()
 
 const template = `
@@ -181,32 +181,22 @@ function saveFile() {
 // Run ASCA
 function runASCA() {
 	let rawWordList = document.getElementById("lexicon").value;
-	let rawRuleList = getRules();
+	let ruleList = getRules();
 	let ruleStates = getRuleBoxStates();
 
 	console.log("Saving to local storage")
 	localStorage.setItem("words", rawWordList);	
-	localStorage.setItem("rules", JSON.stringify(rawRuleList));
+	localStorage.setItem("rules", JSON.stringify(ruleList));
 	localStorage.setItem("closedRules", JSON.stringify(ruleStates))
 	
 	let wordList = rawWordList.split('\n')
 
-	var ruleList = [];
-	rawRuleList.forEach((r) => {
-		let rule = r.rule.filter(r => r);
-		if (rule.length !== 0) {
-			ruleList.push(rule)
-		}
-	});
-
-	let flatRuleList = ruleList.flat();
-
-	if (flatRuleList.length === 0 || wordList.length === 0) {
+	if (ruleList.length === 0 || wordList.length === 0) {
 		return;
 	}
 
 	console.log("Running ASCA...");
-	let res = run(flatRuleList, wordList);
+	let res = run_asca(ruleList, wordList);
 	console.log("Done");
 
 	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
