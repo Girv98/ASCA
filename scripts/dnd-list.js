@@ -160,6 +160,7 @@ function loadFile(event) {
 	document.getElementById("load").value = null;
 };
 
+// TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 // Saving to JSON
 function saveFile() {
 	let wordList = document.getElementById("lexicon").value;
