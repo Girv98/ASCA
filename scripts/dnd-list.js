@@ -1,6 +1,6 @@
 // import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/+esm'
 import Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@latest/+esm"
-import init, { run_asca } from '../libasca/asca.js'
+import init, { run_wasm } from '../libasca/asca.js'
 await init()
 
 const template = `
@@ -197,7 +197,7 @@ function runASCA() {
 	}
 
 	console.log("Running ASCA...");
-	let res = run_asca(ruleList, wordList);
+	let res = run_wasm(ruleList, wordList);
 	console.log("Done");
 
 	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
