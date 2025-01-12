@@ -15,7 +15,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA Beta <button id="modal-open">0.8</button></h1>
+			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.9</button></h1>
 		</div>
 	</header>
 
@@ -23,13 +23,18 @@
 		<div class="modal-wrapper">
 			<header>
 				<h2>What's new</h2>
-				<button id="modal-close" class="delete"><i class="fas fa-times"></i></button>
+				<button id="version-modal-close" class="delete"><i class="fas fa-times"></i></button>
 			</header>
 			<div class="modal-content">
+
+				<h3>0.9</h3>
+				<ul>
+					<li><b>Lib:</b> Ability to deromanise input and romanise output  <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.4.0">(release 0.4.0)</a></li>
+				</ul>
 				<h3>0.8</h3>
 				<ul>
-					<li><b>Lib:</b> Add "voiced stridentised" diacritic. <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.3.1">(release 0.3.1)</a></li>
-					<li><b>Lib:</b> Fix bug whereby IPA literals with a feature alpha modifier were not correctly matching. <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.2.1">(release 0.2.1)</a></li>
+					<li><b>Lib:</b> Added "voiced stridentised" diacritic. <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.3.1">(release 0.3.1)</a></li>
+					<li><b>Lib:</b> Fixed bug whereby IPA literals with a feature alpha modifier were not correctly matching. <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.2.1">(release 0.2.1)</a></li>
 					<li><b>Lib:</b> Fixed options falsely matching in certain situations <a target="_blank" href="https://github.com/Girv98/asca-rust/issues/3">(issue #3)</a></li>
 					<li><b>Lib:</b> Fixed some bugs regarding matching ipa</li>
 					<li><b>Lib:</b> Added normalisation for some precomposed Unicode characters</li>
@@ -54,6 +59,21 @@
 					<li><b>Ui:</b> Now require confirmation before deleting rules</li>
 					<li><b>Ui:</b> Added collapse and clear buttons</li>
 				</ul>
+			</div>
+		</div>
+	</dialog>
+
+	<dialog id="alias-modal">
+		<div class="modal-wrapper">
+			<header>
+				<h2>Custom Aliasing</h2>
+				<button id="alias-modal-close" class="delete"><i class="fas fa-times"></i></button>
+			</header>
+			<div class="modal-content">
+				<h3>Into IPA</h3>
+				<textarea id="alias-into" spellcheck="false" placeholder="Convert input into IPA (deromanisation)"></textarea>
+				<h3>From IPA</h3>
+				<textarea id="alias-from" spellcheck="false" placeholder="Convert output from IPA (romanisation)"></textarea>
 			</div>
 		</div>
 	</dialog>
@@ -84,6 +104,7 @@
 			<div id="buttons">
 				<button id="run" class="custom-button">Run</button>
 				<button id="add" class="custom-button">Add Rule</button>
+				<button id="alias-modal-open" class="custom-button">Aliases</button>
 				<a id="help" class="custom-button" href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md" target="_blank">Documentation</a>
 				<button id="save" class="custom-button">Save</button>
 				<label for="load" class="custom-button" tabindex=0>Load</label>

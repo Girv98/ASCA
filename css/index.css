@@ -86,7 +86,7 @@ a:focus-visible {
 	text-decoration: none;
 }
 
-#modal-open {
+#version-modal-open {
 	background: none;
 	font: inherit;
 	color: inherit;
@@ -97,13 +97,12 @@ a:focus-visible {
 	text-decoration: underline;
 }
 
-#modal-open:focus-visible {
+#version-modal-open:focus-visible {
 	border: transparent solid 0px;
   	border-radius: 1rem;
 	outline: var(--green) 2px solid;
 	outline-offset: 2px;
 	text-decoration: none;
-
 }
 
 #demo .draggable-element {
@@ -319,6 +318,11 @@ dialog h3 {
 	color: var(--green);
 }
 
+#alias-into, #alias-from {
+	white-space: pre !important;
+	min-height: 6lh;
+}
+
 footer {
 	margin: 2vh;
 }
@@ -345,12 +349,14 @@ footer {
 
 @media screen and (max-width: 2000px) {
 	dialog {
+		min-width: 50%;
 		max-width: 60%;
 	}
 }
 
 @media screen and (max-width: 1600px) {
 	dialog {
+		min-width: 60%;
 		max-width: 80%;
 	}
 }
@@ -376,13 +382,16 @@ footer {
 		width: auto !important;
 	}
 
-	#lexicon,
-	#output {
+	#lexicon, #output {
 		min-height: 4lh;
 	}
+
+	#alias-into, #alias-from {
+		min-height: 4lh;
+	}
+
 	dialog {
-		min-width: 70%;
-		max-width: 95%;
+		min-width: 93%;
 	}
 }
 

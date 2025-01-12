@@ -62,6 +62,10 @@ function getRules() {
 	return list
 }
 
+function getAliases() {
+	return [(document.getElementById("alias-into").value), (document.getElementById("alias-from").value)]
+}
+
 function createRuleEvents(ruleEl) {
 
 	// x button
@@ -151,6 +155,24 @@ function onReaderLoad(event) {
 		lex.style.height = "1px";
 		lex.style.height = (lex.scrollHeight)+"px";
 	}
+
+	let to = document.getElementById("alias-into");
+	if (obj.into) {
+		to.value = obj.into.join('\n');
+	} else {
+		to.value = ""
+	}
+	to.style.height = "1px";
+	to.style.height = (to.scrollHeight)+"px";
+
+	let fr = document.getElementById("alias-from");
+	if (obj.from) {
+		fr.value = obj.from.join('\n');
+	} else {
+		fr.value = ""
+	}
+	fr.style.height = "1px";
+	fr.style.height = (fr.scrollHeight)+"px";
 };
 
 function loadFile(event) {
@@ -164,11 +186,15 @@ function loadFile(event) {
 // Saving to JSON
 function saveFile() {
 	let wordList = document.getElementById("lexicon").value;
-	let list = getRules();
+	let rules = getRules();
+	let into = document.getElementById("alias-into").value;
+	let from = document.getElementById("alias-from").value;
 
 	let obj = {
 		words: wordList.split('\n'),
-		rules: list
+		rules, 
+		into: into.split('\n'), 
+		from: from.split('\n')
 	}
 	let objJSON = JSON.stringify(obj);
 
@@ -179,16 +205,38 @@ function saveFile() {
 	a.remove();
 }
 
+// function saveFile() {
+// 	let wordList = document.getElementById("lexicon").value;
+// 	let list = getRules();
+
+// 	let obj = {
+// 		words: wordList.split('\n'),
+// 		rules: list
+// 	}
+// 	let objJSON = JSON.stringify(obj);
+
+// 	let downloading = browser.downloads.download({
+// 		url: "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON),
+// 		filename: 'sound_changes.json',
+// 		saveAs: true,
+// 	  });
+// }
+
+
 // Run ASCA
 function runASCA() {
 	let rawWordList = document.getElementById("lexicon").value;
 	let ruleList = getRules();
 	let ruleStates = getRuleBoxStates();
 
+	let [aliasInto, aliasFrom] = getAliases();
+
 	console.log("Saving to local storage")
 	localStorage.setItem("words", rawWordList);	
 	localStorage.setItem("rules", JSON.stringify(ruleList));
-	localStorage.setItem("closedRules", JSON.stringify(ruleStates))
+	localStorage.setItem("closedRules", JSON.stringify(ruleStates));
+	localStorage.setItem("aliasInto", aliasInto);
+	localStorage.setItem("aliasFrom", aliasFrom);
 	
 	let wordList = rawWordList.split('\n')
 
@@ -197,7 +245,7 @@ function runASCA() {
 	}
 
 	console.log("Running ASCA...");
-	let res = run_wasm(ruleList, wordList);
+	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'));
 	console.log("Done");
 
 	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
@@ -212,19 +260,32 @@ function runASCA() {
 
 function onLoad() {
 	addResizeEvents(document.getElementById("lexicon"))
+	addResizeEvents(document.getElementById("alias-into"))
+	addResizeEvents(document.getElementById("alias-from"))
 
 	console.log("Loading local storage")
 	let words = localStorage.getItem("words");
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
+	let aliasInto = localStorage.getItem("aliasInto");
+	let aliasFrom = localStorage.getItem("aliasFrom");
 	
+	// Populate textareas from local stortage
 	let lex = document.getElementById("lexicon");
-	if (words) {
-		lex.value = words;
-	}
+	if (words) { lex.value = words } else { lex.value = "" }
 	lex.style.height = "1px";
 	lex.style.height = (lex.scrollHeight)+"px";
-	
+
+	let to = document.getElementById("alias-into");
+	if (aliasInto) {to.value = aliasInto} else { to.value = aliasInto }
+	to.style.height = "1px";
+	to.style.height = (to.scrollHeight)+"px";
+
+	let fr = document.getElementById("alias-from");
+	if (aliasFrom) {fr.value = aliasFrom} else { fr.value = aliasFrom }
+	fr.style.height = "1px";
+	fr.style.height = (fr.scrollHeight)+"px";
+
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
 	if (rules) {
@@ -265,13 +326,26 @@ document.getElementById("run").addEventListener("click", runASCA);
 document.getElementById("collapse").addEventListener("click", collapseRules);
 document.getElementById("clear-all").addEventListener("click", clearRules);
 
-document.getElementById("modal-open").addEventListener("click", () => document.getElementById('version-modal').showModal())
-document.getElementById("modal-close").addEventListener("click", () => document.getElementById('version-modal').close());
-document.querySelector('dialog').addEventListener('mousedown', event => {
-    if (event.target === event.currentTarget) {
-        event.currentTarget.close()
-    }
+document.getElementById("version-modal-open").addEventListener("click", () => document.getElementById('version-modal').showModal())
+document.getElementById("version-modal-close").addEventListener("click", () => document.getElementById('version-modal').close());
+
+document.getElementById("alias-modal-open").addEventListener("click", () => {
+	document.getElementById('alias-modal').showModal();
+	// This has to go here for some reason... I assume closed modals don't calculate style changes
+	let to = document.getElementById("alias-into");
+	to.style.height = "1px"; to.style.height = (to.scrollHeight)+"px";
+	let fr = document.getElementById("alias-from");
+	fr.style.height = "1px"; fr.style.height = (fr.scrollHeight)+"px";
 })
+document.getElementById("alias-modal-close").addEventListener("click", () => document.getElementById('alias-modal').close());
+
+document.querySelectorAll('dialog').forEach(item => {
+	item.addEventListener('mousedown', event => {
+		if (event.target === event.currentTarget) {
+			event.currentTarget.close()
+		}
+	})
+});
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
