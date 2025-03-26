@@ -17,17 +17,17 @@ jobs:
       - name: Get latest libasca release
         id: latestrelease
         run: |
-          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/girv98/asca-rust/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+          echo "VERSION=$(curl -s https://api.github.com/repos/girv98/asca-rust/releases/latest | jq '.tag_name' | sed 's/\"//g')" >> $GITHUB_OUTPUT
       
       - name: Confirm latest libasca release
         run: |
-          echo ${{ steps.latestrelease.outputs.releasetag }}
+          echo ${{ steps.latestrelease.outputs.VERSION }}
       
       - name: Checkout latest libasca release
         uses: actions/checkout@v4
         with:
           repository: girv98/asca-rust
-          ref: ${{ steps.latestrelease.outputs.releasetag }}
+          ref: ${{ steps.latestrelease.outputs.VERSION }}
       
       - name: Install WasmPack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
