@@ -14,13 +14,26 @@ jobs:
   build_lib:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Get latest libasca release
+        id: latestrelease
+        run: |
+          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/girv98/asca-rust/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      
+      - name: Confirm latest libasca release
+        run: |
+          echo ${{ steps.latestrelease.outputs.releasetag }}
+      
+      - name: Checkout latest libasca release
+        uses: actions/checkout@v4
         with:
           repository: girv98/asca-rust
+          ref: ${{ steps.latestrelease.outputs.releasetag }}
+      
       - name: Install WasmPack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-      - run: wasm-pack build --release --target web --out-dir libasca
+      - name: Build libasca 
+        run: wasm-pack build --release --target web --out-dir libasca
 
       - uses: actions/upload-artifact@v4
         with:
