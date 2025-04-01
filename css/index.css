@@ -68,6 +68,10 @@ div.thirds {
 	border-radius: 10px;
 }
 
+div.thirds.sounds {
+	width: 160%;
+}
+
 .wrapper {
 	display:flex;
 }
@@ -345,6 +349,12 @@ footer {
 .custom-button::selection {
 	background: #543A48 !important;
 	color: var(--green);
+}
+
+@media screen and (max-width: 2400px) {
+	div.thirds.sounds {
+		width: 200%;
+	}
 }
 
 @media screen and (max-width: 2000px) {
