@@ -8,9 +8,9 @@ const template = `
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
-				<button class="onoff"><i class="fas fa-toggle-on"></i></button>
-				<button class="maxmin"><i class="fas fa-minus"></i></button>
-				<button class="delete"><i class="fas fa-times"></i></button>
+			<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on"></i></button>
+			<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus"></i></button>
+			<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times"></i></button>
 			</div>
 		</div>
 		<div class="cont">
@@ -20,7 +20,6 @@ const template = `
 	</div>`;
 
 const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></textarea>`;
-
 
 // ------------ Rule Functions ------------
 
