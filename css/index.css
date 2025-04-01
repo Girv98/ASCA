@@ -116,6 +116,16 @@ a:focus-visible {
 	border-radius: 10px;
 }
 
+.ignore {
+	filter: brightness(90%);
+	/* background-color: hsl(199, 12%, 24%) !important; */
+
+}
+
+.ignore .onoff {
+	color: var(--red);
+}
+
 h1 {
 	width: 100%;
 	text-align: center;
@@ -188,7 +198,7 @@ h1 {
 	height: 100%;
 }
 
-.maxmin, .delete {
+.maxmin, .delete, .onoff {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
@@ -203,8 +213,8 @@ h1 {
 	cursor: pointer;
 }
 
-.maxmin:focus-visible, .delete:focus-visible {
-	color: var(--orange);
+.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible {
+	color: var(--purple);
 }
 
 textarea {
@@ -269,7 +279,7 @@ p {
     white-space: normal;
 }
 
-.invisible{
+.invisible {
     display:none !important;
 }
 
@@ -371,9 +381,33 @@ footer {
 	}
 }
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1350px) {
 	.name {
-		max-width: 90%;
+		max-width: 70%;
+	}
+}
+
+@media screen and (max-width: 1300px) {
+	.name {
+		max-width: 68%;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.name {
+		max-width: 65%;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.name {
+		max-width: 60%;
+	}
+}
+
+@media screen and (max-width: 950) {
+	.name {
+		max-width: 55%;
 	}
 }
 

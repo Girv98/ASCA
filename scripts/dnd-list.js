@@ -8,8 +8,9 @@ const template = `
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
-			<button class="maxmin"><i class="fas fa-minus"></i></button>
-			<button class="delete"><i class="fas fa-times"></i></button>
+				<button class="onoff"><i class="fas fa-toggle-on"></i></button>
+				<button class="maxmin"><i class="fas fa-minus"></i></button>
+				<button class="delete"><i class="fas fa-times"></i></button>
 			</div>
 		</div>
 		<div class="cont">
@@ -27,19 +28,50 @@ function addRule() {
 	let demo = document.getElementById("demo");
 	demo.insertAdjacentHTML( "beforeend", template);
 	createRuleEvents(demo.lastChild);
+	updateCollapse(true)
 }
 
 function clearRules() {
 	if (confirm("Are you sure you want to remove all rules?") === true) {
 		document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	}
+	updateCollapse(true)
+}
+
+function updateCollapse(coll) {
+	let colButton = document.getElementById("collapse");
+	if (coll) {
+		colButton.innerHTML = "Collapse"
+		toCollapse = true
+	} else {
+		colButton.innerHTML = "Expand"
+		toCollapse = false
+	}
 }
 
 function collapseRules() {
 	let els = document.querySelectorAll(".draggable-element");
+
+	if (toCollapse) {
+		els.forEach(el => {
+			el.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
+			el.querySelector(".cont").classList.add('invisible');
+		})
+		updateCollapse(false)
+	} else {
+		els.forEach(el => {
+			el.querySelector(".maxmin").querySelector("i").classList.replace('fa-plus', 'fa-minus')
+			el.querySelector(".cont").classList.remove('invisible');
+		})
+		updateCollapse(true)
+	}
+}
+
+function activateRules() {
+	let els = document.querySelectorAll(".draggable-element");
 	els.forEach(el => {
-		el.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
-		el.querySelector(".cont").classList.add('invisible');
+		el.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-off', 'fa-toggle-on')
+		el.classList.remove('ignore');
 	})
 }
 
@@ -67,7 +99,6 @@ function getAliases() {
 }
 
 function createRuleEvents(ruleEl) {
-
 	// x button
 	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
@@ -79,20 +110,52 @@ function createRuleEvents(ruleEl) {
 		let i = this.querySelector('i');
 		if (i.classList.contains('fa-minus')) {
 			i.classList.replace('fa-minus', 'fa-plus');
+			if (!getRuleClosedBoxes().some((e) => e == false)) {
+				updateCollapse(false)
+			}
 		} else {
 			i.classList.replace('fa-plus', 'fa-minus');
+			updateCollapse(true)
 		}
 		this.closest(".draggable-element").querySelector(".cont").classList.toggle('invisible')
 	})
 
+	// On/Off Button
+	ruleEl.querySelector('.onoff').addEventListener('click', function() {
+		let i = this.querySelector('i');
+		if (i.classList.contains('fa-toggle-on')) {
+			i.classList.replace('fa-toggle-on', 'fa-toggle-off');
+		} else {
+			i.classList.replace('fa-toggle-off', 'fa-toggle-on');
+		}
+		this.closest(".draggable-element").classList.toggle('ignore')
+	})
 	// Custom field-sizing	
 	addResizeEvents(ruleEl.querySelector('.rule'))
 	addResizeEvents(ruleEl.querySelector('.description'))
 }
+
 /** 
  * @returns	{boolean[]}
  */
-function getRuleBoxStates() {
+function getRuleActiveBoxes() {
+	let activeList = [];
+	let els = [...document.querySelectorAll(".draggable-element")];
+
+	els.forEach(el => {
+		if (el.classList.contains('ignore')) {
+			activeList.push(false)
+		} else {
+			activeList.push(true)
+		}
+	})
+	return activeList
+}
+
+/** 
+ * @returns	{boolean[]}
+ */
+function getRuleClosedBoxes() {
 	let closedList = [];
 	let els = [...document.querySelectorAll(".draggable-element")];
 
@@ -107,10 +170,10 @@ function getRuleBoxStates() {
 }
 /**
  *
- * @param {string} name @param {string} rule
- * @param {string} desc @param {boolean} ruleStates
+ * @param {string} name @param {string} rule @param {string} desc 
+ * @param {boolean} ruleClosed @param {boolean} ruleActive
  */
-function makeRule(name, rule, desc, ruleStates) {
+function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 	let demo = document.getElementById("demo");
 	demo.insertAdjacentHTML( "beforeend", template);
 	let ruleElement = demo.lastChild;
@@ -126,10 +189,16 @@ function makeRule(name, rule, desc, ruleStates) {
 	d.style.height = "1px";
 	d.style.height = (d.scrollHeight)+"px";
 
-	if (ruleStates === true) {
+	if (ruleClosed) {
 		ruleElement.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
 		ruleElement.querySelector(".cont").classList.toggle('invisible');
 	}
+
+	if (!ruleActive) {
+		ruleElement.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-on', 'fa-toggle-off')
+		ruleElement.classList.add('ignore')
+	}
+
 	createRuleEvents(ruleElement);
 };
 
@@ -146,8 +215,9 @@ function onReaderLoad(event) {
 
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	for (let i = 0; i < obj.rules.length; i++) {
-		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false);
+		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
 	}
+	updateCollapse(true)
 
 	if (obj.words) {
 		let lex = document.getElementById('lexicon');
@@ -227,22 +297,34 @@ function saveFile() {
 function runASCA() {
 	let rawWordList = document.getElementById("lexicon").value;
 	let ruleList = getRules();
-	let ruleStates = getRuleBoxStates();
+	let ruleClosed = getRuleClosedBoxes();
+	let ruleActive = getRuleActiveBoxes();
 
 	let [aliasInto, aliasFrom] = getAliases();
 
 	console.log("Saving to local storage")
 	localStorage.setItem("words", rawWordList);	
 	localStorage.setItem("rules", JSON.stringify(ruleList));
-	localStorage.setItem("closedRules", JSON.stringify(ruleStates));
+	localStorage.setItem("closedRules", JSON.stringify(ruleClosed));
+	localStorage.setItem("activeRules", JSON.stringify(ruleActive));
 	localStorage.setItem("aliasInto", aliasInto);
 	localStorage.setItem("aliasFrom", aliasFrom);
 	
 	let wordList = rawWordList.split('\n')
 
-	if (ruleList.length === 0 || wordList.length === 0) {
-		return;
+	// if (ruleList.length === 0 || wordList.length === 0) {
+	// 	return;
+	// }
+
+	for (let i = ruleList.length - 1; i >= 0; i--) {
+		if (!ruleActive[i]) {
+			ruleList.splice(i, 1)
+		}
 	}
+
+	// if (ruleList.length === 0) {
+	// 	return;
+	// }
 
 	console.log("Running ASCA...");
 	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'));
@@ -267,6 +349,12 @@ function onLoad() {
 	let words = localStorage.getItem("words");
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
+	let ruleActive = JSON.parse(localStorage.getItem("activeRules"));
+
+	if (ruleStates && !ruleStates.some((e) => e == false)) {
+		updateCollapse(false)
+	}
+
 	let aliasInto = localStorage.getItem("aliasInto");
 	let aliasFrom = localStorage.getItem("aliasFrom");
 	
@@ -291,10 +379,14 @@ function onLoad() {
 	if (rules) {
 		for (let i = 0; i < rules.length; i++) {
 			// Otherwise, this would be a breaking change
-			if (!ruleStates) {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false);
+			if (!ruleStates && !ruleActive) {
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false, true);
+			} else if (!ruleActive) {
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i], true);
+			} else if (!ruleStates) { 
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false, ruleActive[i]);
 			} else {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i]);
+				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i], ruleActive[i]);
 			}
 		}
 	}
@@ -317,6 +409,7 @@ Sortable.create(document.getElementById('demo'), {
 	forceFallback: true,
 });
 
+let toCollapse = true;
 
 // Button click events
 document.getElementById("add").addEventListener("click", addRule);
@@ -324,6 +417,7 @@ document.getElementById("save").addEventListener("click", saveFile);
 document.getElementById("load").addEventListener("change", e => loadFile(e));
 document.getElementById("run").addEventListener("click", runASCA);
 document.getElementById("collapse").addEventListener("click", collapseRules);
+document.getElementById("activate").addEventListener("click", activateRules);
 document.getElementById("clear-all").addEventListener("click", clearRules);
 
 document.getElementById("version-modal-open").addEventListener("click", () => document.getElementById('version-modal').showModal())
