@@ -1,4 +1,3 @@
-// import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/+esm'
 import Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@latest/+esm"
 import init, { run_wasm } from '../libasca/asca.js'
 await init()
