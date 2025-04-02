@@ -117,7 +117,7 @@ a:focus-visible {
 }
 
 .ignore {
-	filter: brightness(90%);
+	filter: brightness(80%);
 	/* background-color: hsl(199, 12%, 24%) !important; */
 
 }
