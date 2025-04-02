@@ -32,18 +32,42 @@ function addRule() {
 function clearRules() {
 	if (confirm("Are you sure you want to remove all rules?") === true) {
 		document.querySelectorAll('.draggable-element').forEach(e => e.remove());
+		updateCollapse(null)
+		updateActive(null)
 	}
-	updateCollapse(true)
 }
 
-function updateCollapse(coll) {
-	let colButton = document.getElementById("collapse");
-	if (coll) {
-		colButton.innerHTML = "Collapse"
+function updateCollapse(col) {
+	let button = document.getElementById("collapse");
+	if (col === true) {
+		button.disabled = false;
+		button.innerHTML = "Collapse"
 		toCollapse = true
-	} else {
-		colButton.innerHTML = "Expand"
+	} else if (col === false) {
+		button.disabled = false;
+		button.innerHTML = "Reexpand"
 		toCollapse = false
+	} else {
+		button.disabled = true;
+		button.innerHTML = "Collapse"
+		toCollapse = true
+	}
+}
+
+function updateActive(act) {
+	let button = document.getElementById("activate");
+	if (act === true) {
+		button.disabled = false;
+		button.innerHTML = "Disable"
+		allActive = true;
+	} else if (act === false) {
+		button.disabled = false;
+		button.innerHTML = "Enable"
+		allActive = false;
+	} else {
+		button.disabled = true;
+		button.innerHTML = "Enable"
+		allActive = true;
 	}
 }
 
@@ -67,10 +91,21 @@ function collapseRules() {
 
 function activateRules() {
 	let els = document.querySelectorAll(".draggable-element");
-	els.forEach(el => {
-		el.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-off', 'fa-toggle-on')
-		el.classList.remove('ignore');
-	})
+
+	if (allActive) {
+		els.forEach(el => {
+			el.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-on', 'fa-toggle-off')
+			el.classList.add('ignore');
+		})
+		updateActive(false)
+	} else {
+		els.forEach(el => {
+			el.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-off', 'fa-toggle-on')
+			el.classList.remove('ignore');
+		})
+		updateActive(true)
+	}
+
 }
 
 function getRules() {
@@ -101,6 +136,18 @@ function createRuleEvents(ruleEl) {
 	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
 			this.closest(".draggable-element").remove();
+			let activeArr = getRuleActiveBoxes();
+			if (!activeArr.length) {
+				updateActive(null);
+			} else if (!activeArr.some((e) => e == false)) {
+				updateActive(true);
+			}
+			let closedArr = getRuleClosedBoxes();
+			if (!closedArr.length) {
+				updateCollapse(null) 
+			} else if (!closedArr.some((e) => e == false)) {
+				updateCollapse(false)
+			}
 		}
 	})
 	// +/- button
@@ -121,10 +168,13 @@ function createRuleEvents(ruleEl) {
 	// On/Off Button
 	ruleEl.querySelector('.onoff').addEventListener('click', function() {
 		let i = this.querySelector('i');
-		if (i.classList.contains('fa-toggle-on')) {
-			i.classList.replace('fa-toggle-on', 'fa-toggle-off');
-		} else {
+
+		if (i.classList.contains('fa-toggle-off')) {
 			i.classList.replace('fa-toggle-off', 'fa-toggle-on');
+			updateActive(!getRuleActiveBoxes().some((e) => e == false));
+		} else {
+			i.classList.replace('fa-toggle-on', 'fa-toggle-off');
+			updateActive(false);
 		}
 		this.closest(".draggable-element").classList.toggle('ignore')
 	})
@@ -141,10 +191,10 @@ function getRuleActiveBoxes() {
 	let els = [...document.querySelectorAll(".draggable-element")];
 
 	els.forEach(el => {
-		if (el.classList.contains('ignore')) {
-			activeList.push(false)
-		} else {
+		if (el.querySelector('.onoff').querySelector('i').classList.contains('fa-toggle-on')) {
 			activeList.push(true)
+		} else {
+			activeList.push(false)
 		}
 	})
 	return activeList
@@ -215,7 +265,13 @@ function onReaderLoad(event) {
 	for (let i = 0; i < obj.rules.length; i++) {
 		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
 	}
-	updateCollapse(true)
+	if (obj.rules.length) {
+		updateCollapse(true)
+		updateActive(true)
+	} else {
+		updateCollapse(null)
+		updateActive(null)
+	}
 
 	if (obj.words) {
 		let lex = document.getElementById('lexicon');
@@ -349,8 +405,28 @@ function onLoad() {
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	let ruleActive = JSON.parse(localStorage.getItem("activeRules"));
 
-	if (ruleStates && !ruleStates.some((e) => e == false)) {
-		updateCollapse(false)
+	if (ruleStates && rules) {
+		if (ruleStates.length) {
+			updateCollapse(ruleStates.some((e) => e == false))
+		} else {
+			updateCollapse(null)
+		}
+	} else if (rules) {
+		updateCollapse(true)
+	} else {
+		updateCollapse(null)
+	}
+	
+	if (ruleActive) {
+		if (ruleActive.length) {
+			updateActive(!ruleActive.some((e) => e == false));
+		} else {
+			updateActive(null)
+		}
+	} else if (rules) {
+		updateActive(true)
+	} else {
+		updateActive(null)
 	}
 
 	let aliasInto = localStorage.getItem("aliasInto");
@@ -408,6 +484,7 @@ Sortable.create(document.getElementById('demo'), {
 });
 
 let toCollapse = true;
+let allActive = true;
 
 // Button click events
 document.getElementById("add").addEventListener("click", addRule);
