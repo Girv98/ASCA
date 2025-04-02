@@ -27,6 +27,7 @@ function addRule() {
 	demo.insertAdjacentHTML( "beforeend", template);
 	createRuleEvents(demo.lastChild);
 	updateCollapse(true)
+	updateActive(true)
 }
 
 function clearRules() {
