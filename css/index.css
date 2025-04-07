@@ -223,6 +223,13 @@ h1 {
 	color: var(--purple);
 }
 
+code {
+	background-color: var(--bgd);
+	border-radius: 6px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
 textarea {
 	font-size: 1rem;
     width: 100%;
