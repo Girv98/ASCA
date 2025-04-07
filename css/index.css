@@ -170,12 +170,13 @@ h1 {
 
 .rule {
 	white-space: pre !important;
-	min-height: 3lh;
-	/* max-height: 6lh; */
+	min-height: 4lh;
+	padding: 6px;
 }
 
 .description {
-	min-height: 3lh;
+	min-height: 4lh;
+	padding: 4px;
 }
 
 .name {
