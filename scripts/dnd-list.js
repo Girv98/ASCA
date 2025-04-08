@@ -23,11 +23,43 @@ const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></text
 // ------------ Rule Functions ------------
 
 function addRule() {
+	if (dirEnd) {
+		addRuleEnd()
+	} else {
+		addRuleBegin()
+	}
+}
+
+function addRuleEnd() {
 	let demo = document.getElementById("demo");
-	demo.insertAdjacentHTML( "beforeend", template);
-	createRuleEvents(demo.lastChild);
+	demo.insertAdjacentHTML("beforeend", template);
+	createRuleEvents(demo.lastElementChild);
 	updateCollapse(true)
 	updateActive(true)
+}
+
+function addRuleBegin() {
+	let demo = document.getElementById("demo");
+	demo.insertAdjacentHTML("afterbegin", template);
+	createRuleEvents(demo.firstElementChild);
+	updateCollapse(true)
+	updateActive(true)
+}
+
+function changeDirection() {
+	let addButton = document.getElementById("add");
+	let upDownButton = document.getElementById("updown");
+	if (dirEnd) {
+		upDownButton.querySelector("i").classList.replace('fa-chevron-down', 'fa-chevron-up')
+		upDownButton.title = "Change add direction to end"
+		addButton.title = "Add rule to beginning"
+		dirEnd = false
+	} else {
+		upDownButton.querySelector("i").classList.replace('fa-chevron-up', 'fa-chevron-down')
+		upDownButton.title = "Change add direction to beginning"
+		addButton.title = "Add rule to end"
+		dirEnd = true
+	}
 }
 
 function clearRules() {
@@ -486,9 +518,11 @@ Sortable.create(document.getElementById('demo'), {
 
 let toCollapse = true;
 let allActive = true;
+let dirEnd = true;
 
 // Button click events
 document.getElementById("add").addEventListener("click", addRule);
+document.getElementById("updown").addEventListener("click", changeDirection);
 document.getElementById("save").addEventListener("click", saveFile);
 document.getElementById("load").addEventListener("change", e => loadFile(e));
 document.getElementById("run").addEventListener("click", runASCA);

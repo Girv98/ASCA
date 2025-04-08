@@ -119,7 +119,6 @@ a:focus-visible {
 .ignore {
 	filter: brightness(80%);
 	/* background-color: hsl(199, 12%, 24%) !important; */
-
 }
 
 .ignore .onoff {
@@ -150,7 +149,7 @@ h1 {
 	font-size: 1rem;	
 }
 
-.custom-button:focus-visible {
+.custom-button:focus-visible, .dropdown button:focus-visible {
 	outline: var(--green) 2px solid;
 	outline-offset: 2px;
 }
@@ -158,6 +157,35 @@ h1 {
 .custom-button:disabled,
 .custom-button[disabled] {
 	filter: brightness(75%);
+}
+
+.dropdown {
+	padding: 0;
+	display: inline-block;
+	cursor: default;
+}
+
+.dropdown button {
+	box-sizing: border-box;
+	float: left;
+	width: max-content;
+	height: 100%;
+	text-decoration: none;
+	color: var(--bgm);
+	border: none;
+	cursor: pointer;
+	background: var(--green);
+	font-size: 1rem;	
+	margin: 0;
+}
+
+#add {
+	border-radius: 10px 0 0 10px;
+}
+
+#updown {
+	border-radius: 0 10px 10px 0;
+	border-left: 0.1rem solid var(--bgd);
 }
 
 .title {
