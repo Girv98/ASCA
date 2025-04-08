@@ -225,9 +225,9 @@ h1 {
 
 code {
 	background-color: var(--bgd);
-	border-radius: 6px;
-	padding-left: 2px;
-	padding-right: 2px;
+	border-radius: 0.6ch;
+	padding-left: 0.6ch;
+	padding-right: 0.6ch;
 }
 
 textarea {
