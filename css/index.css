@@ -87,6 +87,7 @@ div.thirds.sounds {
 	top: 0;
 	background-color: var(--bgd);
 	border-radius: 10px;
+	z-index: 9;
 }
 
 a:focus-visible {
