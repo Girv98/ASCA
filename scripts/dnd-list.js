@@ -7,9 +7,12 @@ const template = `
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
-			<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on"></i></button>
-			<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus"></i></button>
-			<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times"></i></button>
+				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-copy fa-rotate-270"></i></button>-->
+				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
+				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
+				<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on"></i></button>
+				<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus"></i></button>
+				<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times"></i></button>
 			</div>
 		</div>
 		<div class="cont">
@@ -283,6 +286,31 @@ function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 	createRuleEvents(ruleElement);
 };
 
+// const U = document.getElementById("synchronise-scroll");
+// var d = !1;
+// x.addEventListener("scroll", (function(t) {
+// 	if (U.checked)
+// 		if (d)
+// 			d = !1;
+// 		else {
+// 			const t = x.scrollTop / x.scrollHeight;
+// 			d = !0,
+// 			k.scrollTop = t * k.scrollHeight
+// 		}
+// }
+// ));
+// k.addEventListener("scroll", (function(t) {
+// 	if (U.checked)
+// 		if (d)
+// 			d = !1;
+// 		else {
+// 			const t = k.scrollTop / k.scrollHeight;
+// 			d = !0,
+// 			x.scrollTop = t * x.scrollHeight
+// 		}
+// }
+// ));
+
 // --------------------------------------------------
 
 function onReaderLoad(event) {
@@ -330,6 +358,8 @@ function onReaderLoad(event) {
 	}
 	fr.style.height = "1px";
 	fr.style.height = (fr.scrollHeight)+"px";
+
+	document.getElementById("trace").value = -1
 };
 
 function loadFile(event) {
@@ -380,13 +410,84 @@ function saveFile() {
 // }
 
 
+// function getValues() {
+// 	let selectElement = document.getElementById("trace");
+// 	return [...selectElement.options].map(o => o.value)
+// }
+  
+// function getOptionText() {
+// 	let selectElement = document.getElementById("trace");
+// 	return [...selectElement.options].map(o => o.text);
+// }
+
+function getTraceState() {
+	return document.getElementById("trace").value
+}
+
+function updateTrace(e) {
+	// console.log(e)
+	let traceBox = document.getElementById("trace");
+	let lex = document.getElementById("lexicon");
+	let lexList = lex.value.split('\n');
+	// let traceText = [...traceBox.options].map(o => o.text);
+	// let traceVals = [...traceBox.options].map(o => o.value);
+	
+	// let lexLines = lex.value.substr(0, lex.selectionStart).split("\n");
+	// let lexLineNum = lexLines.length;
+	// let lexColNum = lexLines[lexLines.length-1].length+1;
+
+	// let eLines = lex.value.substr(0, e.target.selectionStart).split("\n");
+	// let eLineNum = eLines.length;
+	// let eColNum = eLines[eLines.length-1].length+1;
+	
+	traceBox.length = 1;
+	lexList.map((w, i) => {
+		if (w.trim() !== "") {
+			let opt = document.createElement("option");
+			opt.value = i;
+			opt.innerHTML = w;
+			traceBox.append(opt);
+		}
+	})
+
+	traceBox.value = -1
+
+
+	// if (e.key === 'Enter') {
+	// 	traceBox.length = 1;
+	// 	lexList.map((w, i) => {
+	// 		if (w !== "") {
+	// 			let opt = document.createElement("option");
+	// 			opt.value = i;
+	// 			opt.innerHTML = w;
+	// 			traceBox.append(opt);
+	// 		}
+	// 	})
+	// } else if (e.key === 'Backspace') {
+	// 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+	// } else if (e.key === 'Delete') { 
+	// 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+	// } else if (lexList[lexLineNum-1].trim() !== "") {
+	// 	if (traceText.length <= 1) {
+	// 		let opt = document.createElement("option");
+	// 		opt.value = lexLineNum;
+	// 		opt.innerHTML = lexList[lexLineNum-1];
+	// 		traceBox.append(opt);
+	// 	} else {
+	// 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
+	// 	}
+	// }
+
+}
+
+
 // Run ASCA
 function runASCA() {
 	let rawWordList = document.getElementById("lexicon").value;
 	let ruleList = getRules();
 	let ruleClosed = getRuleClosedBoxes();
 	let ruleActive = getRuleActiveBoxes();
-
+	let traceState = getTraceState();
 	let [aliasInto, aliasFrom] = getAliases();
 
 	console.log("Saving to local storage")
@@ -396,12 +497,9 @@ function runASCA() {
 	localStorage.setItem("activeRules", JSON.stringify(ruleActive));
 	localStorage.setItem("aliasInto", aliasInto);
 	localStorage.setItem("aliasFrom", aliasFrom);
+	localStorage.setItem("trace", traceState);
 	
 	let wordList = rawWordList.split('\n')
-
-	// if (ruleList.length === 0 || wordList.length === 0) {
-	// 	return;
-	// }
 
 	for (let i = ruleList.length - 1; i >= 0; i--) {
 		if (!ruleActive[i]) {
@@ -409,12 +507,12 @@ function runASCA() {
 		}
 	}
 
-	// if (ruleList.length === 0) {
-	// 	return;
-	// }
-
 	console.log("Running ASCA...");
-	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'));
+	let asdf = null;
+	if (traceState >= 0) {
+		asdf = traceState
+	}
+	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), asdf);
 	console.log("Done");
 
 	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
@@ -437,6 +535,7 @@ function onLoad() {
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	let ruleActive = JSON.parse(localStorage.getItem("activeRules"));
+	let traceState = JSON.parse(localStorage.getItem("trace"));
 
 	if (ruleStates && rules) {
 		if (ruleStates.length) {
@@ -497,6 +596,24 @@ function onLoad() {
 			}
 		}
 	}
+
+	if (words) {
+		let wordList = words.split('\n');
+		let selectTag = document.getElementById("trace");
+
+		wordList.map((w, i) => {
+			if (w !== "") {
+				let opt = document.createElement("option");
+				opt.value = i;
+				opt.innerHTML = w;
+				selectTag.append(opt);
+
+				if ((traceState || traceState === 0) && traceState === i) {
+					selectTag.value = traceState;
+				}
+			}
+		})		
+	}
 }
 
 // ------------ On page load events ------------
@@ -550,6 +667,8 @@ document.querySelectorAll('dialog').forEach(item => {
 		}
 	})
 });
+
+document.getElementById("lexicon").addEventListener("keyup", (e) => updateTrace(e));
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes

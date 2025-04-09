@@ -27,8 +27,7 @@
 	font-optical-sizing: auto;
 	font-style: normal;
 	/* font-weight: 500; */
-	font-variation-settings:
-		"wdth" 80;
+	font-variation-settings: "wdth" 80;
 }
 
 html {
@@ -305,10 +304,26 @@ textarea::placeholder {
 }
 
 .options {
-	padding: 1% 0 0 2%;
-	/* width:100%; */
-	overflow:hidden;
-	font-size: 15px;
+	padding: 2% 0;
+	display: flex;
+	flex-wrap: nowrap;
+	align-content: center;
+	align-items: center;
+}
+
+#trace {
+	width: 100%;
+	font-size: 1rem;
+	background-color: var(--bgl);
+	color: var(--green);
+	border: none;
+	border-radius: 4px;
+	scrollbar-width: thin;
+	height: 1.5lh 
+}
+
+#trace:focus-visible {
+	outline: 2px solid var(--green);
 }
 
 label {
