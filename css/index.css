@@ -31,6 +31,10 @@
 		"wdth" 80;
 }
 
+html {
+	scrollbar-gutter: stable !important;
+}
+
 body {
 	height: 100%;
 	width: 100%;
