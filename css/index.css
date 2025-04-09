@@ -83,6 +83,10 @@ div.thirds.sounds {
 	display: flex;
 	flex-wrap: wrap;
 	align-content: center;
+	position: sticky;
+	top: 0;
+	background-color: var(--bgd);
+	border-radius: 10px;
 }
 
 a:focus-visible {
@@ -309,6 +313,9 @@ textarea::placeholder {
 	flex-wrap: nowrap;
 	align-content: center;
 	align-items: center;
+	position: sticky;
+	top: 0;
+	background-color: var(--bgd);
 }
 
 #trace {
