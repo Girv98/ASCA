@@ -240,7 +240,7 @@ h1 {
 	height: 100%;
 }
 
-.maxmin, .delete, .onoff {
+.maxmin, .delete, .onoff, .copy {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
@@ -255,7 +255,7 @@ h1 {
 	cursor: pointer;
 }
 
-.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible {
+.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .copy:focus-visible {
 	color: var(--purple);
 }
 

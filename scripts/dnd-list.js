@@ -7,9 +7,9 @@ const template = `
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
-				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-copy fa-rotate-270"></i></button>-->
 				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
 				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
+				<button class="copy" title="Copy Rule Below" aria-label="Copy Rule"><i class="fas fa-copy"></i></button>
 				<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on"></i></button>
 				<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus"></i></button>
 				<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times"></i></button>
@@ -36,6 +36,7 @@ function addRule() {
 function addRuleEnd() {
 	let demo = document.getElementById("demo");
 	demo.insertAdjacentHTML("beforeend", template);
+	demo.lastElementChild.querySelector(".copy").querySelector("i").classList.add('fa-rotate-90')
 	createRuleEvents(demo.lastElementChild);
 	updateCollapse(true)
 	updateActive(true)
@@ -44,6 +45,7 @@ function addRuleEnd() {
 function addRuleBegin() {
 	let demo = document.getElementById("demo");
 	demo.insertAdjacentHTML("afterbegin", template);
+	demo.firstElementChild.querySelector(".copy").querySelector("i").title = "Copy Rule Above"
 	createRuleEvents(demo.firstElementChild);
 	updateCollapse(true)
 	updateActive(true)
@@ -52,6 +54,7 @@ function addRuleBegin() {
 function changeDirection() {
 	let addButton = document.getElementById("add");
 	let upDownButton = document.getElementById("updown");
+	let txt = "Copy Rule Above"
 	if (dirEnd) {
 		upDownButton.querySelector("i").classList.replace('fa-chevron-down', 'fa-chevron-up')
 		upDownButton.title = "Change add direction to end"
@@ -62,7 +65,14 @@ function changeDirection() {
 		upDownButton.title = "Change add direction to beginning"
 		addButton.title = "Add rule to end"
 		dirEnd = true
+		txt = "Copy Rule Below"
 	}
+
+	document.querySelectorAll(".draggable-element").forEach(el => {
+		let copyButton = el.querySelector(".copy").querySelector("i");
+		copyButton.classList.toggle('fa-rotate-90')
+		copyButton.title = txt
+	})
 }
 
 function clearRules() {
@@ -200,7 +210,6 @@ function createRuleEvents(ruleEl) {
 		}
 		this.closest(".draggable-element").querySelector(".cont").classList.toggle('invisible')
 	})
-
 	// On/Off Button
 	ruleEl.querySelector('.onoff').addEventListener('click', function() {
 		let i = this.querySelector('i');
@@ -214,6 +223,18 @@ function createRuleEvents(ruleEl) {
 		}
 		this.closest(".draggable-element").classList.toggle('ignore')
 	})
+	// Copy Button
+	ruleEl.querySelector('.copy').addEventListener('click', function() {
+		let el = this.closest(".draggable-element");
+		let clone = el.cloneNode(true);
+		createRuleEvents(clone)
+		if (dirEnd) {
+			el.parentNode.insertBefore(clone, el.nextSibling);
+		} else {
+			el.parentNode.insertBefore(clone, el);
+		}
+	})
+
 	// Custom field-sizing	
 	addResizeEvents(ruleEl.querySelector('.rule'))
 	addResizeEvents(ruleEl.querySelector('.description'))
@@ -281,6 +302,10 @@ function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 	if (!ruleActive) {
 		ruleElement.querySelector(".onoff").querySelector("i").classList.replace('fa-toggle-on', 'fa-toggle-off')
 		ruleElement.classList.add('ignore')
+	}
+
+	if (dirEnd) {
+		ruleElement.querySelector(".copy").querySelector("i").classList.add('fa-rotate-90')
 	}
 
 	createRuleEvents(ruleElement);
