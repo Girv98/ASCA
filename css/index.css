@@ -473,7 +473,7 @@ footer {
 	}
 }
 
-@media screen and (max-width: 950) {
+@media screen and (max-width: 950px) {
 	.name {
 		max-width: 55%;
 	}
@@ -484,10 +484,6 @@ footer {
 		flex-direction: column;
 		padding: 1vw;
 		width: 100%;
-	}
-
-	.name {
-		max-width: auto;
 	}
 
 	.thirds {
@@ -507,12 +503,32 @@ footer {
 	}
 }
 
-@media screen and (max-width: 380px) {
-	/* .name {
-		max-width: auto !important;
-		overflow: hidden;
-	} */
+@media screen and (max-width: 470px) {
+	.name {
+		max-width: 50%;
+		/* overflow: hidden; */
+	}
 	.draggable-element {
 		overflow: hidden;
+	}
+}
+
+@media screen and (max-width: 440px) {
+	.title {
+		display: block;
+	}
+	.name {
+		max-width: 100%;
+		width: 100%;
+		border-radius: 6px;
+		padding: 0;
+	}
+	.title-btns {
+		display: flex;
+		float: none;
+		width: 100%;
+		justify-content: space-around;
+		padding-top: 2%;
+		padding-bottom: 0;
 	}
 }
