@@ -384,7 +384,7 @@ function onReaderLoad(event) {
 	fr.style.height = "1px";
 	fr.style.height = (fr.scrollHeight)+"px";
 
-	document.getElementById("trace").value = -1
+	updateTrace();
 };
 
 function loadFile(event) {
