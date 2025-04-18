@@ -204,6 +204,10 @@ h1 {
 	padding: 2%;
 }
 
+.cont {
+	padding-top: 0;
+}
+
 .rule {
 	white-space: pre !important;
 	min-height: 4lh;
