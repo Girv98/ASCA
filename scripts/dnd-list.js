@@ -87,15 +87,15 @@ function updateCollapse(col) {
 	let button = document.getElementById("collapse");
 	if (col === true) {
 		button.disabled = false;
-		button.innerHTML = "Collapse"
+		button.innerHTML = "Collapse All"
 		toCollapse = true
 	} else if (col === false) {
 		button.disabled = false;
-		button.innerHTML = "Reexpand"
+		button.innerHTML = "Reexpand All"
 		toCollapse = false
 	} else {
 		button.disabled = true;
-		button.innerHTML = "Collapse"
+		button.innerHTML = "Collapse All"
 		toCollapse = true
 	}
 }
@@ -104,15 +104,15 @@ function updateActive(act) {
 	let button = document.getElementById("activate");
 	if (act === true) {
 		button.disabled = false;
-		button.innerHTML = "Disable"
+		button.innerHTML = "Disable All"
 		allActive = true;
 	} else if (act === false) {
 		button.disabled = false;
-		button.innerHTML = "Enable"
+		button.innerHTML = "&nbspEnable All"
 		allActive = false;
 	} else {
 		button.disabled = true;
-		button.innerHTML = "Enable"
+		button.innerHTML = "Enable&nbsp All"
 		allActive = true;
 	}
 }
@@ -339,7 +339,7 @@ function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 // --------------------------------------------------
 
 function onReaderLoad(event) {
-	console.log("Loading from file")
+	console.log("Parsing file...")
 	var obj = JSON.parse(event.target.result);
 
 	if (!obj.words && !obj.rules) {
@@ -367,24 +367,18 @@ function onReaderLoad(event) {
 	}
 
 	let to = document.getElementById("alias-into");
-	if (obj.into) {
-		to.value = obj.into.join('\n');
-	} else {
-		to.value = ""
-	}
+	if (obj.into) { to.value = obj.into.join('\n'); } else { to.value = "" }
 	to.style.height = "1px";
 	to.style.height = (to.scrollHeight)+"px";
 
 	let fr = document.getElementById("alias-from");
-	if (obj.from) {
-		fr.value = obj.from.join('\n');
-	} else {
-		fr.value = ""
-	}
+	if (obj.from) { fr.value = obj.from.join('\n'); } else { fr.value = "" }
 	fr.style.height = "1px";
 	fr.style.height = (fr.scrollHeight)+"px";
 
 	updateTrace();
+
+	console.log("File parsed")
 };
 
 function loadFile(event) {
@@ -555,12 +549,13 @@ function onLoad() {
 	addResizeEvents(document.getElementById("alias-into"))
 	addResizeEvents(document.getElementById("alias-from"))
 
-	console.log("Loading local storage")
+	console.log("Parsing local storage...")
 	let words = localStorage.getItem("words");
 	let rules = JSON.parse(localStorage.getItem("rules"));
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	let ruleActive = JSON.parse(localStorage.getItem("activeRules"));
 	let traceState = JSON.parse(localStorage.getItem("trace"));
+	console.log("Local storage parsed")
 
 	if (ruleStates && rules) {
 		if (ruleStates.length) {
@@ -666,6 +661,12 @@ let dirEnd = true;
 document.getElementById("add").addEventListener("click", addRule);
 document.getElementById("updown").addEventListener("click", changeDirection);
 document.getElementById("save").addEventListener("click", saveFile);
+document.getElementById("load-label").addEventListener("keyup", e => {
+	const load = document.getElementById("load");
+	if (e.key === "Enter" && load) {
+		load.click();
+	}
+});
 document.getElementById("load").addEventListener("change", e => loadFile(e));
 document.getElementById("run").addEventListener("click", runASCA);
 document.getElementById("collapse").addEventListener("click", collapseRules);

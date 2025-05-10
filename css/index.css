@@ -18,6 +18,22 @@
     src: url(../assets/fonts/NotoSansMono-VariableFont_wdth\,wght.ttf);
 }
 
+.button-group a {
+	display: inline-block; /* Make it behave like a block element */
+	padding: 10px 20px; /* Add padding around the text */
+	background-color: #4CAF50; /* Set a background color */
+	color: white; /* Set text color */
+	text-decoration: none; /* Remove the underline */
+	border-radius: 5px; /* Optional: Add rounded corners */
+	cursor: pointer; /* Change cursor to indicate interactivity */
+}
+
+/* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+} */
+
 /* 
 <weight>: from 100 to 900
 <width>: from 62.5 to 100 
@@ -117,11 +133,16 @@ a:focus-visible {
 	text-decoration: none;
 }
 
-#demo .draggable-element {
+.draggable-element {
 	margin: 1%;
 	background: var(--bgl);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
+}
+
+.draggable-element:focus, .draggable-element:focus-visible {
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
 }
 
 .ignore {
@@ -157,7 +178,10 @@ h1 {
 	font-size: 1rem;	
 }
 
-.custom-button:focus-visible, .dropdown button:focus-visible {
+.custom-button:focus-visible, 
+.button-group button:focus-visible,
+.button-group a:focus-visible,
+.button-group label:focus-visible {
 	outline: var(--green) 2px solid;
 	outline-offset: 2px;
 }
@@ -167,13 +191,14 @@ h1 {
 	filter: brightness(75%);
 }
 
-.dropdown {
+.button-group {
 	padding: 0;
 	display: inline-block;
 	cursor: default;
 }
 
-.dropdown button {
+.button-group button {
+	/* padding: 10px 6px 10px 6px; */
 	box-sizing: border-box;
 	float: left;
 	width: max-content;
@@ -187,13 +212,29 @@ h1 {
 	margin: 0;
 }
 
-#add {
-	border-radius: 10px 0 0 10px;
+.button-group a, .button-group label {
+	text-align: center;
+	padding: 10px 6px 10px 6px;
+	box-sizing: border-box;
+	float: left;
+	width: max-content;
+	height: 100%;
+	text-decoration: none;
+	color: var(--bgm);
+	border: none;
+	cursor: pointer;
+	background: var(--green);
+	font-size: 1rem;	
+	margin: 0;
 }
 
-#updown {
-	border-radius: 0 10px 10px 0;
-	border-left: 0.1rem solid var(--bgd);
+.join-left {
+	border-radius: 10px 0 0 10px !important;
+}
+
+.join-right {
+	border-radius: 0 10px 10px 0 !important;
+	border-left: 0.1rem solid var(--bgd) !important;
 }
 
 .title {
@@ -260,7 +301,9 @@ h1 {
 }
 
 .maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .copy:focus-visible {
-	color: var(--purple);
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 
 code {
@@ -423,14 +466,14 @@ footer {
 }
 
 /* Firefox */
-.custom-button::-moz-selection { 
+.custom-button::-moz-selection, .custom-button *::-moz-selection { 
 	background: #543A48 !important;
-	color: var(--green);
+	color: var(--green) !important;
 }
   
-.custom-button::selection {
+.custom-button::selection, .custom-button *::selection {
 	background: #543A48 !important;
-	color: var(--green);
+	color: var(--green) !important;
 }
 
 @media screen and (max-width: 2400px) {
