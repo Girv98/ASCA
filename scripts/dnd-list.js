@@ -3,7 +3,7 @@ import init, { run_wasm } from '../libasca/asca.js'
 await init()
 
 const template = `
-	<div class="draggable-element">
+	<div class="draggable-element" tabindex="0">
 		<div class="title">
 			<input type="text" class="name" placeholder = "Sound Change Title...">
 			<div class="title-btns">
@@ -178,6 +178,16 @@ function getAliases() {
 }
 
 function createRuleEvents(ruleEl) {
+
+	ruleEl.addEventListener('keydown', e => ruleHandleKeyboardDown(e));
+	ruleEl.addEventListener('keyup', e => ruleHandleKeyboardUp(e));
+	ruleEl.addEventListener('click', e => {
+		if (e.target.classList.contains("title")) {
+			e.preventDefault();
+			ruleEl.focus();
+		}
+	})
+
 	// x button
 	ruleEl.querySelector('.delete').addEventListener('click', function() {
 		if (confirm("Are you sure you want to remove this rule?") === true) {
@@ -235,9 +245,182 @@ function createRuleEvents(ruleEl) {
 		}
 	})
 
+	// VSCode-like Alt Reordering
+	ruleEl.querySelector('.rule').addEventListener("keydown", (e) => checkMoveOrDup(e));
+
 	// Custom field-sizing	
 	addResizeEvents(ruleEl.querySelector('.rule'))
 	addResizeEvents(ruleEl.querySelector('.description'))
+}
+
+function ruleHandleKeyboardDown(e) {
+	if (e.target !== e.currentTarget) {
+		// jump to outer
+		if (e.shiftKey && e.key == 'Backspace') {
+			e.preventDefault();
+			e.target.closest(".draggable-element").focus();
+		}
+		return;
+	}
+
+	if (e.altKey) {
+		if (e.key == 'ArrowUp') {
+			e.preventDefault();
+			let parent = document.getElementById("demo");
+			parent.insertBefore(e.target, e.target.previousElementSibling);
+			e.target.focus();
+			console.log("fjdfn")
+		} else if (e.key == 'ArrowDown') {
+			e.preventDefault();
+			let parent = document.getElementById("demo");
+
+			if (e.target.nextElementSibling) {
+				parent.insertBefore(e.target.nextElementSibling, e.target);
+			} else {
+				parent.insertBefore(e.target, parent.firstElementChild);
+				e.target.focus();
+			}
+		}
+		return;
+	}
+
+	if (e.shiftKey) {
+		if (e.key == 'ArrowUp') {
+			e.preventDefault();
+			e.target.previousElementSibling?.focus()
+		} else if (e.key == 'ArrowDown') {
+			e.preventDefault();
+			e.target.nextElementSibling?.focus()
+		}
+		return;
+	}
+}
+
+function ruleHandleKeyboardUp(e) {
+	if (e.shiftKey) {
+		if (e.key == 'N') {
+			// jump to title
+			e.preventDefault();
+			e.target.querySelector(".name").focus();
+		} else if (e.key == 'R') {
+			// jump to rule
+			e.preventDefault();
+			e.target.querySelector('.maxmin i').classList.replace('fa-plus', 'fa-minus');
+			e.target.querySelector(".cont").classList.remove('invisible')
+			e.target.querySelector(".rule").focus();
+			updateCollapse(true)
+		} else if (e.key == 'D') {
+			// jump to description
+			e.preventDefault();
+			e.target.querySelector('.maxmin i').classList.replace('fa-plus', 'fa-minus');
+			e.target.querySelector(".cont").classList.remove('invisible')
+			e.target.querySelector(".description").focus();
+			updateCollapse(true)
+		} else if (e.key == 'T') {
+			// toggle
+			let i = e.target.querySelector('.onoff i');
+
+			if (i.classList.contains('fa-toggle-off')) {
+				i.classList.replace('fa-toggle-off', 'fa-toggle-on');
+				updateActive(!getRuleActiveBoxes().some((e) => e == false));
+			} else {
+				i.classList.replace('fa-toggle-on', 'fa-toggle-off');
+				updateActive(false);
+			}
+			e.target.classList.toggle('ignore')
+		} else if (e.key === 'Home') {
+			e.preventDefault();
+			document.getElementById("demo")?.firstElementChild?.focus();
+		} else if (e.key === 'End') {
+			e.preventDefault();
+			document.getElementById("demo")?.lastElementChild?.focus();
+		}
+
+		return;
+	}
+
+	if (e.target === e.currentTarget) {
+		if (e.key === 'Delete') {
+			e.preventDefault();
+			if (confirm("Are you sure you want to remove this rule?") === true) {
+				let el = e.target.closest(".draggable-element");
+				if (el.previousElementSibling) {
+					el.previousElementSibling.focus();
+				} else if (el.nextElementSibling) {
+					el.nextElementSibling.focus();
+				}
+				el.remove();
+				let activeArr = getRuleActiveBoxes();
+				if (!activeArr.length) {
+					updateActive(null);
+				} else if (!activeArr.some((e) => e == false)) {
+					updateActive(true);
+				}
+				let closedArr = getRuleClosedBoxes();
+				if (!closedArr.length) {
+					updateCollapse(null) 
+				} else if (!closedArr.some((e) => e == false)) {
+					updateCollapse(false)
+				}
+			}
+		} else if (e.key === 'Enter') {
+			e.preventDefault();
+			let i = e.target.querySelector('.maxmin i');
+			if (i.classList.contains('fa-minus')) {
+				i.classList.replace('fa-minus', 'fa-plus');
+				if (!getRuleClosedBoxes().some((e) => e == false)) {
+					updateCollapse(false)
+				}
+			} else {
+				i.classList.replace('fa-plus', 'fa-minus');
+				updateCollapse(true)
+			}
+			e.target.querySelector(".cont").classList.toggle('invisible')
+		}
+
+		return;
+	}
+}
+
+function globalHandleKeyUp(e) {
+	if (e.altKey) {
+		switch (e.key) {
+			// Move to rules
+			case 'r': 
+				e.preventDefault();
+				document.getElementById("demo")?.firstElementChild?.focus();
+				return;
+			// Move to input
+			case 'w':
+				e.preventDefault();
+				document.getElementById("lexicon")?.focus();
+				return;
+			// Add rule
+			case 'a': e.preventDefault(); addRule(); return;
+			case 'q': e.preventDefault(); changeDirection(); return;
+			// Collapse
+			case 'c': e.preventDefault(); collapseRules(); return;
+			// Clear
+			case 'x': e.preventDefault(); clearRules(); return;
+			// Toggle
+			case 'z': e.preventDefault(); activateRules(); return;
+			default: return;
+		}
+	}
+	if (e.shiftKey) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			runASCA();
+		}
+	}
+}
+
+function globalHandleKeyDown(e) {
+	if (e.shiftKey) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+		}
+	}
 }
 
 /** 
@@ -695,6 +878,139 @@ document.querySelectorAll('dialog').forEach(item => {
 });
 
 document.getElementById("lexicon").addEventListener("keyup", (e) => updateTrace(e));
+
+document.addEventListener("keyup", (e) => globalHandleKeyUp(e));
+document.addEventListener("keydown", (e) => globalHandleKeyDown(e));
+
+// VSCode-like Alt Reordering
+document.getElementById("lexicon").addEventListener("keydown", (e) => checkMoveOrDup(e));
+document.getElementById("alias-into").addEventListener("keydown", (e) => checkMoveOrDup(e));
+document.getElementById("alias-from").addEventListener("keydown", (e) => checkMoveOrDup(e));
+
+function checkMoveOrDup(e) {
+	if (e.altKey && e.shiftKey) {
+		if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			dupUp(e);
+		} else if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			dupDown(e);
+		}
+	} else if (e.altKey) {
+		if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			moveUp(e);
+		} else if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			moveDown(e);
+		}
+	}
+}
+
+function dupUp(event) {
+	const textarea = event.currentTarget;
+
+	let lines = textarea.value.split('\n');
+	const posStart = textarea.selectionStart;
+	const posEnd = textarea.selectionEnd;
+
+	const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+	const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+	let els = lines.slice(lineStart, lineEnd+1);
+
+	lines.splice(lineEnd+1, 0, ...els);
+
+	textarea.value = lines.join("\n");
+	textarea.setSelectionRange(posStart, posEnd)
+
+	resize(textarea)
+}
+
+function dupDown(event) {
+	const textarea = event.currentTarget;
+
+	let lines = textarea.value.split('\n');
+	const posStart = textarea.selectionStart;
+	const posEnd = textarea.selectionEnd;
+
+	const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+	const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+	let els = lines.slice(lineStart, lineEnd+1);
+
+	lines.splice(lineEnd+1, 0, ...els);
+
+	let len = 0;
+
+	els.forEach(el => { len += el.length + 1 });
+
+	let newPosStart = posStart + len;
+	let newPosEnd = newPosStart + (posEnd-posStart);
+	
+
+	textarea.value = lines.join("\n");
+	textarea.setSelectionRange(newPosStart, newPosEnd)
+
+	resize(textarea)
+}
+
+function moveUp(event) {
+	const textarea = event.currentTarget;
+	
+	let lines = textarea.value.split('\n');
+	const posStart = textarea.selectionStart;
+	const posEnd = textarea.selectionEnd;
+
+	const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+	const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+	if (lineStart <= 0) return;
+
+	let els = lines.slice(lineStart, lineEnd+1);
+
+	let temp = lines[lineStart-1];
+
+	let i= 0;
+	for (; i < els.length; i++) {
+		lines[lineStart-1+i] = els[i];
+	}
+	lines[lineStart-1+i] = temp;
+	
+	let newPosStart = posStart - 1 - lines[lineEnd].length
+	let newPosEnd = newPosStart + (posEnd-posStart);
+	
+	textarea.value = lines.join("\n");
+	textarea.setSelectionRange(newPosStart, newPosEnd)
+}
+
+function moveDown(event) {
+	const textarea = event.currentTarget;
+
+	let lines = textarea.value.split('\n');
+	const posStart = textarea.selectionStart;
+	const posEnd = textarea.selectionEnd;
+
+	const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+	const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+	if (lineEnd+1 > lines.length-1) return;
+	
+	let els = lines.slice(lineStart, lineEnd+1);
+
+	let temp = lines[lineEnd+1];
+
+	lines[lineStart] = temp;
+	for (let i = 1; i < els.length+1; i++) {
+		lines[lineStart+i] = els[i-1];
+	}
+
+	let newPosStart = posStart + 1 + lines[lineStart].length;
+	let newPosEnd = newPosStart + (posEnd-posStart);
+	
+	textarea.value = lines.join("\n");
+	textarea.setSelectionRange(newPosStart, newPosEnd)
+}
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
