@@ -34,6 +34,8 @@
 				<h3>0.12</h3>
 				<ul>
 					<li><b>Lib</b> Segment length character <code>ː</code> is correctly omitted when removing a long segment</li>
+					<li><b>Ui:</b> The values of any segments that couldn't be represented are now displayed at the bottom of the output.</li>
+					<li><b>Ui:</b> These unknown segments are colour-coded in the output for easier debugging.</li>
 					<li><b>Ui:</b> Added hotkeys for easier keyboard navigation</li>
 				</ul>
 				<h3>0.11</h3>
@@ -152,7 +154,9 @@
 		<div class="thirds outlex">
 			<h1>Output</h1>
 			<div class = "wrapper">
-				<!-- Output lives here -->
+				<div class="scroller">
+					<!-- Output lives here -->
+				</div>
 			</div>
 		</div>
 	</section>

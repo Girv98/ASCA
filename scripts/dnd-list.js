@@ -21,7 +21,7 @@ const template = `
 		</div>
 	</div>`;
 
-const outlexTemplate = `<textarea id="output" spellcheck="false" readonly></textarea>`;
+const outlexTemplate = `<div id="output" role="textbox" contenteditable="true" spellcheck="false" onbeforeinput="return false" aria-multiline="true"></div>`;
 
 // ------------ Rule Functions ------------
 
@@ -471,11 +471,11 @@ function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 	let r = ruleElement.querySelector(".rule");
 	r.value = rule;
 	r.style.height = "1px";
-	r.style.height = (r.scrollHeight)+"px";
+	r.style.height = (r.scrollHeight+16)+"px";
 	let d = ruleElement.querySelector(".description");
 	d.value = desc;
 	d.style.height = "1px";
-	d.style.height = (d.scrollHeight)+"px";
+	d.style.height = (d.scrollHeight+16)+"px";
 
 	if (ruleClosed) {
 		ruleElement.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
@@ -546,18 +546,18 @@ function onReaderLoad(event) {
 		let lex = document.getElementById('lexicon');
 		lex.value = obj.words.join('\n');
 		lex.style.height = "1px";
-		lex.style.height = (lex.scrollHeight)+"px";
+		lex.style.height = (lex.scrollHeight+16)+"px";
 	}
 
 	let to = document.getElementById("alias-into");
 	if (obj.into) { to.value = obj.into.join('\n'); } else { to.value = "" }
 	to.style.height = "1px";
-	to.style.height = (to.scrollHeight)+"px";
+	to.style.height = (to.scrollHeight+16)+"px";
 
 	let fr = document.getElementById("alias-from");
 	if (obj.from) { fr.value = obj.from.join('\n'); } else { fr.value = "" }
 	fr.style.height = "1px";
-	fr.style.height = (fr.scrollHeight)+"px";
+	fr.style.height = (fr.scrollHeight+16)+"px";
 
 	updateTrace();
 
@@ -709,22 +709,86 @@ function runASCA() {
 		}
 	}
 
+	let traceNumber = (traceState >= 0) ? traceState : null;
 	console.log("Running ASCA...");
-	let asdf = null;
-	if (traceState >= 0) {
-		asdf = traceState
-	}
-	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), asdf);
+	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), traceNumber);
 	console.log("Done");
 
-	let outlexWrapper = document.querySelector(".outlex").querySelector(".wrapper");
+	let output = res.get_output();
+
+	let outlexWrapper = document.querySelector(".outlex").querySelector(".scroller");
 	outlexWrapper.innerHTML = outlexTemplate;
 
 	let outputArea = document.getElementById('output');
-	outputArea.value = res.join('\n');
-	outputArea.style.height = "1px";
-	outputArea.style.height = (outputArea.scrollHeight)+"px";
+
+	let outputJoined = "";
 	
+	// handle unknowns
+	let unknowns = res.get_unknowns();
+	console.log(unknowns.length)
+	if (unknowns.length) {
+
+		let unknownsMap = {};
+		unknowns.forEach((val, i) => {
+			if (!unknownsMap[val]) unknownsMap[val] = [];
+			unknownsMap[val].push(i);
+		})
+
+		let unknownsUnique = [... new Set(unknowns)];
+
+		let len = Object.keys(unknownsUnique).length;
+
+		let colors = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)",  "var(--red)", "var(--yellow)"]
+
+		let occurence = -1;
+		output.forEach((val) => {
+			outputJoined += '<div class="out-line"><span>'
+			let parts = val.split('�')
+			if (parts.length == 1) {
+				if (val == "") {
+					outputJoined += "<br>"
+				} else {
+					outputJoined += val;
+				}
+			} else {
+				for (let p = 0; p < parts.length; p++) {
+					outputJoined += parts[p];
+					
+					if (p < parts.length - 1) {
+						occurence += 1;
+						let ind = unknownsUnique.indexOf(unknowns[occurence]);
+						let color = (ind < len) ? colors[ind] : "var(--fg)";
+						outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
+					}
+
+				}
+			}
+			outputJoined += "</span></div>";
+		});
+
+		let string = unknownsUnique.map((val, ind) => {
+			let color = (ind < len) ? colors[ind] : "var(--fg)";
+			let number = unknownsMap[val].length;
+			let counts = (number == 1) ? "count" : "counts";
+			return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
+		}).join('');
+
+		outputJoined += '<div class="out-line"><span><br></span></div>';
+		let header = '<div class="out-line"><span><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></span></div>';
+		outputJoined += `<div class="out-line"><span><b>${len} unique unknowns found:</b></span></div>${header}${string}`
+	} else {
+		output.forEach((val) => {
+			if (val) {
+				outputJoined += `<div class="out-line"><span>${val}</span></div>`
+			} else {
+				outputJoined += '<div class="out-line"><span><br></span></div>'
+			}
+		});
+	}
+
+	outputArea.innerHTML = outputJoined;
+	outputArea.style.height = "1px";
+	outputArea.style.height = (outputArea.scrollHeight+16)+"px";
 }
 
 function onLoad() {
@@ -771,17 +835,17 @@ function onLoad() {
 	let lex = document.getElementById("lexicon");
 	if (words) { lex.value = words } else { lex.value = "" }
 	lex.style.height = "1px";
-	lex.style.height = (lex.scrollHeight)+"px";
+	lex.style.height = (lex.scrollHeight+16)+"px";
 
 	let to = document.getElementById("alias-into");
 	if (aliasInto) {to.value = aliasInto} else { to.value = aliasInto }
 	to.style.height = "1px";
-	to.style.height = (to.scrollHeight)+"px";
+	to.style.height = (to.scrollHeight+16)+"px";
 
 	let fr = document.getElementById("alias-from");
 	if (aliasFrom) {fr.value = aliasFrom} else { fr.value = aliasFrom }
 	fr.style.height = "1px";
-	fr.style.height = (fr.scrollHeight)+"px";
+	fr.style.height = (fr.scrollHeight+16)+"px";
 
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
@@ -863,9 +927,9 @@ document.getElementById("alias-modal-open").addEventListener("click", () => {
 	document.getElementById('alias-modal').showModal();
 	// This has to go here for some reason... I assume closed modals don't calculate style changes
 	let to = document.getElementById("alias-into");
-	to.style.height = "1px"; to.style.height = (to.scrollHeight)+"px";
+	to.style.height = "1px"; to.style.height = (to.scrollHeight+16)+"px";
 	let fr = document.getElementById("alias-from");
-	fr.style.height = "1px"; fr.style.height = (fr.scrollHeight)+"px";
+	fr.style.height = "1px"; fr.style.height = (fr.scrollHeight+16)+"px";
 })
 document.getElementById("alias-modal-close").addEventListener("click", () => document.getElementById('alias-modal').close());
 
@@ -1034,7 +1098,7 @@ function addResizeEvents(el) {
 function resize(el) {
 	if (!el.classList.contains("user-resized")) {
 		el.style.height = "1px";
-		el.style.height = (el.scrollHeight)+"px";
+		el.style.height = (el.scrollHeight+16)+"px";
 	}
 }
 
