@@ -470,12 +470,10 @@ function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 
 	let r = ruleElement.querySelector(".rule");
 	r.value = rule;
-	r.style.height = "1px";
-	r.style.height = (r.scrollHeight+16)+"px";
+	resize(r);
 	let d = ruleElement.querySelector(".description");
 	d.value = desc;
-	d.style.height = "1px";
-	d.style.height = (d.scrollHeight+16)+"px";
+	resize(d);
 
 	if (ruleClosed) {
 		ruleElement.querySelector(".maxmin").querySelector("i").classList.replace('fa-minus', 'fa-plus')
@@ -545,19 +543,16 @@ function onReaderLoad(event) {
 	if (obj.words) {
 		let lex = document.getElementById('lexicon');
 		lex.value = obj.words.join('\n');
-		lex.style.height = "1px";
-		lex.style.height = (lex.scrollHeight+16)+"px";
+		resize(lex);
 	}
 
 	let to = document.getElementById("alias-into");
 	if (obj.into) { to.value = obj.into.join('\n'); } else { to.value = "" }
-	to.style.height = "1px";
-	to.style.height = (to.scrollHeight+16)+"px";
+	resize(to);
 
 	let fr = document.getElementById("alias-from");
 	if (obj.from) { fr.value = obj.from.join('\n'); } else { fr.value = "" }
-	fr.style.height = "1px";
-	fr.style.height = (fr.scrollHeight+16)+"px";
+	resize(fr);
 
 	updateTrace();
 
@@ -834,18 +829,15 @@ function onLoad() {
 	// Populate textareas from local stortage
 	let lex = document.getElementById("lexicon");
 	if (words) { lex.value = words } else { lex.value = "" }
-	lex.style.height = "1px";
-	lex.style.height = (lex.scrollHeight+16)+"px";
+	resize(lex);
 
 	let to = document.getElementById("alias-into");
 	if (aliasInto) {to.value = aliasInto} else { to.value = aliasInto }
-	to.style.height = "1px";
-	to.style.height = (to.scrollHeight+16)+"px";
+	resize(to);
 
 	let fr = document.getElementById("alias-from");
 	if (aliasFrom) {fr.value = aliasFrom} else { fr.value = aliasFrom }
-	fr.style.height = "1px";
-	fr.style.height = (fr.scrollHeight+16)+"px";
+	resize(fr);
 
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
@@ -926,10 +918,8 @@ document.getElementById("version-modal-close").addEventListener("click", () => d
 document.getElementById("alias-modal-open").addEventListener("click", () => {
 	document.getElementById('alias-modal').showModal();
 	// This has to go here for some reason... I assume closed modals don't calculate style changes
-	let to = document.getElementById("alias-into");
-	to.style.height = "1px"; to.style.height = (to.scrollHeight+16)+"px";
-	let fr = document.getElementById("alias-from");
-	fr.style.height = "1px"; fr.style.height = (fr.scrollHeight+16)+"px";
+	resize(document.getElementById("alias-into"));
+	resize(document.getElementById("alias-from"));
 })
 document.getElementById("alias-modal-close").addEventListener("click", () => document.getElementById('alias-modal').close());
 
@@ -988,7 +978,7 @@ function dupUp(event) {
 	textarea.value = lines.join("\n");
 	textarea.setSelectionRange(posStart, posEnd)
 
-	resize(textarea)
+	userResize(textarea)
 }
 
 function dupDown(event) {
@@ -1016,7 +1006,7 @@ function dupDown(event) {
 	textarea.value = lines.join("\n");
 	textarea.setSelectionRange(newPosStart, newPosEnd)
 
-	resize(textarea)
+	userResize(textarea)
 }
 
 function moveUp(event) {
@@ -1088,17 +1078,22 @@ let resizeObserver = new ResizeObserver(e => {
 let mouseIsDown = false;
 
 function addResizeEvents(el) {
-	el.addEventListener("input", e=> resize(e.target));
+	el.addEventListener("input", e=> userResize(e.target));
 	el.addEventListener("mousedown", function() { mouseIsDown = true });
 	el.addEventListener("mouseup",   function() { mouseIsDown = false });
 
 	resizeObserver.observe(el)
 }
 
+function userResize(el) {
+	if (!el.classList.contains("user-resized")) {
+		el.style.height = "1px"; el.style.height = (el.scrollHeight+16)+"px";
+	}
+}
+
 function resize(el) {
 	if (!el.classList.contains("user-resized")) {
-		el.style.height = "1px";
-		el.style.height = (el.scrollHeight+16)+"px";
+		el.style.height = "1px"; el.style.height = (el.scrollHeight+16)+"px";
 	}
 }
 
