@@ -1,5 +1,5 @@
 import Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@latest/+esm"
-import init, { run_wasm } from '../libasca/asca.js'
+import init, { run_wasm, WasmResult } from '../libasca/asca.js'
 await init()
 
 const template = `
@@ -677,6 +677,35 @@ function updateTrace(e) {
 
 }
 
+/**@param {string} rulesString */
+function updateHistory(rulesString) {
+	let history = JSON.parse(localStorage.getItem("ruleHistory"));
+
+	if (history) {
+		if (history[history.length - 1] === rulesString) { return }
+		if (history.length >= 5) { history.shift(); }
+		history.push(rulesString);
+		localStorage.setItem("ruleHistory", JSON.stringify(history));
+
+	} else {
+		let hist = [rulesString];
+		localStorage.setItem("ruleHistory", JSON.stringify(hist));
+	}
+}
+
+function updateLocalStorage(rawWordList, ruleList, ruleClosed, ruleActive, aliasInto, aliasFrom, traceState) {
+	console.log("Saving to local storage")
+	let rulesString = JSON.stringify(ruleList);
+	localStorage.setItem("words", rawWordList);	
+	localStorage.setItem("rules", rulesString);
+	localStorage.setItem("closedRules", JSON.stringify(ruleClosed));
+	localStorage.setItem("activeRules", JSON.stringify(ruleActive));
+	localStorage.setItem("aliasInto", aliasInto);
+	localStorage.setItem("aliasFrom", aliasFrom);
+	localStorage.setItem("trace", traceState);
+
+	updateHistory(rulesString);
+}
 
 // Run ASCA
 function runASCA() {
@@ -687,91 +716,35 @@ function runASCA() {
 	let traceState = getTraceState();
 	let [aliasInto, aliasFrom] = getAliases();
 
-	console.log("Saving to local storage")
-	localStorage.setItem("words", rawWordList);	
-	localStorage.setItem("rules", JSON.stringify(ruleList));
-	localStorage.setItem("closedRules", JSON.stringify(ruleClosed));
-	localStorage.setItem("activeRules", JSON.stringify(ruleActive));
-	localStorage.setItem("aliasInto", aliasInto);
-	localStorage.setItem("aliasFrom", aliasFrom);
-	localStorage.setItem("trace", traceState);
+	updateLocalStorage(rawWordList, ruleList, ruleClosed, ruleActive, aliasInto, aliasFrom, traceState);
 	
 	let wordList = rawWordList.split('\n')
 
-	for (let i = ruleList.length - 1; i >= 0; i--) {
-		if (!ruleActive[i]) {
-			ruleList.splice(i, 1)
-		}
-	}
+	// filter inactive rules
+	ruleList = ruleList.filter((val, index) => { if (ruleActive[index]) { return val } });
 
 	let traceNumber = (traceState >= 0) ? traceState : null;
 	console.log("Running ASCA...");
 	let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), traceNumber);
 	console.log("Done");
 
-	let output = res.get_output();
-
-	let outlexWrapper = document.querySelector(".outlex").querySelector(".scroller");
-	outlexWrapper.innerHTML = outlexTemplate;
-
-	let outputArea = document.getElementById('output');
-
-	let outputJoined = "";
+	// handle result
 	
-	// handle unknowns
+	let outputJoined = createOutput(res);
+	
+	document.getElementById("outlex").querySelector(".scroller").innerHTML = outlexTemplate;
+	let outputArea = document.getElementById('output');
+	outputArea.innerHTML = outputJoined;
+	resize(outputArea);
+}
+
+/** @param {WasmResult} res */
+function createOutput(res) {
+	let outputJoined = "";
+	let output = res.get_output();
 	let unknowns = res.get_unknowns();
-	console.log(unknowns.length)
-	if (unknowns.length) {
-
-		let unknownsMap = {};
-		unknowns.forEach((val, i) => {
-			if (!unknownsMap[val]) unknownsMap[val] = [];
-			unknownsMap[val].push(i);
-		})
-
-		let unknownsUnique = [... new Set(unknowns)];
-
-		let len = Object.keys(unknownsUnique).length;
-
-		let colors = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)",  "var(--red)", "var(--yellow)"]
-
-		let occurence = -1;
-		output.forEach((val) => {
-			outputJoined += '<div class="out-line"><span>'
-			let parts = val.split('�')
-			if (parts.length == 1) {
-				if (val == "") {
-					outputJoined += "<br>"
-				} else {
-					outputJoined += val;
-				}
-			} else {
-				for (let p = 0; p < parts.length; p++) {
-					outputJoined += parts[p];
-					
-					if (p < parts.length - 1) {
-						occurence += 1;
-						let ind = unknownsUnique.indexOf(unknowns[occurence]);
-						let color = (ind < len) ? colors[ind] : "var(--fg)";
-						outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
-					}
-
-				}
-			}
-			outputJoined += "</span></div>";
-		});
-
-		let string = unknownsUnique.map((val, ind) => {
-			let color = (ind < len) ? colors[ind] : "var(--fg)";
-			let number = unknownsMap[val].length;
-			let counts = (number == 1) ? "count" : "counts";
-			return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
-		}).join('');
-
-		outputJoined += '<div class="out-line"><span><br></span></div>';
-		let header = '<div class="out-line"><span><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></span></div>';
-		outputJoined += `<div class="out-line"><span><b>${len} unique unknowns found:</b></span></div>${header}${string}`
-	} else {
+	// If no unknowns
+	if (!unknowns.length) {
 		output.forEach((val) => {
 			if (val) {
 				outputJoined += `<div class="out-line"><span>${val}</span></div>`
@@ -779,11 +752,50 @@ function runASCA() {
 				outputJoined += '<div class="out-line"><span><br></span></div>'
 			}
 		});
+		return outputJoined;
 	}
+	// else handle unknowns
+	let unknownsMap = {};
+	unknowns.forEach((val, i) => {
+		if (!unknownsMap[val]) unknownsMap[val] = [];
+		unknownsMap[val].push(i);
+	})
 
-	outputArea.innerHTML = outputJoined;
-	outputArea.style.height = "1px";
-	outputArea.style.height = (outputArea.scrollHeight+16)+"px";
+	let unknownsUnique = [... new Set(unknowns)];
+	let lenUnique = Object.keys(unknownsUnique).length;
+	let colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
+
+	let occurence = -1;
+	output.forEach((val) => {
+		outputJoined += '<div class="out-line"><span>'
+		let parts = val.split('�')
+		if (parts.length == 1) {
+			outputJoined += (val == "") ? "<br>" : val;
+		} else {
+			for (let p = 0; p < parts.length - 1; p++) {
+				occurence += 1;
+				outputJoined += parts[p];
+				let ind = unknownsUnique.indexOf(unknowns[occurence]);
+				let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+				outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
+			}
+			outputJoined += parts[parts.length - 1];
+		}
+		outputJoined += "</span></div>";
+	});
+
+	let string = unknownsUnique.map((val, ind) => {
+		let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+		let number = unknownsMap[val].length;
+		let counts = (number == 1) ? "count" : "counts";
+		return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
+	}).join('');
+
+	outputJoined += '<div class="out-line"><span><br></span></div>';
+	let header = '<div class="out-line"><span><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></span></div>';
+	outputJoined += `<div class="out-line"><span><b>${lenUnique} unique unknowns found:</b></span></div>${header}${string}`
+
+	return outputJoined;
 }
 
 function onLoad() {
@@ -797,6 +809,8 @@ function onLoad() {
 	let ruleStates = JSON.parse(localStorage.getItem("closedRules"));
 	let ruleActive = JSON.parse(localStorage.getItem("activeRules"));
 	let traceState = JSON.parse(localStorage.getItem("trace"));
+	let aliasInto = localStorage.getItem("aliasInto");
+	let aliasFrom = localStorage.getItem("aliasFrom");
 	console.log("Local storage parsed")
 
 	if (ruleStates && rules) {
@@ -805,11 +819,7 @@ function onLoad() {
 		} else {
 			updateCollapse(null)
 		}
-	} else if (rules) {
-		updateCollapse(true)
-	} else {
-		updateCollapse(null)
-	}
+	} else if (rules) { updateCollapse(true) } else { updateCollapse(null) }
 	
 	if (ruleActive) {
 		if (ruleActive.length) {
@@ -817,15 +827,8 @@ function onLoad() {
 		} else {
 			updateActive(null)
 		}
-	} else if (rules) {
-		updateActive(true)
-	} else {
-		updateActive(null)
-	}
+	} else if (rules) { updateActive(true) } else { updateActive(null) }
 
-	let aliasInto = localStorage.getItem("aliasInto");
-	let aliasFrom = localStorage.getItem("aliasFrom");
-	
 	// Populate textareas from local stortage
 	let lex = document.getElementById("lexicon");
 	if (words) { lex.value = words } else { lex.value = "" }
@@ -844,15 +847,9 @@ function onLoad() {
 	if (rules) {
 		for (let i = 0; i < rules.length; i++) {
 			// Otherwise, this would be a breaking change
-			if (!ruleStates && !ruleActive) {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false, true);
-			} else if (!ruleActive) {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i], true);
-			} else if (!ruleStates) { 
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, false, ruleActive[i]);
-			} else {
-				makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, ruleStates[i], ruleActive[i]);
-			}
+			let rs = ruleStates ? ruleStates[i] : true;
+			let ra = ruleActive ? ruleActive[i] : true;
+			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
 		}
 	}
 
