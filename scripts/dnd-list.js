@@ -87,15 +87,15 @@ function updateCollapse(col) {
 	let button = document.getElementById("collapse");
 	if (col === true) {
 		button.disabled = false;
-		button.innerHTML = "Collapse All"
+		button.innerHTML = "Collapse"
 		toCollapse = true
 	} else if (col === false) {
 		button.disabled = false;
-		button.innerHTML = "Reexpand All"
+		button.innerHTML = "Reexpand"
 		toCollapse = false
 	} else {
 		button.disabled = true;
-		button.innerHTML = "Collapse All"
+		button.innerHTML = "Collapse"
 		toCollapse = true
 	}
 }
