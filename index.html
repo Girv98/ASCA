@@ -144,10 +144,13 @@
 					<button id="save" class="join-left" title="Save to computer">Save</button>
 					<label id="load-label" for="load" class="join-right" title="Load from files" tabindex=0>Load</label>
 					<input id="load" type="file" accept="application/json">
+					<!-- <button id="history-modal-open" class="join-right">Hist</button> -->
 				</div>
-				<button id="clear-all" title="Remove all rules" class="custom-button">Clear All</button>
-				<button id="collapse" class="custom-button">Collapse All</button>
-				<button id="activate" class="custom-button">Disable All</button>
+				<div class="custom-button button-group">
+					<button id="collapse" class="join-left">Collapse</button>
+					<button id="activate" class="join-right">Disable</button>
+				</div>
+				<button id="clear-all" title="Remove all rules" class="custom-button">Clear</button>
 			</div>
 			 <div id="demo">
 				<!-- Rules live here -->
