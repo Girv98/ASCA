@@ -350,6 +350,7 @@ textarea, #output {
 	border: None;
 	scrollbar-width: thin;
 	scrollbar-gutter: stable;
+	scrollbar-color: var(--green)  var(--bg2) !important;
 }
 
 #lexicon,
