@@ -9,10 +9,10 @@ const template = `
 			<div class="title-btns">
 				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
 				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
-				<button class="copy" title="Copy Rule Below" aria-label="Copy Rule"><i class="fas fa-copy"></i></button>
-				<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on"></i></button>
-				<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus"></i></button>
-				<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times"></i></button>
+				<button class="copy" title="Copy Rule Below" aria-label="Copy Rule"><i class="fas fa-copy" aria-hidden="true"></i></button>
+				<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on" aria-hidden="true"></i></button>
+				<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus" aria-hidden="true"></i></button>
+				<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times" aria-hidden="true"></i></button>
 			</div>
 		</div>
 		<div class="cont">
@@ -463,7 +463,7 @@ function getRuleClosedBoxes() {
  */
 function makeRule(name, rule, desc, ruleClosed, ruleActive) {
 	let demo = document.getElementById("demo");
-	demo.insertAdjacentHTML( "beforeend", template);
+	demo.insertAdjacentHTML("beforeend", template);
 	let ruleElement = demo.lastChild;
 
 	ruleElement.querySelector(".name").value = name;

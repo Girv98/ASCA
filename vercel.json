@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/growth/:match*",
+      "destination": "https://asca.girv.dev/_vercel/insights/:match*"
+    }
+  ]
+}
