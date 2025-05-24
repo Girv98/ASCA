@@ -1,0 +1,259 @@
+import { userResize } from "./main";
+import { getRuleActiveBoxes, getRuleClosedBoxes, updateActive, updateCollapse } from "./rules";
+
+
+export function checkMoveOrDup(e: KeyboardEvent) {
+    if (e.altKey && e.shiftKey) {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            dupUp(e);
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            dupDown(e);
+        }
+    } else if (e.altKey) {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            moveUp(e);
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            moveDown(e);
+        }
+    }
+}
+
+export function ruleHandleKeyboardDown(e: KeyboardEvent) {
+    if (e.target !== e.currentTarget) {
+        // jump to outer
+        if (e.shiftKey && e.key == 'Backspace') {
+            e.preventDefault();
+            ((e.target as HTMLElement).closest(".draggable-element") as HTMLDivElement)?.focus();
+        }
+        return;
+    }
+
+    if (e.altKey) {
+        if (e.key == 'ArrowUp') {
+            e.preventDefault();
+            let parent = document.getElementById("demo")!;
+            parent.insertBefore((e.target as HTMLElement), (e.target as HTMLElement).previousElementSibling);
+            (e.target as HTMLElement)?.focus();
+        } else if (e.key == 'ArrowDown') {
+            e.preventDefault();
+            let parent = document.getElementById("demo")!;
+
+            if ((e.target as HTMLElement).nextElementSibling) {
+                parent.insertBefore((e.target as HTMLElement).nextElementSibling!, (e.target as HTMLElement));
+            } else {
+                parent.insertBefore((e.target as HTMLElement), parent.firstElementChild);
+                (e.target as HTMLElement)?.focus();
+            }
+        }
+        return;
+    }
+
+    if (e.shiftKey) {
+        if (e.key == 'ArrowUp') {
+            e.preventDefault();
+            ((e.target as HTMLElement).previousElementSibling as HTMLDivElement)?.focus()
+        } else if (e.key == 'ArrowDown') {
+            e.preventDefault();
+            ((e.target as HTMLElement).nextElementSibling as HTMLDivElement)?.focus()
+        }
+        return;
+    }
+}
+
+export function ruleHandleKeyboardUp(e: KeyboardEvent) {
+    if (e.target !== e.currentTarget && e.shiftKey) {
+        if (e.key === 'Home') {
+            e.preventDefault();
+            (document.getElementById("demo")?.firstElementChild as HTMLDivElement).focus();
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            (document.getElementById("demo")?.lastElementChild as HTMLDivElement).focus();
+        }
+
+        return;
+    }
+
+    if (e.target === e.currentTarget) {
+        if (e.shiftKey) {
+            if (e.key == 'N') {
+                // jump to title
+                e.preventDefault();
+                ((e.target as HTMLElement)?.querySelector(".name") as HTMLInputElement)?.focus();
+            } else if (e.key == 'R') {
+                // jump to rule
+                e.preventDefault();
+                (e.target as HTMLElement)?.querySelector('.maxmin')?.querySelector('i')?.classList?.replace('fa-plus', 'fa-minus');
+                (e.target as HTMLElement)?.querySelector(".cont")?.classList.remove('invisible');
+                ((e.target as HTMLElement)?.querySelector(".rule") as HTMLTextAreaElement)?.focus();
+                updateCollapse(true)
+            } else if (e.key == 'D') {
+                // jump to description
+                e.preventDefault();
+                (e.target as HTMLElement)?.querySelector('.maxmin i')?.classList.replace('fa-plus', 'fa-minus');
+                (e.target as HTMLElement)?.querySelector(".cont")?.classList.remove('invisible');
+                ((e.target as HTMLElement)?.querySelector(".description") as HTMLTextAreaElement)?.focus();
+                updateCollapse(true)
+            } else if (e.key == 'T') {
+                // toggle
+                let i = (e.target as HTMLElement).querySelector('.onoff i')!;
+
+                if (i.classList.contains('fa-toggle-off')) {
+                    i.classList.replace('fa-toggle-off', 'fa-toggle-on');
+                    updateActive(!getRuleActiveBoxes().some((e) => e == false));
+                } else {
+                    i.classList.replace('fa-toggle-on', 'fa-toggle-off');
+                    updateActive(false);
+                }
+                (e.target as HTMLElement).classList.toggle('ignore')
+            }
+        } else if (e.key === 'Delete') {
+            e.preventDefault();
+            if (confirm("Are you sure you want to remove this rule?") === true) {
+                let el = (e.target as HTMLElement).closest(".draggable-element")!;
+                if (el.previousElementSibling) {
+                    (el.previousElementSibling as HTMLDivElement).focus();
+                } else if (el.nextElementSibling) {
+                    (el.nextElementSibling as HTMLDivElement).focus();
+                }
+                el.remove();
+                let activeArr = getRuleActiveBoxes();
+                if (!activeArr.length) {
+                    updateActive(null);
+                } else if (!activeArr.some((e) => e == false)) {
+                    updateActive(true);
+                }
+                let closedArr = getRuleClosedBoxes();
+                if (!closedArr.length) {
+                    updateCollapse(null) 
+                } else if (!closedArr.some((e) => e == false)) {
+                    updateCollapse(false)
+                }
+            }
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            let i = (e.target as HTMLElement).querySelector('.maxmin i')!;
+            if (i.classList.contains('fa-minus')) {
+                i.classList.replace('fa-minus', 'fa-plus');
+                if (!getRuleClosedBoxes().some((e) => e == false)) {
+                    updateCollapse(false)
+                }
+            } else {
+                i.classList.replace('fa-plus', 'fa-minus');
+                updateCollapse(true)
+            }
+            (e.target as HTMLElement).querySelector(".cont")!.classList.toggle('invisible')
+        }
+
+        return;
+    }
+}
+
+
+function dupUp(event: KeyboardEvent) {
+    const textarea = event.currentTarget! as HTMLTextAreaElement;
+
+    let lines = textarea.value.split('\n');
+    const posStart = textarea.selectionStart;
+    const posEnd = textarea.selectionEnd;
+
+    const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+    const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+    let els = lines.slice(lineStart, lineEnd+1);
+
+    lines.splice(lineEnd+1, 0, ...els);
+
+    textarea.value = lines.join("\n");
+    textarea.setSelectionRange(posStart, posEnd)
+
+    userResize(textarea)
+}
+
+function dupDown(event: KeyboardEvent) {
+    const textarea = event.currentTarget as HTMLTextAreaElement;
+
+    let lines = textarea.value.split('\n');
+    const posStart = textarea.selectionStart;
+    const posEnd = textarea.selectionEnd;
+
+    const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+    const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+    let els = lines.slice(lineStart, lineEnd+1);
+
+    lines.splice(lineEnd+1, 0, ...els);
+
+    let len = 0;
+
+    els.forEach(el => { len += el.length + 1 });
+
+    let newPosStart = posStart + len;
+    let newPosEnd = newPosStart + (posEnd-posStart);
+    
+
+    textarea.value = lines.join("\n");
+    textarea.setSelectionRange(newPosStart, newPosEnd)
+
+    userResize(textarea)
+}
+
+function moveUp(event: KeyboardEvent) {
+    const textarea = event.currentTarget as HTMLTextAreaElement;
+    
+    let lines = textarea.value.split('\n');
+    const posStart = textarea.selectionStart;
+    const posEnd = textarea.selectionEnd;
+
+    const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+    const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+    if (lineStart <= 0) return;
+
+    let els = lines.slice(lineStart, lineEnd+1);
+
+    let temp = lines[lineStart-1];
+
+    let i= 0;
+    for (; i < els.length; i++) {
+        lines[lineStart-1+i] = els[i];
+    }
+    lines[lineStart-1+i] = temp;
+    
+    let newPosStart = posStart - 1 - lines[lineEnd].length
+    let newPosEnd = newPosStart + (posEnd-posStart);
+    
+    textarea.value = lines.join("\n");
+    textarea.setSelectionRange(newPosStart, newPosEnd)
+}
+
+function moveDown(event: KeyboardEvent) {
+    const textarea = event.currentTarget as HTMLTextAreaElement;
+
+    let lines = textarea.value.split('\n');
+    const posStart = textarea.selectionStart;
+    const posEnd = textarea.selectionEnd;
+
+    const lineStart = textarea.value.slice(0, posStart).match(/\r?\n/gu)?.length ?? 0;
+    const lineEnd = textarea.value.slice(0, posEnd).match(/\r?\n/gu)?.length ?? 0;
+
+    if (lineEnd+1 > lines.length-1) return;
+    
+    let els = lines.slice(lineStart, lineEnd+1);
+
+    let temp = lines[lineEnd+1];
+
+    lines[lineStart] = temp;
+    for (let i = 1; i < els.length+1; i++) {
+        lines[lineStart+i] = els[i-1];
+    }
+
+    let newPosStart = posStart + 1 + lines[lineStart].length;
+    let newPosEnd = newPosStart + (posEnd-posStart);
+    
+    textarea.value = lines.join("\n");
+    textarea.setSelectionRange(newPosStart, newPosEnd)
+}
