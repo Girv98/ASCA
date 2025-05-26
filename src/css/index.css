@@ -160,10 +160,29 @@ a:focus-visible {
 	border-radius: 10px;
 }
 
+
+
+/* .draggable-element.untraced { */
+	/* background: var(--green); */
+	/* outline: var(--blue) 2px solid; */
+	/* outline-offset: 2px; */
+	/* filter: brightness(80%); */
+/* }  */
+
+.draggable-element.traced {
+	outline: var(--blue) 2px solid;
+	outline-offset: 2px;
+}
+
+
 .draggable-element:focus, .draggable-element:focus-visible {
 	outline: var(--green) 2px solid;
 	outline-offset: 2px;
 }
+
+/* .draggable-element.traced button {
+	color: var(--bg2);
+} */
 
 .ignore {
 	filter: brightness(80%);

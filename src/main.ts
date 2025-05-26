@@ -6,7 +6,8 @@ import Sortable from 'sortablejs';
 
 import { /*historyTemplate,*/ outlexTemplate } from "./templates";
 import init, { run_wasm, WasmResult } from '../libasca/asca.js'
-import { activateRules, addRule, changeDirection, clearRules, collapseRules, getRuleActiveBoxes, getRuleClosedBoxes, getRules, makeRule, updateActive, updateCollapse, type Rule } from './rules.js';
+import * as Rules from './rules.js';
+import { type Rule } from './rules.js';
 import { checkMoveOrDup } from './hotkeys.js';
 
 
@@ -28,14 +29,14 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 				document.getElementById("lexicon")?.focus();
 				return;
 			// Add rule
-			case 'a': e.preventDefault(); addRule(); return;
-			case 'q': e.preventDefault(); changeDirection(); return;
+			case 'a': e.preventDefault(); Rules.addRule(); return;
+			case 'q': e.preventDefault(); Rules.changeDirection(); return;
 			// Collapse
-			case 'c': e.preventDefault(); collapseRules(); return;
+			case 'c': e.preventDefault(); Rules.collapseRules(); return;
 			// Clear
-			case 'x': e.preventDefault(); clearRules(); return;
+			case 'x': e.preventDefault(); Rules.clearRules(); return;
 			// Toggle
-			case 'z': e.preventDefault(); activateRules(); return;
+			case 'z': e.preventDefault(); Rules.activateRules(); return;
 			default: return;
 		}
 	}
@@ -68,14 +69,14 @@ function onReaderLoad(event: any) {
 
 	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 	for (let i = 0; i < obj.rules.length; i++) {
-		makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
+		Rules.makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
 	}
 	if (obj.rules.length) {
-		updateCollapse(true)
-		updateActive(true)
+		Rules.updateCollapse(true)
+		Rules.updateActive(true)
 	} else {
-		updateCollapse(null)
-		updateActive(null)
+		Rules.updateCollapse(null)
+		Rules.updateActive(null)
 	}
 
 	if (obj.words) {
@@ -108,7 +109,7 @@ function loadFile(event: any) {
 // Saving to JSON
 function saveFile() {
 	let wordList = (document.getElementById("lexicon") as HTMLTextAreaElement).value;
-	let rules = getRules();
+	let rules = Rules.getRules();
 	let into = (document.getElementById("alias-into") as HTMLTextAreaElement).value;
 	let from = (document.getElementById("alias-from") as HTMLTextAreaElement).value;
 
@@ -228,10 +229,12 @@ function updateLocalStorage(
 
 // Run ASCA
 function runASCA() {
+	Rules.removeTrace();
+
     let rawWordList = (document.getElementById("lexicon") as HTMLTextAreaElement).value;
-    let ruleList = getRules();
-    let ruleClosed = getRuleClosedBoxes();
-    let ruleActive = getRuleActiveBoxes();
+    let ruleList = Rules.getRules();
+    let ruleClosed = Rules.getRuleClosedBoxes();
+    let ruleActive = Rules.getRuleActiveBoxes();
     let traceState = getTraceState();
     let [aliasInto, aliasFrom] = getAliases();
 
@@ -255,6 +258,12 @@ function runASCA() {
     let outputArea = document.getElementById('output')!;
     outputArea.innerHTML = outputJoined;
     resize(outputArea);
+
+	// handle traces
+
+	let trace_indices = res.get_traces();
+
+	Rules.traceRules(trace_indices);
 }
 
 function createOutput(res: WasmResult) {
@@ -335,19 +344,19 @@ function onLoad() {
 
     if (ruleStates && rules) {
 		if (ruleStates.length) {
-			updateCollapse(ruleStates.some((e) => e == false))
+			Rules.updateCollapse(ruleStates.some((e) => e == false))
 		} else {
-			updateCollapse(null)
+			Rules.updateCollapse(null)
 		}
-	} else if (rules) { updateCollapse(true) } else { updateCollapse(null) }
+	} else if (rules) { Rules.updateCollapse(true) } else { Rules.updateCollapse(null) }
 	
 	if (ruleActive) {
 		if (ruleActive.length) {
-			updateActive(!ruleActive.some((e) => e == false));
+			Rules.updateActive(!ruleActive.some((e) => e == false));
 		} else {
-			updateActive(null)
+			Rules.updateActive(null)
 		}
-	} else if (rules) { updateActive(true) } else { updateActive(null) }
+	} else if (rules) { Rules.updateActive(true) } else { Rules.updateActive(null) }
 
     // Populate textareas from local stortage
 	let lex = document.getElementById("lexicon")! as HTMLTextAreaElement;
@@ -369,7 +378,7 @@ function onLoad() {
 			// Otherwise, this would be a breaking change
 			let rs = ruleStates ? ruleStates[i] : true;
 			let ra = ruleActive ? ruleActive[i] : true;
-			makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
+			Rules.makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
 		}
 	}
 
@@ -410,8 +419,8 @@ Sortable.create(document.getElementById('demo')!, {
 
 // Button click events
 
-document.getElementById("add")!.addEventListener("click", addRule);
-document.getElementById("updown")!.addEventListener("click", changeDirection);
+document.getElementById("add")!.addEventListener("click", Rules.addRule);
+document.getElementById("updown")!.addEventListener("click", Rules.changeDirection);
 document.getElementById("save")!.addEventListener("click", saveFile);
 document.getElementById("load-label")!.addEventListener("keyup", e => {
 	const load = document.getElementById("load");
@@ -421,9 +430,9 @@ document.getElementById("load-label")!.addEventListener("keyup", e => {
 });
 document.getElementById("load")!.addEventListener("change", e => loadFile(e));
 document.getElementById("run")!.addEventListener("click", runASCA);
-document.getElementById("collapse")!.addEventListener("click", collapseRules);
-document.getElementById("activate")!.addEventListener("click", activateRules);
-document.getElementById("clear-all")!.addEventListener("click", clearRules);
+document.getElementById("collapse")!.addEventListener("click", Rules.collapseRules);
+document.getElementById("activate")!.addEventListener("click", Rules.activateRules);
+document.getElementById("clear-all")!.addEventListener("click", Rules.clearRules);
 
 document.getElementById("version-modal-close")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).close());
 document.getElementById("version-modal-open")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).showModal())

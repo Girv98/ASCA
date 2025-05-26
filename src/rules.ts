@@ -136,6 +136,19 @@ export function activateRules() {
 	}
 }
 
+export function traceRules(indices: Uint32Array<ArrayBufferLike>) {
+    let els = document.querySelectorAll(".draggable-element");
+
+    indices.forEach((val) => {
+        els[val].classList.add('traced');
+	})
+}
+
+export function removeTrace() {
+    let els = document.querySelectorAll(".draggable-element");
+    els.forEach((el) => el.classList.remove('traced'));
+}
+
 export type Rule = {
     name: string,
     rule: string[], 
