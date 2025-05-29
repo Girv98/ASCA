@@ -28,7 +28,6 @@
 .button-group a {
 	display: inline-block; /* Make it behave like a block element */
 	padding: 10px 20px; /* Add padding around the text */
-	background-color: #4CAF50; /* Set a background color */
 	text-decoration: none; /* Remove the underline */
 	border-radius: 5px; /* Optional: Add rounded corners */
 	cursor: pointer; /* Change cursor to indicate interactivity */
@@ -226,7 +225,11 @@ h1 {
 }
 
 .custom-button:disabled,
-.custom-button[disabled] {
+.custom-button[disabled],
+.join-left:disabled,
+.join-left[disabled],
+.join-right:disabled,
+.join-right[disabled] {
 	filter: brightness(75%);
 }
 
