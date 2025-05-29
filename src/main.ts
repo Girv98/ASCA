@@ -79,7 +79,7 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 				return;
 			// Add rule
 			case 'a': e.preventDefault(); Rules.addRule(); return;
-			case 'q': e.preventDefault(); Rules.changeDirection(); return;
+			case 'q': e.preventDefault(); Rules.toggleDirection(); return;
 			// Collapse
 			case 'c': e.preventDefault(); Rules.collapseRules(); return;
 			// Clear
@@ -127,6 +127,7 @@ function onReaderLoad(event: any) {
 	} else {
 		Rules.updateCollapse(null);
 		Rules.updateActive(null);
+		(document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
 	}
 
 	if (obj.words) {
@@ -149,7 +150,7 @@ function onReaderLoad(event: any) {
 };
 
 function loadFile(event: any) {
-	console.log(event)
+	// console.log(event)
 	var reader = new FileReader();
 	reader.onload = onReaderLoad;
 	reader.readAsText(event.target.files[0]);
@@ -401,7 +402,7 @@ function onLoad() {
 		} else {
 			Rules.updateCollapse(null)
 		}
-	} else if (rules) { Rules.updateCollapse(true) } else { Rules.updateCollapse(null) }
+	} else if (rules.length > 0) { Rules.updateCollapse(true) } else { Rules.updateCollapse(null) }
 	
 	if (ruleActive) {
 		if (ruleActive.length) {
@@ -409,7 +410,11 @@ function onLoad() {
 		} else {
 			Rules.updateActive(null)
 		}
-	} else if (rules) { Rules.updateActive(true) } else { Rules.updateActive(null) }
+	} else if (rules.length > 0) { Rules.updateActive(true) } else { Rules.updateActive(null) }
+
+	if (rules.length === 0) {
+		(document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+	}
 
     // Populate textareas from local stortage
 	let lex = document.getElementById("lexicon")! as HTMLTextAreaElement;
@@ -476,7 +481,7 @@ Sortable.create(document.getElementById('demo')!, {
 // Button click events
 
 document.getElementById("add")!.addEventListener("click", _ => Rules.addRule());
-document.getElementById("updown")!.addEventListener("click", _ => Rules.changeDirection());
+document.getElementById("updown")!.addEventListener("click", _ => Rules.toggleDirection());
 document.getElementById("save")!.addEventListener("click", saveFile);
 document.getElementById("load-label")!.addEventListener("keyup", e => {
 	const load = document.getElementById("load");

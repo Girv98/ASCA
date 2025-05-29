@@ -31,7 +31,7 @@ export function ruleHandleKeyboardDown(rules: Rules, e: KeyboardEvent) {
         return;
     }
 
-    if (e.altKey) {
+    if (e.altKey && !e.shiftKey) {
         if (e.key == 'ArrowUp') {
             e.preventDefault();
             let parent = document.getElementById("demo")!;
@@ -58,7 +58,7 @@ export function ruleHandleKeyboardDown(rules: Rules, e: KeyboardEvent) {
         return;
     }
 
-    if (e.shiftKey) {
+    if (e.shiftKey && !e.altKey) {
         if (e.key == 'ArrowUp') {
             e.preventDefault();
             ((e.target as HTMLElement).previousElementSibling as HTMLDivElement)?.focus()
@@ -109,6 +109,17 @@ export function ruleHandleKeyboardUp(rules: Rules, e: KeyboardEvent) {
                     rules.updateActive(false);
                 }
                 (e.target as HTMLElement).classList.toggle('ignore')
+            } else if (e.altKey) {
+                if (e.key == 'ArrowUp') {
+                    e.preventDefault();
+                    rules.changeDirectionUp();
+                    rules.cloneRuleFocus(e.target as HTMLElement);
+                    
+                } else if (e.key == 'ArrowDown') {
+                    e.preventDefault();
+                    rules.changeDirectionDown()
+                    rules.cloneRuleFocus(e.target as HTMLElement);
+                }
             }
         } else if (e.key === 'Delete') {
             e.preventDefault();

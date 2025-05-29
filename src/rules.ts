@@ -113,7 +113,19 @@ export class Rules {
         }
     }
 
-    public changeDirection() {
+    public changeDirectionUp() {
+        if (this.dirEnd) {
+            this.toggleDirection()
+        }
+    }
+
+    public changeDirectionDown() {
+        if (!this.dirEnd) {
+            this.toggleDirection()
+        }
+    }
+
+    public toggleDirection() {
         let addButton = document.getElementById("add")!;
         let upDownButton = document.getElementById("updown")!;
         let txt = "Copy Rule Above"
@@ -140,7 +152,6 @@ export class Rules {
     public clearForLoad() {
         document.querySelectorAll('.draggable-element').forEach(e => e.remove());
         this.editors.length = 0;
-        (document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
     }
 
     public clearRules() {
@@ -345,6 +356,12 @@ export class Rules {
         }
 
         createRuleEvents(ruleElement);
+    }
+
+    public cloneRuleFocus(el: HTMLElement) {
+        this.dirEnd = !this.dirEnd;
+        this.cloneRule(el);
+        this.dirEnd = !this.dirEnd;
     }
 
     public cloneRule(el: HTMLElement) {
