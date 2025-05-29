@@ -1,14 +1,63 @@
-// import './style.css'
-// import typescriptLogo from './typescript.svg'
-// import viteLogo from '/vite.svg'
-// import { setupCounter } from './counter.ts'
 import Sortable from 'sortablejs';
 
 import { /*historyTemplate,*/ outlexTemplate } from "./templates";
 import init, { run_wasm, WasmResult } from '../libasca/asca.js'
-import * as Rules from './rules.js';
+import { Rules as RulesClass }  from './rules.js';
 import { type Rule } from './rules.js';
-import { checkMoveOrDup } from './hotkeys.js';
+import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
+
+let Rules = new RulesClass();
+
+
+export function createRuleEvents(ruleEl: HTMLElement) {
+
+    ruleEl.addEventListener('keydown', e => ruleHandleKeyboardDown(Rules, e));
+    ruleEl.addEventListener('keyup', e => ruleHandleKeyboardUp(Rules, e));
+
+    // x button
+    ruleEl.querySelector('.delete')!.addEventListener('click', function(this: HTMLElement) {
+        Rules.removeRule(this.closest(".draggable-element")!);
+    })
+    // +/- button
+    ruleEl.querySelector('.maxmin')!.addEventListener('click', function(this: HTMLElement) {
+        let i = this.querySelector('i')!;
+        if (i.classList.contains('fa-minus')) {
+            i.classList.replace('fa-minus', 'fa-plus');
+            if (!RulesClass.getRuleClosedBoxes().some((e) => e == false)) {
+                Rules.updateCollapse(false)
+            }
+        } else {
+            i.classList.replace('fa-plus', 'fa-minus');
+            Rules.updateCollapse(true)
+        }
+        this.closest(".draggable-element")!.querySelector(".cont")!.classList.toggle('invisible')
+    })
+    // On/Off Button
+    ruleEl.querySelector('.onoff')!.addEventListener('click', function(this: HTMLElement) {
+    
+        let i = this.querySelector('i')!;
+
+        if (i.classList.contains('fa-toggle-off')) {
+            i.classList.replace('fa-toggle-off', 'fa-toggle-on');
+            Rules.updateActive(!RulesClass.getRuleActiveBoxes().some((e) => e == false));
+        } else {
+            i.classList.replace('fa-toggle-on', 'fa-toggle-off');
+            Rules.updateActive(false);
+        }
+        this.closest(".draggable-element")!.classList.toggle('ignore')
+    })
+    // Copy Button
+    ruleEl.querySelector('.clone')!.addEventListener('click', function(this: HTMLElement) {
+		Rules.cloneRule(this.closest(".draggable-element")!)
+    })
+
+    // VSCode-like Alt Reordering
+    // ruleEl.querySelector('.rule')!.addEventListener("keydown", (e) => checkMoveOrDup(e as KeyboardEvent));
+
+    // Custom field-sizing	
+    // addResizeEvents(ruleEl.querySelector('.rule')!)
+    addResizeEvents(ruleEl.querySelector('.description')!)
+}
 
 
 function getAliases() {
@@ -37,22 +86,21 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 			case 'x': e.preventDefault(); Rules.clearRules(); return;
 			// Toggle
 			case 'z': e.preventDefault(); Rules.activateRules(); return;
+			case 'l': e.preventDefault(); showAliasModal(); return; 
+			case 's': e.preventDefault(); saveFile(); return; 
+			// case 'o': e.preventDefault(); loadFile(); return; 
 			default: return;
 		}
 	}
-	if (e.shiftKey) {
-		if (e.key === 'Enter') {
-			e.preventDefault();
-			runASCA();
-		}
+	if (e.shiftKey && e.key === 'Enter') {
+		e.preventDefault();
+		runASCA();
 	}
 }
 
 function globalHandleKeyDown(e: KeyboardEvent) {
-	if (e.shiftKey) {
-		if (e.key === 'Enter') {
-			e.preventDefault();
-		}
+	if (e.shiftKey && e.key === 'Enter') {
+		e.preventDefault();
 	}
 }
 
@@ -67,16 +115,18 @@ function onReaderLoad(event: any) {
 		return
 	} 
 
-	document.querySelectorAll('.draggable-element').forEach(e => e.remove());
+	Rules.clearForLoad();
+
 	for (let i = 0; i < obj.rules.length; i++) {
 		Rules.makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
 	}
 	if (obj.rules.length) {
-		Rules.updateCollapse(true)
-		Rules.updateActive(true)
+		Rules.updateCollapse(true);
+		Rules.updateActive(true);
+		(document.getElementById("clear-all") as HTMLButtonElement).disabled = false;
 	} else {
-		Rules.updateCollapse(null)
-		Rules.updateActive(null)
+		Rules.updateCollapse(null);
+		Rules.updateActive(null);
 	}
 
 	if (obj.words) {
@@ -99,6 +149,7 @@ function onReaderLoad(event: any) {
 };
 
 function loadFile(event: any) {
+	console.log(event)
 	var reader = new FileReader();
 	reader.onload = onReaderLoad;
 	reader.readAsText(event.target.files[0]);
@@ -229,12 +280,14 @@ function updateLocalStorage(
 
 // Run ASCA
 function runASCA() {
-	Rules.removeTrace();
+	RulesClass.removeTrace();
+
+	// Rules.printEditors();
 
     let rawWordList = (document.getElementById("lexicon") as HTMLTextAreaElement).value;
     let ruleList = Rules.getRules();
-    let ruleClosed = Rules.getRuleClosedBoxes();
-    let ruleActive = Rules.getRuleActiveBoxes();
+    let ruleClosed = RulesClass.getRuleClosedBoxes();
+    let ruleActive = RulesClass.getRuleActiveBoxes();
     let traceState = getTraceState();
     let [aliasInto, aliasFrom] = getAliases();
 
@@ -263,7 +316,7 @@ function runASCA() {
 
 	let trace_indices = res.get_traces();
 
-	Rules.traceRules(trace_indices);
+	RulesClass.traceRules(trace_indices);
 }
 
 function createOutput(res: WasmResult) {
@@ -414,13 +467,16 @@ Sortable.create(document.getElementById('demo')!, {
 	ghostClass: "sortable-ghost",
 	dragClass: "sortable-drag",
 	forceFallback: true,
+	onEnd(evt) {
+		Rules.move(evt.oldIndex!, evt.newIndex!);
+	},
 });
 
 
 // Button click events
 
-document.getElementById("add")!.addEventListener("click", Rules.addRule);
-document.getElementById("updown")!.addEventListener("click", Rules.changeDirection);
+document.getElementById("add")!.addEventListener("click", _ => Rules.addRule());
+document.getElementById("updown")!.addEventListener("click", _ => Rules.changeDirection());
 document.getElementById("save")!.addEventListener("click", saveFile);
 document.getElementById("load-label")!.addEventListener("keyup", e => {
 	const load = document.getElementById("load");
@@ -429,21 +485,23 @@ document.getElementById("load-label")!.addEventListener("keyup", e => {
 	}
 });
 document.getElementById("load")!.addEventListener("change", e => loadFile(e));
-document.getElementById("run")!.addEventListener("click", runASCA);
-document.getElementById("collapse")!.addEventListener("click", Rules.collapseRules);
-document.getElementById("activate")!.addEventListener("click", Rules.activateRules);
-document.getElementById("clear-all")!.addEventListener("click", Rules.clearRules);
+document.getElementById("run")!.addEventListener("click", _ => runASCA());
+document.getElementById("collapse")!.addEventListener("click", _ => Rules.collapseRules());
+document.getElementById("activate")!.addEventListener("click", _ => Rules.activateRules());
+document.getElementById("clear-all")!.addEventListener("click", _ => Rules.clearRules());
 
 document.getElementById("version-modal-close")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).close());
 document.getElementById("version-modal-open")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).showModal())
 
 document.getElementById("alias-modal-close")!.addEventListener("click", () => (document.getElementById('alias-modal')! as HTMLDialogElement).close());
-document.getElementById("alias-modal-open")!.addEventListener("click", () => {
+document.getElementById("alias-modal-open")!.addEventListener("click", () => showAliasModal())
+
+function showAliasModal() {
 	(document.getElementById('alias-modal')! as HTMLDialogElement).showModal();
 	// This has to go here for some reason... I assume closed modals don't calculate style changes
 	resize(document.getElementById("alias-into")!);
 	resize(document.getElementById("alias-from")!);
-})
+}
 
 // document.getElementById("history-modal-close")!.addEventListener("click", () => (document.getElementById('history-modal')! as HTMLDialogElement).close());
 // document.getElementById("history-modal-open")!.addEventListener("click", () => {

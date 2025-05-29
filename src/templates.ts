@@ -12,7 +12,8 @@ export const blockTemplate = `
 			</div>
 		</div>
 		<div class="cont">
-			<textarea class="rule" spellcheck="false" autocapitalize="off" placeholder="Enter rule(s) here..."></textarea>
+			<div class="rule-cont"></div>
+			<!--<textarea class="rule" spellcheck="false" autocapitalize="off" placeholder="Enter rule(s) here..."></textarea>-->
 			<textarea class="description" autocapitalize="off" placeholder="Rule description..."></textarea>
 		</div>
 	</div>`;

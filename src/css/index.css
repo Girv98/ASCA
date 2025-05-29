@@ -286,6 +286,8 @@ h1 {
 
 .cont {
 	padding-top: 0;
+	display: flex;
+	flex-direction: column;
 }
 
 .rule {
@@ -413,7 +415,7 @@ textarea:focus,
 input::placeholder,
 textarea::placeholder,
 #output::placeholder {
-	color:var(--fg);
+	color:var(--grey1);
 }
 
 .options {

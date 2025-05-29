@@ -1,0 +1,105 @@
+@top all { line* }
+
+@skip { Comment | WS }
+
+line { emptyLine | Rule (Newline | Eof) }
+
+Rule { Input Arrow Output (Slash Env)? (Pipe Env)? }
+
+Input { InputTerm ( "," InputTerm)* }
+InputTerm { Empty | InputElements }
+InputElements { ( InputElement )+ }
+InputElement { Ellipsis | SyllBound | Term }
+
+Output { OutputTerm ("," OutputTerm)* }
+OutputTerm { Meta | Empty | OutputElements }
+OutputElements { ( OutputElement )+ }
+OutputElement { Syllable | Structure | Set | Segment | Variable | SyllBound }
+
+Env { EnvSet ( "," EnvSet)* | EnvTerms }
+EnvSet { ":{" EnvTerms? "}:" }
+EnvTerms { EnvTerm ("," EnvTerm)* }
+EnvTerm { WordBound? EnvElements? Underline EnvElements? WordBound? }
+EnvElements { ( EnvElement )+ }
+EnvElement { SyllBound | Ellipsis | Optional | Term }
+
+Term { Syllable | Structure | Set | Segment | Variable }
+
+Syllable { "%" (":" Params)? VarAssign? }
+Structure {StructOpen SyllableTerms? StructClose (":" Params)? VarAssign? }
+SyllableTerms { (SyllableTerm)+ }
+SyllableTerm { Segment | Ellipsis | Variable }
+StructOpen { StructOpenSimp | StructOpenComp }
+StructClose { StructCloseSimp | StructCloseComp }
+
+Set { "{" SetTerm ("," SetTerm)* "}" }
+SetTerm { Segment | Boundary | Syllable }
+
+Optional { "(" OptionalTerms ("," Number (":" Number)?)? ")" }
+OptionalTerms { (OptionalTerm)+ }
+OptionalTerm { Boundary | Syllable | Set | Segment | Variable }
+
+Segment { Ipa (":" Params)? | Matrix VarAssign? }
+Matrix { Group (":" Params)? | Params }
+Group { "C" | "O" | "S" | "P" | "F" | "L" | "N" | "G" | "V" }
+
+Variable { Number (":" Params)? }
+VarAssign { "=" Number }
+
+
+// @precedence {ArgChar, "-" ArgChar  | "+" | "-" }
+
+@precedence { times @cut, plus}
+
+Params { "[" ArgList? "]" }
+ArgList { Arg ("," Arg)* ","? }
+Arg { 
+  (ArgMod { !times ("+" | "-")?  ArgChar |  !plus  ("+" | "-") } String) 
+  | 
+  Tone { ("tone" | "ton" | "tne" | "tn") ":" Number }
+}
+ArgChar {Greek | Upper}
+
+
+Meta { "&" }
+Empty { "*" | "∅"}
+Ellipsis { "..."  | ".." | "…" }
+Boundary { WordBound | SyllBound }
+WordBound { "#" }
+SyllBound { "$" }
+
+emptyLine { Newline }
+Underline { "_"+ }
+
+
+@tokens {
+    WS { (" " | "\t")+ }
+    Comment { ";;" ![\n]* }
+    Arrow { "=>" | "->" | "~>" | ">" | "~" }
+    Pipe { "//" | "|" }
+    Slash { "/" }
+    Greek { $[α-ω] }
+    String { $[A-Za-z.]+ }
+    Upper { $[A-Z] }
+    Number { $[0-9]+ }
+    Ipa { ![ \,.=>()*[\]<|{}⟨⟩+?/…∅\-_:!~$%@#&\t\n\r0-9A-Z;]+ }
+    Newline { ("\r\n" | "\n") }
+    @precedence { String , Upper }
+    @precedence { ":{", "{" }
+    @precedence { "}:", "}" }
+    StructOpenSimp[closedBy=">"] { "<" }
+    StructCloseSimp[openedBy="<"] { ">"}
+    StructOpenComp[closedBy="⟩"] { "⟨" }
+    StructCloseComp[openedBy="⟨"] { "⟩" }
+    // EnvSetOpen[closedBy="}:"] { ":{" } 
+    // EnvSetClose[openedBy=":{"] { "}:" }
+    ":{" "}:"
+    "(" ")"
+    "[" "]"
+    "{" "}"
+    ":" ","
+    "="
+    Eof { @eof }
+}
+
+@detectDelim

@@ -1,0 +1,94 @@
+
+.cm-editor { 
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+	appearance: textarea;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+    font-size: 1rem;
+
+    font-family: FontNoto !important;
+	font-optical-sizing: none !important;
+	font-variation-settings:
+    "wdth" 80;
+    background: var(--bg0);	
+    width: 100%;
+    border-radius: 10px;
+	outline:none;
+	border: None;
+    white-space: pre !important;
+
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+    flex-grow: 1;
+	flex-shrink: 0;
+    margin-bottom: 5px;
+}
+.cm-editor.cm-focused { 
+    box-shadow: inset 0 0 1px 1px var(--green);
+	outline:none;
+}
+
+.cm-scroller {
+    padding: unset !important;
+
+    overflow: auto !important;
+    resize: vertical;
+    /* min-height: 4lh; */
+    scrollbar-width: thin !important;
+    scrollbar-gutter: stable;
+	scrollbar-color: var(--green)  var(--bg1) !important;
+}
+
+.cm-placeholder {
+    color: var(--grey1) !important;
+}
+
+.cm-content {
+    caret-color: var(--fg) !important;
+    min-height: 4lh  !important;
+}
+
+.cm-line  {
+    color: var(--green);
+    width: 1px !important;
+}
+
+/* .tok-name {
+    color: var(--fg) !important;
+}*/
+
+/* .tok-propertyName {
+    color: var(--purple) !important;
+} */
+
+
+/* .tok-keyword {
+    color: var(--red) !important;
+} */
+
+/* .tok-operator {
+    color: var(--blue) !important;
+} */
+
+/* .tok-comment {
+    color: var(--grey1) !important;
+} */
+
+/* .tok-number {
+    color: var(--purple) !important;
+} */
+
+/* .tok-atom {
+    color: var(--blue) !important;
+} */
+
+/* .tok-variableName {
+    color: var(--purple) !important;
+} */
+
+/* .tok-punctuation {
+    color: var(--grey1) !important;
+}  */

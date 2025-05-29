@@ -1,6 +1,5 @@
 import { userResize } from "./main";
-import { getRuleActiveBoxes, getRuleClosedBoxes, updateActive, updateCollapse } from "./rules";
-
+import { Rules } from "./rules";
 
 export function checkMoveOrDup(e: KeyboardEvent) {
     if (e.altKey && e.shiftKey) {
@@ -22,7 +21,7 @@ export function checkMoveOrDup(e: KeyboardEvent) {
     }
 }
 
-export function ruleHandleKeyboardDown(e: KeyboardEvent) {
+export function ruleHandleKeyboardDown(rules: Rules, e: KeyboardEvent) {
     if (e.target !== e.currentTarget) {
         // jump to outer
         if (e.shiftKey && e.key == 'Backspace') {
@@ -36,11 +35,18 @@ export function ruleHandleKeyboardDown(e: KeyboardEvent) {
         if (e.key == 'ArrowUp') {
             e.preventDefault();
             let parent = document.getElementById("demo")!;
+            let index = Array.prototype.indexOf.call(parent.children, e.target as HTMLElement)
+
+            rules.moveUpWrap(index)
+
             parent.insertBefore((e.target as HTMLElement), (e.target as HTMLElement).previousElementSibling);
             (e.target as HTMLElement)?.focus();
         } else if (e.key == 'ArrowDown') {
             e.preventDefault();
             let parent = document.getElementById("demo")!;
+            let index = Array.prototype.indexOf.call(parent.children, e.target as HTMLElement)
+
+            rules.moveDownWrap(index)
 
             if ((e.target as HTMLElement).nextElementSibling) {
                 parent.insertBefore((e.target as HTMLElement).nextElementSibling!, (e.target as HTMLElement));
@@ -64,86 +70,68 @@ export function ruleHandleKeyboardDown(e: KeyboardEvent) {
     }
 }
 
-export function ruleHandleKeyboardUp(e: KeyboardEvent) {
-    if (e.target !== e.currentTarget && e.shiftKey) {
-        if (e.key === 'Home') {
-            e.preventDefault();
-            (document.getElementById("demo")?.firstElementChild as HTMLDivElement).focus();
-        } else if (e.key === 'End') {
-            e.preventDefault();
-            (document.getElementById("demo")?.lastElementChild as HTMLDivElement).focus();
-        }
-
-        return;
-    }
-
+export function ruleHandleKeyboardUp(rules: Rules, e: KeyboardEvent) {
     if (e.target === e.currentTarget) {
         if (e.shiftKey) {
-            if (e.key == 'N') {
+            if (e.key === 'Home') {
+                e.preventDefault();
+                (document.getElementById("demo")?.firstElementChild as HTMLDivElement).focus();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                (document.getElementById("demo")?.lastElementChild as HTMLDivElement).focus();
+            } else if (e.key == 'A') {
                 // jump to title
                 e.preventDefault();
                 ((e.target as HTMLElement)?.querySelector(".name") as HTMLInputElement)?.focus();
-            } else if (e.key == 'R') {
+            } else if (e.key == 'S') {
                 // jump to rule
                 e.preventDefault();
                 (e.target as HTMLElement)?.querySelector('.maxmin')?.querySelector('i')?.classList?.replace('fa-plus', 'fa-minus');
                 (e.target as HTMLElement)?.querySelector(".cont")?.classList.remove('invisible');
-                ((e.target as HTMLElement)?.querySelector(".rule") as HTMLTextAreaElement)?.focus();
-                updateCollapse(true)
+                ((e.target as HTMLElement)?.querySelector(".cm-content") as HTMLTextAreaElement)?.focus();
+                rules.updateCollapse(true)
             } else if (e.key == 'D') {
                 // jump to description
                 e.preventDefault();
                 (e.target as HTMLElement)?.querySelector('.maxmin i')?.classList.replace('fa-plus', 'fa-minus');
                 (e.target as HTMLElement)?.querySelector(".cont")?.classList.remove('invisible');
                 ((e.target as HTMLElement)?.querySelector(".description") as HTMLTextAreaElement)?.focus();
-                updateCollapse(true)
+                rules.updateCollapse(true)
             } else if (e.key == 'T') {
                 // toggle
                 let i = (e.target as HTMLElement).querySelector('.onoff i')!;
 
                 if (i.classList.contains('fa-toggle-off')) {
                     i.classList.replace('fa-toggle-off', 'fa-toggle-on');
-                    updateActive(!getRuleActiveBoxes().some((e) => e == false));
+                    rules.updateActive(!Rules.getRuleActiveBoxes().some((e) => e == false));
                 } else {
                     i.classList.replace('fa-toggle-on', 'fa-toggle-off');
-                    updateActive(false);
+                    rules.updateActive(false);
                 }
                 (e.target as HTMLElement).classList.toggle('ignore')
             }
         } else if (e.key === 'Delete') {
             e.preventDefault();
-            if (confirm("Are you sure you want to remove this rule?") === true) {
-                let el = (e.target as HTMLElement).closest(".draggable-element")!;
-                if (el.previousElementSibling) {
-                    (el.previousElementSibling as HTMLDivElement).focus();
-                } else if (el.nextElementSibling) {
-                    (el.nextElementSibling as HTMLDivElement).focus();
-                }
-                el.remove();
-                let activeArr = getRuleActiveBoxes();
-                if (!activeArr.length) {
-                    updateActive(null);
-                } else if (!activeArr.some((e) => e == false)) {
-                    updateActive(true);
-                }
-                let closedArr = getRuleClosedBoxes();
-                if (!closedArr.length) {
-                    updateCollapse(null) 
-                } else if (!closedArr.some((e) => e == false)) {
-                    updateCollapse(false)
-                }
+            let el = (e.target as HTMLElement).closest(".draggable-element")!;
+            let nextEl = el.previousElementSibling ?? el.nextElementSibling;
+
+            rules.removeRule(el as HTMLElement);
+
+            if (nextEl) {
+                (nextEl as HTMLDivElement).focus();
             }
+
         } else if (e.key === 'Enter') {
             e.preventDefault();
             let i = (e.target as HTMLElement).querySelector('.maxmin i')!;
             if (i.classList.contains('fa-minus')) {
                 i.classList.replace('fa-minus', 'fa-plus');
-                if (!getRuleClosedBoxes().some((e) => e == false)) {
-                    updateCollapse(false)
+                if (!Rules.getRuleClosedBoxes().some((e) => e == false)) {
+                    rules.updateCollapse(false)
                 }
             } else {
                 i.classList.replace('fa-plus', 'fa-minus');
-                updateCollapse(true)
+                rules.updateCollapse(true)
             }
             (e.target as HTMLElement).querySelector(".cont")!.classList.toggle('invisible')
         }

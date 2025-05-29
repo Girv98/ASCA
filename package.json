@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "devhost": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prevhost": "vite preview --host"
+    "prevhost": "vite preview --host",
+    "prepare": "lezer-generator --typeScript src/editor/rule.grammar -o src/editor/parser.ts"
   },
   "devDependencies": {
     "@types/sortablejs": "^1.15.8",
@@ -21,6 +23,7 @@
     "@codemirror/view": "^6.14.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@lezer/generator": "^1.7.3",
     "sortablejs": "^1.15.6"
   }
 }
