@@ -85,6 +85,7 @@ Underline { "_"+ }
     Ipa { ![ \,.=>()*[\]<|{}⟨⟩+?/…∅\-_:!~$%@#&\t\n\r0-9A-Z;]+ }
     Newline { ("\r\n" | "\n") }
     @precedence { String , Upper }
+    @precedence { ":{", ":" }
     @precedence { ":{", "{" }
     @precedence { "}:", "}" }
     StructOpenSimp[closedBy=">"] { "<" }
