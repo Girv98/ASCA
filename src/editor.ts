@@ -22,7 +22,7 @@ const syntax_colors = syntaxHighlighting(
       { tag: tags.literal, color: "var(--green)" },
 
       { tag: tags.operator, color: "var(--blue)", /*fontWeight: "bold"*/ },
-      { tag: tags.keyword, color: "var(--purple)" },
+      { tag: tags.keyword, color: "var(--red)" },
       { tag: tags.number, color: "var(--purple)" },
 			
       { tag: tags.angleBracket, color: "var(--red)" },
