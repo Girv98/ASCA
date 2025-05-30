@@ -134,19 +134,29 @@
 
 	<section>
 		<div class="thirds inlex noto-sans">
-			<h1>Input</h1>
+			<div class="title-wrapper">
+				<h1>Input</h1>
+				<button id="input-minimax">
+					<i class="fa-solid fa-minus"></i>
+				</button>
+			</div>
 			<div class="options">
 				<label for="trace">Trace: </label>
 				<select name="trace" id="trace">
 					<option value="-1">-</option>
 				</select>
 			</div>
-			<div class = "wrapper">
+			<div id="lex-wrap" class="wrapper">
 				<textarea id="lexicon" spellcheck="false" autocapitalize="off" placeholder="Input lexicon in IPA format e.g.&#10;hɛˈləʊ&#10;ˈlɔː.ɹm̩&#10;ˈɪp.sm̩"></textarea>
 			</div>
 		</div>
 		<div class="thirds sounds">
-			<h1>Rules</h1>
+			<div class="title-wrapper">
+				<h1>Rules</h1>
+				<button id="rule-minimax">
+					<i class="fa-solid fa-minus"></i>
+				</button>
+			</div>
 			<div id="buttons">
 				<button id="run" title="Run Asca" class="custom-button">Run</button>
 				<div class="custom-button button-group">
@@ -171,6 +181,7 @@
 				</div>
 				<button id="clear-all" title="Remove all rules" class="custom-button">Clear</button>
 			</div>
+			<div id="rule-thing" class="invisible"><span class="hidden-text"></span></div>
 			 <div id="demo">
 				<!-- Rules live here -->
 			</div>

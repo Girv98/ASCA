@@ -96,6 +96,53 @@ div.thirds.sounds {
 	width: 160%;
 }
 
+.title-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.title-wrapper h1 {
+	flex-grow: 1;
+}
+
+.title-wrapper button {
+	height: 100%;
+	font-weight: bold;
+	font-size: 1.6rem;
+	text-align: center;
+	border: None;
+	background-color: Transparent;
+	box-shadow: none;
+	color: var(--green);
+    outline:none;
+	cursor: pointer;
+	padding: 0;
+
+	position: relative;
+	right: 1rem;
+}
+
+#rule-thing {
+	margin: 1%;
+	padding: 2%;
+	background: var(--bg2);
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+	display: flex;
+}
+
+.hidden-text {
+	width: 100%;
+	text-align: center;
+}
+
+@media screen and (min-width: 920px) {
+	#rule-minimax:has(.fa-minus),  
+	#input-minimax:has(.fa-minus) {
+		display:none !important;
+	}
+}
+
 /* #demo {
 	max-height: 70dvh;
 	overflow-y: auto;

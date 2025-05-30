@@ -5,6 +5,7 @@ import { /*addResizeEvents, */createRuleEvents, resize } from "./main";
 import { blockTemplate } from "./templates";
 import { EditorView } from '@codemirror/view';
 
+let ruleThing = document.getElementById("rule-thing")!.querySelector(".hidden-text")!;
 
 export type Rule = {
     name: string,
@@ -84,6 +85,11 @@ export class Rules {
         }
     }
 
+    private updateHidden() {
+        let asdf = (this.editors.length === 1) ? "rule" : "rules";
+        ruleThing.textContent = `${this.editors.length} ${asdf} hidden`;
+    }
+
     public addRuleEnd() {
         let demo = document.getElementById("demo")!;
         demo.insertAdjacentHTML("beforeend", blockTemplate);
@@ -92,6 +98,7 @@ export class Rules {
         createRuleEvents(demo.lastElementChild as HTMLElement);
         this.updateCollapse(true);
         this.updateActive(true);
+        this.updateHidden();
     }
 
     public addRuleBegin() {
@@ -100,8 +107,9 @@ export class Rules {
         demo.firstElementChild!.querySelector(".clone")!.querySelector("i")!.title = "Copy Rule Above"
         this.attachEditor(demo.firstElementChild as HTMLElement, false);
         createRuleEvents(demo.firstElementChild as HTMLElement);
-        this.updateCollapse(true)
-        this.updateActive(true)
+        this.updateCollapse(true);
+        this.updateActive(true);
+        this.updateHidden();
     }
 
     public addRule() {
@@ -152,6 +160,7 @@ export class Rules {
     public clearForLoad() {
         document.querySelectorAll('.draggable-element').forEach(e => e.remove());
         this.editors.length = 0;
+        this.updateHidden();
     }
 
     public clearRules() {
@@ -163,6 +172,7 @@ export class Rules {
             this.updateCollapse(null);
             this.updateActive(null);
             (document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+            this.updateHidden();
         }
     }
 
@@ -296,6 +306,7 @@ export class Rules {
             if (!this.editors.length) {
                 (document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
             }
+            this.updateHidden();
         }
     }
 
@@ -356,6 +367,7 @@ export class Rules {
         }
 
         createRuleEvents(ruleElement);
+        this.updateHidden();
     }
 
     public cloneRuleFocus(el: HTMLElement) {
@@ -379,6 +391,7 @@ export class Rules {
             el.parentNode!.insertBefore(clone, el);
             this.editors.splice(index, 0, clonedView)
         }
+        this.updateHidden();
     }
 }
 

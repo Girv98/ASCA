@@ -479,6 +479,28 @@ Sortable.create(document.getElementById('demo')!, {
 
 
 // Button click events
+document.getElementById("input-minimax")!.addEventListener("click", function(this: HTMLElement) {
+	let i = this.querySelector("i")!;
+
+	if (i.classList.contains('fa-minus')) {
+		i.classList.replace('fa-minus', 'fa-plus');
+	} else {
+		i.classList.replace('fa-plus', 'fa-minus');
+	}
+	document.getElementById("lex-wrap")!.classList.toggle('invisible')
+});
+
+document.getElementById("rule-minimax")!.addEventListener("click", function(this: HTMLElement) {
+	let i = this.querySelector("i")!;
+
+	if (i.classList.contains('fa-minus')) {
+		i.classList.replace('fa-minus', 'fa-plus');
+	} else {
+		i.classList.replace('fa-plus', 'fa-minus');
+	}
+	document.getElementById("demo")!.classList.toggle('invisible');
+	document.getElementById("rule-thing")!.classList.toggle('invisible');
+})
 
 document.getElementById("add")!.addEventListener("click", _ => Rules.addRule());
 document.getElementById("updown")!.addEventListener("click", _ => Rules.toggleDirection());
