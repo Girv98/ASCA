@@ -329,7 +329,7 @@ function createOutput(res: WasmResult) {
 		output.forEach((val) => {
 			if (val) {
 				if (val.startsWith('Applied "')) {
-					val = val.replace('"', '<span style="color: var(--green)";>"');
+					val = val.replace('Applied "', '<span style="color: var(--green);">"');
 					val = val.replace(new RegExp('":$'), '"</span>:');
 				} else {
 					val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
@@ -356,7 +356,7 @@ function createOutput(res: WasmResult) {
 	output.forEach((val) => {
 		outputJoined += '<div class="out-line"><span>'
 		if (val.startsWith('Applied "')) {
-			val = val.replace('"', '<span style="color: var(--green)";>"');
+			val = val.replace('Applied "', '<span style="color: var(--green);">"');
 			val = val.replace(new RegExp('":$'), '"</span>:');
 		} else {
 			val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
