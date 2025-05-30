@@ -343,11 +343,11 @@ function createOutput(res: WasmResult) {
 		output.forEach((val) => {
 			val = escapeHTML(val);
 			if (val) {
-				if (val.startsWith('Applied "')) {
-					val = val.replace('Applied "', '<span style="color: var(--green);">"');
-					val = val.replace(new RegExp('":$'), '"</span>:');
+				if (val.startsWith('Applied &quot;')) {
+					val = val.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
+					val = val.replace(new RegExp(':$'), '</span>:');
 				} else {
-					val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
+					val = val.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
 				}
 				outputJoined += `<div class="out-line"><span>${val}</span></div>`
 			} else {
@@ -371,11 +371,11 @@ function createOutput(res: WasmResult) {
 	output.forEach((val) => {
 		val = escapeHTML(val);
 		outputJoined += '<div class="out-line"><span>'
-		if (val.startsWith('Applied "')) {
-			val = val.replace('Applied "', '<span style="color: var(--green);">"');
-			val = val.replace(new RegExp('":$'), '"</span>:');
+		if (val.startsWith('Applied &quot;')) {
+			val = val.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
+			val = val.replace(new RegExp(':$'), '</span>:');
 		} else {
-			val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
+			val = val.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
 		}
 		let parts = val.split('�')
 		if (parts.length == 1) {
