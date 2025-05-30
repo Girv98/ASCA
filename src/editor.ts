@@ -53,6 +53,7 @@ const parserWithMeta = parser.configure({
             "( )": tags.paren,
             ":": tags.operator,
             "=": tags.operator,
+            Ellipsis: tags.operator,
             StructOpenSimp: tags.angleBracket,  // <
             StructCloseSimp: tags.angleBracket, // >
             StructOpenComp: tags.angleBracket,  // ⟨
