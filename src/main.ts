@@ -320,6 +320,20 @@ function runASCA() {
 	RulesClass.traceRules(trace_indices);
 }
 
+function escapeHTML(str: string): string {
+	return str.replace(
+    /[&<>'"]/g,
+    tag =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag)
+  )
+}
+
 function createOutput(res: WasmResult) {
 	let outputJoined = "";
 	let output = res.get_output();
@@ -327,6 +341,7 @@ function createOutput(res: WasmResult) {
 	// If no unknowns
 	if (!unknowns.length) {
 		output.forEach((val) => {
+			val = escapeHTML(val);
 			if (val) {
 				if (val.startsWith('Applied "')) {
 					val = val.replace('Applied "', '<span style="color: var(--green);">"');
@@ -354,6 +369,7 @@ function createOutput(res: WasmResult) {
 
 	let occurence = -1;
 	output.forEach((val) => {
+		val = escapeHTML(val);
 		outputJoined += '<div class="out-line"><span>'
 		if (val.startsWith('Applied "')) {
 			val = val.replace('Applied "', '<span style="color: var(--green);">"');
@@ -381,6 +397,7 @@ function createOutput(res: WasmResult) {
 		let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
 		let number = unknownsMap.get(val)!.length;
 		let counts = (number == 1) ? "count" : "counts";
+		val = escapeHTML(val);
 		return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
 	}).join('');
 
