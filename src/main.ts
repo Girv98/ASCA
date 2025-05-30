@@ -328,6 +328,12 @@ function createOutput(res: WasmResult) {
 	if (!unknowns.length) {
 		output.forEach((val) => {
 			if (val) {
+				if (val.startsWith('Applied "')) {
+					val = val.replace('"', '<span style="color: var(--green)";>"');
+					val = val.replace(new RegExp('":$'), '"</span>:');
+				} else {
+					val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
+				}
 				outputJoined += `<div class="out-line"><span>${val}</span></div>`
 			} else {
 				outputJoined += '<div class="out-line"><span><br></span></div>'
@@ -349,6 +355,12 @@ function createOutput(res: WasmResult) {
 	let occurence = -1;
 	output.forEach((val) => {
 		outputJoined += '<div class="out-line"><span>'
+		if (val.startsWith('Applied "')) {
+			val = val.replace('"', '<span style="color: var(--green)";>"');
+			val = val.replace(new RegExp('":$'), '"</span>:');
+		} else {
+			val = val.replace("=>", '<span style="color: var(--blue)";>=></span>');
+		}
 		let parts = val.split('�')
 		if (parts.length == 1) {
 			outputJoined += (val == "") ? "<br>" : val;
