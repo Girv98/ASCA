@@ -251,7 +251,11 @@ export class Rules {
     }
 
     public static traceRules(indices: Uint32Array<ArrayBufferLike>) {
-        let els = document.querySelectorAll(".draggable-element");
+        let els = [...document.querySelectorAll(".draggable-element")];
+
+        let actives = this.getRuleActiveBoxes();
+
+        els = els.filter((_val, index) => actives[index])
 
         indices.forEach((val) => {
             els[val].classList.add('traced');
