@@ -1,7 +1,7 @@
 import { parser } from "./editor/parser.ts"
 
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { defaultKeymap, history, historyKeymap, toggleComment } from "@codemirror/commands";
 import { HighlightStyle, LRLanguage, syntaxHighlighting } from "@codemirror/language";
 import { EditorState, Prec } from "@codemirror/state";
 import { EditorView, keymap, placeholder, type Command, type KeyBinding } from "@codemirror/view";
@@ -85,14 +85,18 @@ const language = LRLanguage.define({
 
 // So that hotkeys still work
 let preventDefault: Command = (_ev: EditorView) => { return true }
-const prevent: KeyBinding[] = [{key: "Shift-Enter", run: preventDefault, preventDefault: true}, {key: "Shift-Backspace", run: preventDefault , preventDefault: true}]
+const customBindings: KeyBinding[] = [
+  {key: "Shift-Enter", run: preventDefault, preventDefault: true}, 
+  {key: "Shift-Backspace", run: preventDefault , preventDefault: true},
+  {key: "Ctrl-;", run: toggleComment , preventDefault: true},
+]
 
 function createState(initial: string) {
     return EditorState.create({
           doc: initial,
           extensions: [
             history(),
-            Prec.highest(keymap.of(prevent)),
+            Prec.highest(keymap.of(customBindings)),
             keymap.of(historyKeymap),
             keymap.of(closeBracketsKeymap),
             keymap.of(defaultKeymap),
