@@ -8,6 +8,15 @@ import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './
 
 let Rules = new RulesClass();
 
+let DEMO = document.getElementById("demo") as HTMLDivElement;
+let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
+let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
+let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
+let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
+let LOAD = document.getElementById("load") as HTMLInputElement;
+let TRACE = document.getElementById("trace") as HTMLSelectElement;
+let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
+
 
 export function createRuleEvents(ruleEl: HTMLElement) {
 
@@ -61,7 +70,7 @@ export function createRuleEvents(ruleEl: HTMLElement) {
 
 
 function getAliases() {
-	return [((document.getElementById("alias-into") as HTMLTextAreaElement).value), ((document.getElementById("alias-from") as HTMLTextAreaElement).value)]
+	return [ALIAS_INTO.value, ALIAS_FROM.value]
 }
 
 function globalHandleKeyUp(e: KeyboardEvent) {
@@ -70,12 +79,12 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 			// Move to rules
 			case 'r': 
 				e.preventDefault();
-				(document.getElementById("demo")!.firstElementChild as HTMLDivElement).focus();
+				(DEMO.firstElementChild as HTMLDivElement).focus();
 				return;
 			// Move to input
 			case 'w':
 				e.preventDefault();
-				document.getElementById("lexicon")?.focus();
+				LEXICON.focus();
 				return;
 			// Add rule
 			case 'a': e.preventDefault(); Rules.addRule(); return;
@@ -123,26 +132,23 @@ function onReaderLoad(event: any) {
 	if (obj.rules.length) {
 		Rules.updateCollapse(true);
 		Rules.updateActive(true);
-		(document.getElementById("clear-all") as HTMLButtonElement).disabled = false;
+		CLEAR_ALL.disabled = false;
 	} else {
 		Rules.updateCollapse(null);
 		Rules.updateActive(null);
-		(document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+		CLEAR_ALL.disabled = true;
 	}
 
 	if (obj.words) {
-		let lex = document.getElementById('lexicon') as HTMLTextAreaElement;
-		lex.value = obj.words.join('\n');
-		resize(lex);
+		LEXICON.value = obj.words.join('\n');
+		resize(LEXICON);
 	}
 
-	let to = document.getElementById("alias-into") as HTMLTextAreaElement;
-	if (obj.into) { to.value = obj.into.join('\n'); } else { to.value = "" }
-	resize(to);
+	if (obj.into) { ALIAS_INTO.value = obj.into.join('\n'); } else { ALIAS_INTO.value = "" }
+	resize(ALIAS_INTO);
 
-	let fr = document.getElementById("alias-from") as HTMLTextAreaElement;
-	if (obj.from) { fr.value = obj.from.join('\n'); } else { fr.value = "" }
-	resize(fr);
+	if (obj.from) { ALIAS_FROM.value = obj.from.join('\n'); } else { ALIAS_FROM.value = "" }
+	resize(ALIAS_FROM);
 
 	updateTrace();
 
@@ -154,16 +160,16 @@ function loadFile(event: any) {
 	var reader = new FileReader();
 	reader.onload = onReaderLoad;
 	reader.readAsText(event.target.files[0]);
-	(document.getElementById("load") as HTMLInputElement).value = '';
+	LOAD.value = '';
 };
 
 // TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 // Saving to JSON
 function saveFile() {
-	let wordList = (document.getElementById("lexicon") as HTMLTextAreaElement).value;
+	let wordList = LEXICON.value;
 	let rules = Rules.getRules();
-	let into = (document.getElementById("alias-into") as HTMLTextAreaElement).value;
-	let from = (document.getElementById("alias-from") as HTMLTextAreaElement).value;
+	let into = ALIAS_INTO.value;
+	let from = ALIAS_FROM.value;
 
 	let obj = {
 		words: wordList.split('\n'),
@@ -181,14 +187,13 @@ function saveFile() {
 }
 
 function getTraceState(): string {
-    return (document.getElementById("trace") as HTMLSelectElement).value
+    return TRACE.value
 }
 
 function updateTrace() {
     // console.log(e)
-    let traceBox = document.getElementById("trace") as HTMLSelectElement;
-    let lex = document.getElementById("lexicon") as HTMLTextAreaElement;
-    let lexList = lex.value.split('\n');
+    let traceBox = TRACE;
+    let lexList = LEXICON.value.split('\n');
     // let traceText = [...traceBox.options].map(o => o.text);
     // let traceVals = [...traceBox.options].map(o => o.value);
     
@@ -285,7 +290,7 @@ function runASCA() {
 
 	// Rules.printEditors();
 
-    let rawWordList = (document.getElementById("lexicon") as HTMLTextAreaElement).value;
+    let rawWordList = LEXICON.value;
     let ruleList = Rules.getRules();
     let ruleClosed = RulesClass.getRuleClosedBoxes();
     let ruleActive = RulesClass.getRuleActiveBoxes();
@@ -297,7 +302,7 @@ function runASCA() {
     let wordList = rawWordList.split('\n')
 
     // filter inactive rules
-    ruleList = ruleList.filter((val, index) => { if (ruleActive[index]) { return val } });
+    ruleList = ruleList.filter((_val, index) => ruleActive[index]);
 
     let traceNumber = (+traceState >= 0) ? +traceState : null;
     console.log("Running ASCA...");
@@ -305,10 +310,10 @@ function runASCA() {
     console.log("Done");
 
     // handle result
-    
+	
     let outputJoined = createOutput(res);
     
-    document.getElementById("outlex")!.querySelector(".scroller")!.innerHTML = outlexTemplate;
+    OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
     let outputArea = document.getElementById('output')!;
     outputArea.innerHTML = outputJoined;
     resize(outputArea);
@@ -409,9 +414,9 @@ function createOutput(res: WasmResult) {
 }
 
 function onLoad() {
-    addResizeEvents(document.getElementById("lexicon")!)
-    addResizeEvents(document.getElementById("alias-into")!)
-    addResizeEvents(document.getElementById("alias-from")!)
+    addResizeEvents(LEXICON)
+    addResizeEvents(ALIAS_INTO)
+    addResizeEvents(ALIAS_FROM)
 
     console.log("Parsing local storage...")
 
@@ -442,21 +447,18 @@ function onLoad() {
 	} else if (rules.length > 0) { Rules.updateActive(true) } else { Rules.updateActive(null) }
 
 	if (rules.length === 0) {
-		(document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+		CLEAR_ALL.disabled = true;
 	}
 
     // Populate textareas from local stortage
-	let lex = document.getElementById("lexicon")! as HTMLTextAreaElement;
-	if (words) { lex.value = words } else { lex.value = '' }
-	resize(lex);
+	if (words) { LEXICON.value = words } else { LEXICON.value = '' }
+	resize(LEXICON);
 
-	let to = document.getElementById("alias-into")! as HTMLTextAreaElement;
-	if (aliasInto) {to.value = aliasInto} else { to.value = '' }
-	resize(to);
+	if (aliasInto) {ALIAS_INTO.value = aliasInto} else { ALIAS_INTO.value = '' }
+	resize(ALIAS_INTO);
 
-	let fr = document.getElementById("alias-from")! as HTMLTextAreaElement;
-	if (aliasFrom) {fr.value = aliasFrom} else { fr.value = '' }
-	resize(fr);
+	if (aliasFrom) {ALIAS_FROM.value = aliasFrom} else { ALIAS_FROM.value = '' }
+	resize(ALIAS_FROM);
 
     document.querySelectorAll('.draggable-element').forEach(e => e.remove());
 
@@ -471,17 +473,16 @@ function onLoad() {
 
 	if (words) {
 		let wordList = words.split('\n');
-		let selectTag = document.getElementById("trace")! as HTMLSelectElement;
 
 		wordList.map((w, i) => {
 			if (w !== "") {
 				let opt = document.createElement("option");
 				opt.value = `${i}`;
 				opt.innerHTML = w;
-				selectTag.append(opt);
+				TRACE.append(opt);
 
 				if ((traceState || traceState === 0) && traceState === i) {
-					selectTag.value = `${traceState}`;
+					TRACE.value = `${traceState}`;
 				}
 			}
 		})		
@@ -489,7 +490,7 @@ function onLoad() {
 }
 
 // Drag and drop
-Sortable.create(document.getElementById('demo')!, {
+Sortable.create(DEMO, {
 	handle: ".title",
 	filter: "button, input",
 	preventOnFilter: false,
@@ -527,7 +528,7 @@ document.getElementById("rule-minimax")!.addEventListener("click", function(this
 	} else {
 		i.classList.replace('fa-plus', 'fa-minus');
 	}
-	document.getElementById("demo")!.classList.toggle('invisible');
+	DEMO.classList.toggle('invisible');
 	document.getElementById("rule-thing")!.classList.toggle('invisible');
 })
 
@@ -555,8 +556,8 @@ document.getElementById("alias-modal-open")!.addEventListener("click", () => sho
 function showAliasModal() {
 	(document.getElementById('alias-modal')! as HTMLDialogElement).showModal();
 	// This has to go here for some reason... I assume closed modals don't calculate style changes
-	resize(document.getElementById("alias-into")!);
-	resize(document.getElementById("alias-from")!);
+	resize(ALIAS_INTO);
+	resize(ALIAS_FROM);
 }
 
 // document.getElementById("history-modal-close")!.addEventListener("click", () => (document.getElementById('history-modal')! as HTMLDialogElement).close());
@@ -619,15 +620,15 @@ document.querySelectorAll('dialog').forEach(item => {
     })
 });
 
-document.getElementById("lexicon")!.addEventListener("keyup", () => updateTrace());
+LEXICON.addEventListener("keyup", () => updateTrace());
 
 document.addEventListener("keyup", (e) => globalHandleKeyUp(e));
 document.addEventListener("keydown", (e) => globalHandleKeyDown(e));
 
 // VSCode-like Alt Reordering
-document.getElementById("lexicon")!.addEventListener("keydown", (e) => checkMoveOrDup(e));
-document.getElementById("alias-into")!.addEventListener("keydown", (e) => checkMoveOrDup(e));
-document.getElementById("alias-from")!.addEventListener("keydown", (e) => checkMoveOrDup(e));
+LEXICON.addEventListener("keydown", (e) => checkMoveOrDup(e));
+ALIAS_INTO.addEventListener("keydown", (e) => checkMoveOrDup(e));
+ALIAS_FROM.addEventListener("keydown", (e) => checkMoveOrDup(e));
 
 
 // ------------ Resizing ------------
@@ -641,7 +642,7 @@ let resizeObserver = new ResizeObserver(e => {
 // Lets us check if the resize was done by using the resize dragger
 let mouseIsDown = false;
 
-export function addResizeEvents(el: /*HTMLElement |*/ HTMLElement) {
+export function addResizeEvents(el: HTMLElement) {
 	el.addEventListener("input", e => userResize(e.target as HTMLElement));
 	el.addEventListener("mousedown", function() { mouseIsDown = true });
 	el.addEventListener("mouseup",   function() { mouseIsDown = false });

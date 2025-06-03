@@ -1,11 +1,16 @@
 
 import { createEditor } from "./editor";
-// import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from "./hotkeys";
 import { /*addResizeEvents, */createRuleEvents, resize } from "./main";
 import { blockTemplate } from "./templates";
 import { EditorView } from '@codemirror/view';
 
-let ruleThing = document.getElementById("rule-thing")!.querySelector(".hidden-text")!;
+let DEMO = document.getElementById("demo")!;
+let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
+let RULE_HIDDEN = document.getElementById("rule-thing")!.querySelector(".hidden-text")!;
+let ADD_BUTTON = document.getElementById("add")!;
+let DIR_BUTTON = document.getElementById("updown")!;
+let COL_BUTTON = document.getElementById("collapse")! as HTMLButtonElement;
+let ACT_BUTTON = document.getElementById("activate") as HTMLButtonElement;
 
 export type Rule = {
     name: string,
@@ -87,33 +92,31 @@ export class Rules {
 
     private updateHidden() {
         let asdf = (this.editors.length === 1) ? "rule" : "rules";
-        ruleThing.textContent = `${this.editors.length} ${asdf} hidden`;
+        RULE_HIDDEN.textContent = `${this.editors.length} ${asdf} hidden`;
     }
 
     public addRuleEnd() {
-        let demo = document.getElementById("demo")!;
-        demo.insertAdjacentHTML("beforeend", blockTemplate);
-        demo.lastElementChild!.querySelector(".clone i")!.classList.add('fa-rotate-90')
-        this.attachEditor(demo.lastElementChild as HTMLElement, true);
-        createRuleEvents(demo.lastElementChild as HTMLElement);
+        DEMO.insertAdjacentHTML("beforeend", blockTemplate);
+        DEMO.lastElementChild!.querySelector(".clone i")!.classList.add('fa-rotate-90')
+        this.attachEditor(DEMO.lastElementChild as HTMLElement, true);
+        createRuleEvents(DEMO.lastElementChild as HTMLElement);
         this.updateCollapse(true);
         this.updateActive(true);
         this.updateHidden();
     }
 
     public addRuleBegin() {
-        let demo = document.getElementById("demo")!;
-        demo.insertAdjacentHTML("afterbegin", blockTemplate);
-        demo.firstElementChild!.querySelector(".clone")!.querySelector("i")!.title = "Copy Rule Above"
-        this.attachEditor(demo.firstElementChild as HTMLElement, false);
-        createRuleEvents(demo.firstElementChild as HTMLElement);
+        DEMO.insertAdjacentHTML("afterbegin", blockTemplate);
+        DEMO.firstElementChild!.querySelector(".clone")!.querySelector("i")!.title = "Copy Rule Above"
+        this.attachEditor(DEMO.firstElementChild as HTMLElement, false);
+        createRuleEvents(DEMO.firstElementChild as HTMLElement);
         this.updateCollapse(true);
         this.updateActive(true);
         this.updateHidden();
     }
 
     public addRule() {
-        (document.getElementById("clear-all") as HTMLButtonElement).disabled = false;
+        CLEAR_ALL.disabled = false;
         if (this.dirEnd) {
             this.addRuleEnd();
         } else {
@@ -134,18 +137,16 @@ export class Rules {
     }
 
     public toggleDirection() {
-        let addButton = document.getElementById("add")!;
-        let upDownButton = document.getElementById("updown")!;
         let txt = "Copy Rule Above"
         if (this.dirEnd) {
-            upDownButton.querySelector("i")!.classList.replace('fa-chevron-down', 'fa-chevron-up')
-            upDownButton.title = "Change add direction to end"
-            addButton.title = "Add rule to beginning"
+            DIR_BUTTON.querySelector("i")!.classList.replace('fa-chevron-down', 'fa-chevron-up')
+            DIR_BUTTON.title = "Change add direction to end"
+            ADD_BUTTON.title = "Add rule to beginning"
             this.dirEnd = false;
         } else {
-            upDownButton.querySelector("i")!.classList.replace('fa-chevron-up', 'fa-chevron-down')
-            upDownButton.title = "Change add direction to beginning"
-            addButton.title = "Add rule to end"
+            DIR_BUTTON.querySelector("i")!.classList.replace('fa-chevron-up', 'fa-chevron-down')
+            DIR_BUTTON.title = "Change add direction to beginning"
+            ADD_BUTTON.title = "Add rule to end"
             this.dirEnd = true;
             txt = "Copy Rule Below"
         }
@@ -171,41 +172,39 @@ export class Rules {
             this.editors.length = 0;
             this.updateCollapse(null);
             this.updateActive(null);
-            (document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+            CLEAR_ALL.disabled = true;
             this.updateHidden();
         }
     }
 
     public updateCollapse(col: boolean | null) {
-        let button = document.getElementById("collapse")! as HTMLButtonElement;
         if (col === true) {
-            button.disabled = false;
-            button.innerHTML = "Collapse"
+            COL_BUTTON.disabled = false;
+            COL_BUTTON.innerHTML = "Collapse"
             this.toCollapse = true;
         } else if (col === false) {
-            button.disabled = false;
-            button.innerHTML = "Reexpand"
+            COL_BUTTON.disabled = false;
+            COL_BUTTON.innerHTML = "Reexpand"
             this.toCollapse = false;
         } else {
-            button.disabled = true;
-            button.innerHTML = "Collapse"
+            COL_BUTTON.disabled = true;
+            COL_BUTTON.innerHTML = "Collapse"
             this.toCollapse = true;
         }
     }
 
     public updateActive(act: boolean | null) {
-        let button = document.getElementById("activate") as HTMLButtonElement;
         if (act === true) {
-            button.disabled = false;
-            button.innerHTML = "Disable All"
+            ACT_BUTTON.disabled = false;
+            ACT_BUTTON.innerHTML = "Disable All"
             this.allActive = true;
         } else if (act === false) {
-            button.disabled = false;
-            button.innerHTML = "&nbspEnable All"
+            ACT_BUTTON.disabled = false;
+            ACT_BUTTON.innerHTML = "&nbspEnable All"
             this.allActive = false;
         } else {
-            button.disabled = true;
-            button.innerHTML = "&nbspEnable All"
+            ACT_BUTTON.disabled = true;
+            ACT_BUTTON.innerHTML = "&nbspEnable All"
             this.allActive = true;
         }
     }
@@ -273,16 +272,14 @@ export class Rules {
 
         els.forEach((el, index) => {
             let name = (el.querySelector('.name')! as HTMLInputElement).value;
-            // let rule = (el.querySelector('.rule')! as HTMLTextAreaElement).value.split('\n');
-            // this.editors.forEach((val) => val.state.doc.toString())
             let rule = this.editors[index].state.doc.toString().split('\n');
             let description = (el.querySelector('.description')! as HTMLTextAreaElement).value;
-            let obj: Rule = {
+            let ruleObj: Rule = {
                 name,
                 rule,
                 description
             };
-            list.push(obj);
+            list.push(ruleObj);
         })
 
         return list
@@ -308,7 +305,7 @@ export class Rules {
             }
 
             if (!this.editors.length) {
-                (document.getElementById("clear-all") as HTMLButtonElement).disabled = true;
+                CLEAR_ALL.disabled = true;
             }
             this.updateHidden();
         }
@@ -343,9 +340,9 @@ export class Rules {
     }
 
     public makeRule(name: string, rule: string, desc: string, ruleClosed: boolean, ruleActive: boolean) {
-        let demo = document.getElementById("demo")!;
-        demo.insertAdjacentHTML("beforeend", blockTemplate);
-        let ruleElement = demo.lastChild! as HTMLElement;
+
+        DEMO.insertAdjacentHTML("beforeend", blockTemplate);
+        let ruleElement = DEMO.lastChild! as HTMLElement;
 
         (ruleElement.querySelector(".name")! as HTMLInputElement).value = name;
 
