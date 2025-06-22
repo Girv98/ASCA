@@ -22,12 +22,15 @@ export const outlexTemplate = `<div id="output" role="textbox" contenteditable="
 
 export const historyTemplate = `
 <div class="history-item">
-	<div style="display:flex; align-items:center;"><h3><span class="history-time"><time></time></span></h3> <button style="height:fit-content;" class="history-load" title="Load" aria-label="Load">Load</button></div>
-	<div class="history-contents"">
-		<div class="history-text">
-
-		</div>
-		
+	<div class="history-item-content">
+		<span class="history-id" contenteditable="plaintext-only" spellcheck="false" autocapitalize="off" title="Save ID"></span> 
+		<!-- <span class="history-made-time">created&nbsp;<time></time></span>-->
+		<span class="history-mod-time" title="Time when last modified"><time></time></span>
+	</div>
+	<div class="history-item-buttons">
+		<button class="history-item-load" title="Load save into ASCA" aria-label="Load">Load</button>
+		<button class="history-item-save" title="Download save to computer" aria-label="Export">Export</button>
+		<button class="history-item-delete" title="Delete save" aria-label="Delete">Delete</button>
 	</div>
 </div>
 `;

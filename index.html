@@ -22,7 +22,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.13</button></h1>
+			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.14</button></h1>
 		</div>
 	</header>
 
@@ -33,6 +33,10 @@
 				<button id="version-modal-close" class="delete"><i class="fas fa-times" aria-hidden="true"></i></button>
 			</header>
 			<div class="modal-content">
+				<h3>0.14</h3>
+				<ul>
+					<li><b>Ui:</b> Brand-new saving system allowing for multiple files to be loaded at once.</li>
+				</ul>
 				<h3>0.13</h3>
 				<ul>
 					<li><b>Ui:</b> Move(ing) to CodeMirror inputs and added syntax highlighting. <br>
@@ -124,17 +128,29 @@
 		</div>
 	</dialog>
 
-	<!-- <dialog id="history-modal">
+	<dialog id="history-modal">
 		<div class="modal-wrapper">
 			<header>
-				<h2>Rule History</h2>
+				<h2>Saves</h2>
 				<button id="history-modal-close" class="delete"><i class="fas fa-times" aria-hidden="true"></i></button>
 			</header>
-			<div class="modal-content"> 
-				 Histories go here 
+			<div style="display: flex; flex-direction: column;">
+				<div class="history-buttons">
+					<button id="history-new" class="custom-button" title="Create new save">New</button>
+					<label id="history-load-label" for="history-load" class="custom-button" title="Import file" tabindex=0>Import</label>
+					<input id="history-load" type="file" accept="application/json">
+					<!-- <button id="history-clear" class="custom-button" title="Delete All">Delete All</button> -->
+				</div>
+				<div class="modal-content" tabindex="-1"> 
+					<!-- Histories go here  -->
+				</div>
+				<div>
+					<hr>
+					<span><b>Please Note:</b> Saves are stored locally. Do not clear browser data while your work is in progress.</span>
+				</div>
 			</div>
 		</div>
-	</dialog> -->
+	</dialog>
 
 	<section>
 		<div class="thirds inlex noto-sans">
@@ -173,12 +189,7 @@
 					<a id="help" class="join-left" title="View Documentation" href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md" target="_blank">Guides</a>
 					<a id="phon" class="join-right" title="View feature values" href="https://docs.google.com/spreadsheets/d/1TTfNy1aKE7KxX0LBhIE6Zacx3GU-BVTM1l7wDKah4zM/edit?usp=sharing" target="_blank">Values</a>
 				</div>
-				<div class="custom-button button-group">
-					<button id="save" class="join-left" title="Save to computer">Save</button>
-					<label id="load-label" for="load" class="join-right" title="Load from files" tabindex=0>Load</label>
-					<input id="load" type="file" accept="application/json">
-					<!-- <button id="history-modal-open" class="join-right">Hist</button> -->
-				</div>
+				<button id="history-modal-open" class="custom-button">Saves</button>
 				<div class="custom-button button-group">
 					<button id="collapse" class="join-left">Collapse</button>
 					<button id="activate" class="join-right">Disable All</button>

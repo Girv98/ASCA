@@ -18,6 +18,12 @@ export type Rule = {
     description: string
 }
 
+export function ruleEquals(a: Rule, b: Rule) {
+    return a.name === b.name 
+        && a.rule.join() === b.rule.join() 
+        && a.description === b.description
+}
+
 export class Rules {
     private editors: EditorView[];
     private toCollapse: boolean;
@@ -91,8 +97,8 @@ export class Rules {
     }
 
     private updateHidden() {
-        let asdf = (this.editors.length === 1) ? "rule" : "rules";
-        RULE_HIDDEN.textContent = `${this.editors.length} ${asdf} hidden`;
+        let plurality = (this.editors.length === 1) ? "rule" : "rules";
+        RULE_HIDDEN.textContent = `${this.editors.length} ${plurality} hidden`;
     }
 
     public addRuleEnd() {

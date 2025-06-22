@@ -1,31 +1,70 @@
 import Sortable from 'sortablejs';
 
-import { /*historyTemplate,*/ outlexTemplate } from "./templates";
+import { outlexTemplate } from "./templates";
 import init, { run_wasm, WasmResult } from '../libasca/asca.js'
 import { Rules as RulesClass }  from './rules.js';
 import { type Rule } from './rules.js';
 import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
+import { Lines } from './history.js';
 
-let Rules = new RulesClass();
+let RULES_VIEW = new RulesClass();
+let LINES = new Lines(RULES_VIEW);
 
 let DEMO = document.getElementById("demo") as HTMLDivElement;
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
-let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
 let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
-let LOAD = document.getElementById("load") as HTMLInputElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
 
+export function createHistoryEvents(el: Element) {
+	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
+	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
+	let deleteButton = el.querySelector<HTMLButtonElement>(".history-item-delete")!;
+
+	let idField = el.querySelector<HTMLSpanElement>(".history-id")!;
+
+	let originalVal = idField.innerText;
+
+	idField.addEventListener('focusout', function() {
+		LINES.histRename(idField.innerText, originalVal);
+	});
+
+	idField.addEventListener('keydown', function(e) {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			(e.target as HTMLElement).blur();
+		}
+	});
+
+	loadButton.addEventListener("click", function() {
+		let item = this.closest(".history-item") as HTMLElement;
+		if (LINES.histLoad(item.querySelector<HTMLSpanElement>(".history-id")!.innerText)) {
+			document.querySelectorAll(".history-item").forEach((i) => i.classList.remove('active'));
+			item.classList.add("active");
+		}
+	});
+
+	exportButton.addEventListener("click", function() {
+		LINES.histExport(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
+	});
+
+	deleteButton.addEventListener("click", function(this: HTMLButtonElement) {
+		let item = this.closest(".history-item") as HTMLElement;
+		LINES.histDelete(item.querySelector<HTMLSpanElement>(".history-id")!.innerText);
+	})
+}
+
+
 export function createRuleEvents(ruleEl: HTMLElement) {
 
-    ruleEl.addEventListener('keydown', e => ruleHandleKeyboardDown(Rules, e));
-    ruleEl.addEventListener('keyup', e => ruleHandleKeyboardUp(Rules, e));
+    ruleEl.addEventListener('keydown', e => ruleHandleKeyboardDown(RULES_VIEW, e));
+    ruleEl.addEventListener('keyup', e => ruleHandleKeyboardUp(RULES_VIEW, e));
 
     // x button
     ruleEl.querySelector('.delete')!.addEventListener('click', function(this: HTMLElement) {
-        Rules.removeRule(this.closest(".draggable-element")!);
+        RULES_VIEW.removeRule(this.closest(".draggable-element")!);
     })
     // +/- button
     ruleEl.querySelector('.maxmin')!.addEventListener('click', function(this: HTMLElement) {
@@ -33,11 +72,11 @@ export function createRuleEvents(ruleEl: HTMLElement) {
         if (i.classList.contains('fa-minus')) {
             i.classList.replace('fa-minus', 'fa-plus');
             if (!RulesClass.getRuleClosedBoxes().some((e) => e == false)) {
-                Rules.updateCollapse(false)
+                RULES_VIEW.updateCollapse(false)
             }
         } else {
             i.classList.replace('fa-plus', 'fa-minus');
-            Rules.updateCollapse(true)
+            RULES_VIEW.updateCollapse(true)
         }
         this.closest(".draggable-element")!.querySelector(".cont")!.classList.toggle('invisible')
     })
@@ -48,16 +87,16 @@ export function createRuleEvents(ruleEl: HTMLElement) {
 
         if (i.classList.contains('fa-toggle-off')) {
             i.classList.replace('fa-toggle-off', 'fa-toggle-on');
-            Rules.updateActive(!RulesClass.getRuleActiveBoxes().some((e) => e == false));
+            RULES_VIEW.updateActive(!RulesClass.getRuleActiveBoxes().some((e) => e == false));
         } else {
             i.classList.replace('fa-toggle-on', 'fa-toggle-off');
-            Rules.updateActive(false);
+            RULES_VIEW.updateActive(false);
         }
         this.closest(".draggable-element")!.classList.toggle('ignore')
     })
     // Copy Button
     ruleEl.querySelector('.clone')!.addEventListener('click', function(this: HTMLElement) {
-		Rules.cloneRule(this.closest(".draggable-element")!)
+		RULES_VIEW.cloneRule(this.closest(".draggable-element")!)
     })
 
     // VSCode-like Alt Reordering
@@ -67,7 +106,6 @@ export function createRuleEvents(ruleEl: HTMLElement) {
     // addResizeEvents(ruleEl.querySelector('.rule')!)
     addResizeEvents(ruleEl.querySelector('.description')!)
 }
-
 
 function getAliases() {
 	return [ALIAS_INTO.value, ALIAS_FROM.value]
@@ -87,16 +125,16 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 				LEXICON.focus();
 				return;
 			// Add rule
-			case 'a': e.preventDefault(); Rules.addRule(); return;
-			case 'q': e.preventDefault(); Rules.toggleDirection(); return;
+			case 'a': e.preventDefault(); RULES_VIEW.addRule(); return;
+			case 'q': e.preventDefault(); RULES_VIEW.toggleDirection(); return;
 			// Collapse
-			case 'c': e.preventDefault(); Rules.collapseRules(); return;
+			case 'c': e.preventDefault(); RULES_VIEW.collapseRules(); return;
 			// Clear
-			case 'x': e.preventDefault(); Rules.clearRules(); return;
+			case 'x': e.preventDefault(); RULES_VIEW.clearRules(); return;
 			// Toggle
-			case 'z': e.preventDefault(); Rules.activateRules(); return;
+			case 'z': e.preventDefault(); RULES_VIEW.activateRules(); return;
 			case 'l': e.preventDefault(); showAliasModal(); return; 
-			case 's': e.preventDefault(); saveFile(); return; 
+			case 's': e.preventDefault(); LINES.exportActive(); return; 
 			// case 'o': e.preventDefault(); loadFile(); return; 
 			default: return;
 		}
@@ -115,82 +153,80 @@ function globalHandleKeyDown(e: KeyboardEvent) {
 
 // --------------------------------------------------
 
-function onReaderLoad(event: any) {
-	console.log("Parsing file...")
-	var obj = JSON.parse(event.target.result);
+// function onReaderLoad(event: any) {
+// 	console.log("Parsing file...")
+// 	var obj = JSON.parse(event.target.result);
 
-	if (!obj.words && !obj.rules) {
-		alert("Not able to parse json")
-		return
-	} 
+// 	if (!obj.words && !obj.rules) {
+// 		alert("Not able to parse json")
+// 		return
+// 	}
 
-	Rules.clearForLoad();
+// 	console.log("File parsed.")
 
-	for (let i = 0; i < obj.rules.length; i++) {
-		Rules.makeRule(obj.rules[i].name, obj.rules[i].rule.join('\n'), obj.rules[i].description, false, true);
-	}
-	if (obj.rules.length) {
-		Rules.updateCollapse(true);
-		Rules.updateActive(true);
-		CLEAR_ALL.disabled = false;
-	} else {
-		Rules.updateCollapse(null);
-		Rules.updateActive(null);
-		CLEAR_ALL.disabled = true;
-	}
+// 	console.log(event.target.name)
 
-	if (obj.words) {
-		LEXICON.value = obj.words.join('\n');
-		resize(LEXICON);
-	}
+// 	LINES.create(obj.words, obj.rules, obj.from, obj.into);
+// 	LINES.update();
+// }
 
-	if (obj.into) { ALIAS_INTO.value = obj.into.join('\n'); } else { ALIAS_INTO.value = "" }
-	resize(ALIAS_INTO);
-
-	if (obj.from) { ALIAS_FROM.value = obj.from.join('\n'); } else { ALIAS_FROM.value = "" }
-	resize(ALIAS_FROM);
-
-	updateTrace();
-
-	console.log("File parsed")
-};
-
-function loadFile(event: any) {
-	// console.log(event)
+function importLine(event: any) {
 	var reader = new FileReader();
-	reader.onload = onReaderLoad;
+	reader.onload = function (env: any) {
+		let id = event.target.files[0].name.replace(/.json/, "");
+
+		if (LINES.contains(id)) {
+			if (!confirm(`An ID by the name "${id}" already exists, do you wish to overwrite it?`)) {
+				return;
+			}
+		}
+
+		console.log("Parsing file...")
+		var obj = JSON.parse(env.target.result);
+
+		if (!obj.words && !obj.rules) {
+			alert("Not able to parse json")
+			return
+		}
+
+		console.log("File parsed.")
+
+		LINES.create(obj.words, obj.rules, obj.from, obj.into, id);
+		LINES.partialSetStorage(id);
+        LINES.updateModal();
+	};
 	reader.readAsText(event.target.files[0]);
-	LOAD.value = '';
-};
+	// LOAD.value = '';
+}
 
 // TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 // Saving to JSON
-function saveFile() {
-	let wordList = LEXICON.value;
-	let rules = Rules.getRules();
-	let into = ALIAS_INTO.value;
-	let from = ALIAS_FROM.value;
+// function saveFile() {
+// 	let wordList = LEXICON.value;
+// 	let rules = RULES_VIEW.getRules();
+// 	let into = ALIAS_INTO.value;
+// 	let from = ALIAS_FROM.value;
 
-	let obj = {
-		words: wordList.split('\n'),
-		rules, 
-		into: into.split('\n'), 
-		from: from.split('\n')
-	}
-	let objJSON = JSON.stringify(obj);
+// 	let obj = {
+// 		words: wordList.split('\n'),
+// 		rules, 
+// 		into: into.split('\n'), 
+// 		from: from.split('\n')
+// 	}
+// 	let objJSON = JSON.stringify(obj);
 
-	let a = document.createElement('a');
-	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
-	a.download = 'sound_changes.json';
-	a.click();
-	a.remove();
-}
+// 	let a = document.createElement('a');
+// 	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
+// 	a.download = 'sound_changes.json';
+// 	a.click();
+// 	a.remove();
+// }
 
 function getTraceState(): string {
     return TRACE.value
 }
 
-function updateTrace() {
+export function updateTrace() {
     // console.log(e)
     let traceBox = TRACE;
     let lexList = LEXICON.value.split('\n');
@@ -245,45 +281,6 @@ function updateTrace() {
 
 }
 
-// function updateHistory(rulesString: string) {
-    // let histTime = new Date();
-
-    // let storedHistory: string[] = JSON.parse(localStorage.getItem("ruleHistory") || '[]');
-    // let storedTimes: string[] = JSON.parse(localStorage.getItem("ruleHistTimes") || '[]');
-
-    // let history = (storedHistory) ? storedHistory : [];
-    // let times = (storedTimes) ? storedTimes : [];
-
-    // if (history.length && history[history.length - 1] === rulesString) { return }
-    // if (history.length >= 5) { history.shift(); storedTimes.shift() }
-    // history.push(rulesString);
-    // times.push(histTime.toISOString());
-    // localStorage.setItem("ruleHistory", JSON.stringify(history));
-    // localStorage.setItem("ruleHistTimes", JSON.stringify(times));
-// }
-
-function updateLocalStorage(
-    rawWordList: string, 
-    ruleList: Rule[], 
-    ruleClosed: boolean[], 
-    ruleActive: boolean[], 
-    aliasInto: string, 
-    aliasFrom: string, 
-    traceState: string 
-) {
-    console.log("Saving to local storage")
-    let rulesString = JSON.stringify(ruleList);
-    localStorage.setItem("words", rawWordList);	
-    localStorage.setItem("rules", rulesString);
-    localStorage.setItem("closedRules", JSON.stringify(ruleClosed));
-    localStorage.setItem("activeRules", JSON.stringify(ruleActive));
-    localStorage.setItem("aliasInto", aliasInto);
-    localStorage.setItem("aliasFrom", aliasFrom);
-    localStorage.setItem("trace", traceState);
-
-    // updateHistory(rulesString);
-}
-
 // Run ASCA
 function runASCA() {
 	RulesClass.removeTrace();
@@ -291,14 +288,14 @@ function runASCA() {
 	// Rules.printEditors();
 
     let rawWordList = LEXICON.value;
-    let ruleList = Rules.getRules();
-    let ruleClosed = RulesClass.getRuleClosedBoxes();
+    let ruleList = RULES_VIEW.getRules();
+    // let ruleClosed = RulesClass.getRuleClosedBoxes();
     let ruleActive = RulesClass.getRuleActiveBoxes();
     let traceState = getTraceState();
     let [aliasInto, aliasFrom] = getAliases();
 
-    updateLocalStorage(rawWordList, ruleList, ruleClosed, ruleActive, aliasInto, aliasFrom, traceState);
-    
+    LINES.updateActiveStorage();
+
     let wordList = rawWordList.split('\n')
 
     // filter inactive rules
@@ -413,79 +410,43 @@ function createOutput(res: WasmResult) {
 	return outputJoined;
 }
 
-function onLoad() {
-    addResizeEvents(LEXICON)
-    addResizeEvents(ALIAS_INTO)
-    addResizeEvents(ALIAS_FROM)
+function updateTo14() {
+    // if localstorage, move to new, then create lines
 
-    console.log("Parsing local storage...")
+    if (localStorage.getItem("asca-data")) { return false }
 
     let words = localStorage.getItem("words") || '';
-	let rules = JSON.parse(localStorage.getItem("rules") || '[]')  ;
+	let rules: Rule[] = JSON.parse(localStorage.getItem("rules") || '[]')  ;
 	let ruleStates: boolean[] = JSON.parse(localStorage.getItem("closedRules") || '[]');
 	let ruleActive: boolean[] = JSON.parse(localStorage.getItem("activeRules") || '[]');
 	let traceState: number = JSON.parse(localStorage.getItem("trace") || '-1');
 	let aliasInto = localStorage.getItem("aliasInto") || '';
 	let aliasFrom = localStorage.getItem("aliasFrom") || '';
 
-    console.log("Local storage parsed")
-
-    if (ruleStates && rules) {
-		if (ruleStates.length) {
-			Rules.updateCollapse(ruleStates.some((e) => e == false))
-		} else {
-			Rules.updateCollapse(null)
-		}
-	} else if (rules.length > 0) { Rules.updateCollapse(true) } else { Rules.updateCollapse(null) }
+	let id = LINES.create(
+		words.split('\n'),
+		rules,
+		aliasFrom.split('\n'),
+		aliasInto.split('\n'),
+		undefined,
+		ruleStates,
+		ruleActive,
+		traceState,
+	)
 	
-	if (ruleActive) {
-		if (ruleActive.length) {
-			Rules.updateActive(!ruleActive.some((e) => e == false));
-		} else {
-			Rules.updateActive(null)
-		}
-	} else if (rules.length > 0) { Rules.updateActive(true) } else { Rules.updateActive(null) }
+	LINES.setLineStorage();
+	LINES.loadId(id);
 
-	if (rules.length === 0) {
-		CLEAR_ALL.disabled = true;
-	}
+	return true
+}
 
-    // Populate textareas from local stortage
-	if (words) { LEXICON.value = words } else { LEXICON.value = '' }
-	resize(LEXICON);
+function onLoadNew() {
+	addResizeEvents(LEXICON)
+    addResizeEvents(ALIAS_INTO)
+    addResizeEvents(ALIAS_FROM)
 
-	if (aliasInto) {ALIAS_INTO.value = aliasInto} else { ALIAS_INTO.value = '' }
-	resize(ALIAS_INTO);
-
-	if (aliasFrom) {ALIAS_FROM.value = aliasFrom} else { ALIAS_FROM.value = '' }
-	resize(ALIAS_FROM);
-
-    document.querySelectorAll('.draggable-element').forEach(e => e.remove());
-
-	if (rules) {
-		for (let i = 0; i < rules.length; i++) {
-			// Otherwise, this would be a breaking change
-			let rs = ruleStates ? ruleStates[i] : true;
-			let ra = ruleActive ? ruleActive[i] : true;
-			Rules.makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
-		}
-	}
-
-	if (words) {
-		let wordList = words.split('\n');
-
-		wordList.map((w, i) => {
-			if (w !== "") {
-				let opt = document.createElement("option");
-				opt.value = `${i}`;
-				opt.innerHTML = w;
-				TRACE.append(opt);
-
-				if ((traceState || traceState === 0) && traceState === i) {
-					TRACE.value = `${traceState}`;
-				}
-			}
-		})		
+	if (!updateTo14()) {
+		LINES.loadFromStorage();
 	}
 }
 
@@ -503,12 +464,13 @@ Sortable.create(DEMO, {
 	dragClass: "sortable-drag",
 	forceFallback: true,
 	onEnd(evt) {
-		Rules.move(evt.oldIndex!, evt.newIndex!);
+		RULES_VIEW.move(evt.oldIndex!, evt.newIndex!);
 	},
 });
 
 
-// Button click events
+// ---------- Button Events ---------
+
 document.getElementById("input-minimax")!.addEventListener("click", function(this: HTMLElement) {
 	let i = this.querySelector("i")!;
 
@@ -532,20 +494,27 @@ document.getElementById("rule-minimax")!.addEventListener("click", function(this
 	document.getElementById("rule-thing")!.classList.toggle('invisible');
 })
 
-document.getElementById("add")!.addEventListener("click", _ => Rules.addRule());
-document.getElementById("updown")!.addEventListener("click", _ => Rules.toggleDirection());
-document.getElementById("save")!.addEventListener("click", saveFile);
-document.getElementById("load-label")!.addEventListener("keyup", e => {
-	const load = document.getElementById("load");
+document.getElementById("history-new")!.addEventListener("click", _ => {
+	LINES.createNew();
+})
+
+document.getElementById("history-load-label")!.addEventListener("keyup", e => {
+	const load = document.getElementById("history-load");
 	if (e.key === "Enter" && load) {
 		load.click();
 	}
 });
-document.getElementById("load")!.addEventListener("change", e => loadFile(e));
+
+document.getElementById("history-load")!.addEventListener("change", e => {
+	importLine(e)
+});
+
+document.getElementById("add")!.addEventListener("click", _ => RULES_VIEW.addRule());
+document.getElementById("updown")!.addEventListener("click", _ => RULES_VIEW.toggleDirection());
 document.getElementById("run")!.addEventListener("click", _ => runASCA());
-document.getElementById("collapse")!.addEventListener("click", _ => Rules.collapseRules());
-document.getElementById("activate")!.addEventListener("click", _ => Rules.activateRules());
-document.getElementById("clear-all")!.addEventListener("click", _ => Rules.clearRules());
+document.getElementById("collapse")!.addEventListener("click", _ => RULES_VIEW.collapseRules());
+document.getElementById("activate")!.addEventListener("click", _ => RULES_VIEW.activateRules());
+document.getElementById("clear-all")!.addEventListener("click", _ => RULES_VIEW.clearRules());
 
 document.getElementById("version-modal-close")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).close());
 document.getElementById("version-modal-open")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).showModal())
@@ -560,57 +529,15 @@ function showAliasModal() {
 	resize(ALIAS_FROM);
 }
 
-// document.getElementById("history-modal-close")!.addEventListener("click", () => (document.getElementById('history-modal')! as HTMLDialogElement).close());
-// document.getElementById("history-modal-open")!.addEventListener("click", () => {
-// 	let modal = (document.getElementById('history-modal')! as HTMLDialogElement);
+document.getElementById("history-modal-close")!.addEventListener("click", () => (document.getElementById('history-modal')! as HTMLDialogElement).close());
+document.getElementById("history-modal-open")!.addEventListener("click", () => {
+	let modal = (document.getElementById('history-modal') as HTMLDialogElement);
 
-// 	populateHistory(modal);
+	LINES.updateModal();
 
-// 	modal.showModal();
+	modal.showModal();
 
-// })
-
-// function getTimeDiff(now: Date, then: Date) {
-//     let diffSecs = now.getSeconds() - then.getSeconds();
-//     let diffDays = now.getDate() - then.getDate();
-//     let diffMonths = now.getMonth() - then.getMonth();
-//     let diffYears = now.getFullYear() - then.getFullYear();
-
-//     if (diffSecs < 60) {
-//         return `${diffSecs} sec ago`
-//     }
-
-//     if(diffYears === 0 && diffDays === 0 && diffMonths === 0) {
-//         return then.toLocaleTimeString([], {timeStyle: 'short'})
-//     } else if (diffYears === 0 && diffDays === 1 && diffMonths === 0) {
-//         return `Yesterday at ${then.toLocaleTimeString([], {timeStyle: 'short'})}`
-//     } else {
-//         return then.toLocaleDateString([], {dateStyle: 'short', timeStyle: 'short'})
-//     }
-// }
-
-// function populateHistory(modal: HTMLDialogElement) {
-//     let content = modal.querySelector(".modal-content")!;
-//     content.querySelectorAll(".history-item").forEach(e => e.remove());
-    
-//     let storedHistory: string[] = JSON.parse(localStorage.getItem("ruleHistory") || '[]');
-//     let storedTimes: string[] = JSON.parse(localStorage.getItem("ruleHistTimes") || '[]');
-    
-//     let now = new Date();
-//     storedHistory.findLast((_val: any, ind: number) => {
-//         content.insertAdjacentHTML("beforeend", historyTemplate);
-//         let el = content.lastElementChild!;
-//         // el.querySelector(".history-title").innerText = "Hi"
-//         let time = el.querySelector(".history-time time")! as HTMLTimeElement;
-//         let then = new Date(storedTimes[ind]);
-//         time.innerText = getTimeDiff(now, then);
-//         time.setAttribute("datetime", then.toISOString());
-
-//         (el.querySelector(".history-text")! as HTMLDivElement).innerText = "Test";
-
-//         // add events
-//     });
-// }
+})
 
 document.querySelectorAll('dialog').forEach(item => {
     item.addEventListener('mousedown', event => {
@@ -662,6 +589,7 @@ export function resize(el: HTMLElement) {
 	}
 }
 
+// ----------------------------------
 
 await init()
-onLoad()
+onLoadNew()

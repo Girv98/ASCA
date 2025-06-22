@@ -246,7 +246,7 @@ h1 {
 	color: var(--green);
 }
 
-#load {
+#load, #history-load {
 	display: none;
 }
 
@@ -536,7 +536,13 @@ dialog {
 	scrollbar-color: var(--green)  var(--bg2) !important;
 	scrollbar-gutter: stable both-edges;
 	scrollbar-width: thin;
-	
+}
+
+#history-modal hr {
+	background-color: var(--grey0);
+	/* height: 1px; */
+	border: none;
+	border-radius: 10px;
 }
 
 dialog::backdrop {
@@ -563,6 +569,113 @@ dialog h3 {
 #alias-into, #alias-from {
 	white-space: pre !important;
 	min-height: 6lh;
+	padding: .7ch 1ch;
+}
+
+.history-item {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	width: 100%;
+	font-size: 1rem;
+	margin: 10px 0;
+	border-radius: 10px;
+	justify-content: center;
+	background-color: var(--bg3);
+	
+	/* margin: 1%; */
+	/* background: var(--bg2) */
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.history-item.active {
+	background-color: var(--green);
+	color: var(--bg_dim);
+}
+
+.history-item-content {
+	width: 100%;
+	align-self: center;	
+	padding: 1%;
+	font-size: 1rem;
+	margin-top: 0.4%;
+	display: flex;
+	align-items: center;
+}
+
+.history-item-buttons {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.history-item-buttons button {
+	/* height:100%; */
+	width: 100%;
+	text-decoration: none;
+	border: none;
+	cursor: pointer;
+	padding: 1%;
+	margin: 1%;
+	margin-top: 0;
+	border-radius: 10px;
+	font-size: 1rem;
+}
+
+.history-item-buttons button:focus-visible {
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
+}
+
+/* .history-item-buttons button {
+	background-color: var(--green);
+	color: var(--bg_dim)
+} */
+
+/*.active*/ .history-item-buttons button {
+	background-color: var(--bg1);
+	color: var(--green)
+}
+
+.active .history-item-buttons button:focus-visible {
+	outline-color: var(--bg_dim);
+}
+
+.history-id {
+	color: var(--green);
+	background-color: var(--bg1);
+	padding: 0.5ch 1ch;
+	margin-left: 1ch;
+	border-radius: 10px;
+	white-space: nowrap;
+	/* overflow-x: auto; */
+}
+
+.history-id:focus-visible {
+	outline: var(--green) 2px solid;
+	outline-offset: 2px;
+}
+
+.active .history-id {
+	color: var(--green);
+	/* background-color: var(--bg3); */
+}
+
+.active .history-id:focus-visible {
+	outline-color: var(--bg_dim);
+}
+
+.history-made-time, .history-mod-time {
+	cursor: default;
+	margin: auto 1ch;
+}
+
+.history-id {
+	max-width: 30ch;
+	overflow-x: auto;
 }
 
 footer {
@@ -579,14 +692,32 @@ footer {
 }
 
 /* Firefox */
-.custom-button::-moz-selection, .custom-button *::-moz-selection { 
+.custom-button::-moz-selection, .custom-button *::-moz-selection, 
+.history-item-buttons button::-moz-selection { 
 	background: var(--select) !important;
 	color: var(--green) !important;
 }
   
-.custom-button::selection, .custom-button *::selection {
+.custom-button::selection, .custom-button *::selection
+.history-item-buttons button::selection { 
 	background: var(--select) !important;
 	color: var(--green) !important;
+}
+
+.active div *::-moz-selection {
+	color: var(--fg);
+}
+
+.active div *::selection {
+	color: var(--fg);
+}
+
+.active .history-id::-moz-selection {
+	color: var(--green);
+}
+
+.active .history-id::selection {
+	color: var(--green);
 }
 
 @media screen and (max-width: 2400px) {
@@ -663,6 +794,17 @@ footer {
 	}
 }
 
+@media screen and (max-width: 720px) {
+	.history-id {
+		margin-left: 0;
+	}
+	.history-item-content {
+		padding-left: 3%;
+		margin-left: 0;
+	}
+
+}
+
 @media screen and (max-width: 470px) {
 	.name {
 		max-width: 50%;
@@ -670,6 +812,10 @@ footer {
 	}
 	.draggable-element {
 		overflow: hidden;
+	}
+
+	.history-id {
+		max-width: 55%;
 	}
 }
 
