@@ -27,13 +27,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: girv98/asca-rust
-          ref: ${{ steps.latestrelease.outputs.VERSION }}
+          # ref: ${{ steps.latestrelease.outputs.VERSION }} Until bulk mem is is patched or new ASCA version is released with fix
       
       - name: Install WasmPack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Build libasca 
-        run: wasm-pack build --enable-bulk-memory --release --target web --out-dir libasca
+        run: wasm-pack build --release --target web --out-dir libasca
 
       - uses: actions/upload-artifact@v4
         with:
