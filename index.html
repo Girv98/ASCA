@@ -22,7 +22,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.14</button></h1>
+			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.15</button></h1>
 		</div>
 	</header>
 
@@ -33,9 +33,16 @@
 				<button id="version-modal-close" class="delete"><i class="fas fa-times" aria-hidden="true"></i></button>
 			</header>
 			<div class="modal-content">
+				<h3>0.15</h3>
+				<ul>
+					<li><b>Lib:</b> Diacritic aliases are now preceded by <code>"</code> instead of <code>^</code> to remove ambiguity between <code>ʔ͡h</code> and <code>ʔʰ</code> which are now <code>?^h</code> and <code>?"h</code> respectively. </li>
+					<li><b>Lib:</b> Added more inbuilt diacritic aliases using the new <code>"</code> prefix. </li>
+					<li><b>Lib:</b> Removed dedicated americanist aliases in favour of custom aliasing. See <a href="https://github.com/Girv98/asca-rust/releases/tag/0.8.0" target="_blank" rel="noopener noreferrer">release notes</a> for a replacement.</li>
+					<li><b>Lib:</b> Prenasalised palatal and retroflex consonants now use consistent diacritics (<code>ᶮC</code> and <code>ᶯC</code> respectively). </li>
+				</ul>
 				<h3>0.14</h3>
 				<ul>
-					<li><b>Ui:</b> Brand-new saving system allowing for multiple files to be loaded at once.</li>
+					<li><b>Ui:</b> Brand-new saving system allowing for multiple files to be loaded at once. </li>
 				</ul>
 				<h3>0.13</h3>
 				<ul>
