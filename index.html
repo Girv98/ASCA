@@ -10,8 +10,6 @@
    	<link rel="icon" href="data:;base64,=">
 	<link rel="stylesheet" href="src/css/index.css">
 	<link rel="stylesheet" href="src/css/editor.css">
-	<!-- <script defer type="module" src="scripts/codemirror.js"></script> -->
-	<!-- <script defer type="module" src="scripts/editor.js"></script> -->
 	<script defer type="module" src="src/main.ts"></script> 
   	<link href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   	<link href="node_modules/@fortawesome/fontawesome-free/css/solid.min.css" rel="stylesheet">
@@ -210,6 +208,16 @@
 		</div>
 		<div id="outlex" class="thirds">
 			<h1>Output</h1>
+			<div class="options">
+				<label for="format">Format: </label>
+				<select name="format" id="format">
+					<option value="out">Output</option>
+					<option value=">">Input > Output</option>
+					<option value="=>">Input => Output</option>
+					<option value="+>">Input > Output (Aligned)</option>
+					<option value="+=>">Input => Output (Aligned)</option>
+				</select>
+			</div>
 			<div class = "wrapper">
 				<div class="scroller">
 					<!-- Output lives here -->

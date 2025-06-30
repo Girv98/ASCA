@@ -15,6 +15,7 @@ let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
 let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
+let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
 
@@ -222,6 +223,12 @@ function importLine(event: any) {
 // 	a.remove();
 // }
 
+export type OutputFormat = "out" | ">" | "+>" | "=>" | "+=>";
+
+function getFormatState(): OutputFormat {
+    return FORMAT.value as OutputFormat
+}
+
 function getTraceState(): string {
     return TRACE.value
 }
@@ -285,14 +292,13 @@ export function updateTrace() {
 function runASCA() {
 	RulesClass.removeTrace();
 
-	// Rules.printEditors();
-
     let rawWordList = LEXICON.value;
     let ruleList = RULES_VIEW.getRules();
     // let ruleClosed = RulesClass.getRuleClosedBoxes();
     let ruleActive = RulesClass.getRuleActiveBoxes();
     let traceState = getTraceState();
     let [aliasInto, aliasFrom] = getAliases();
+	let formatType = getFormatState();
 
     LINES.updateActiveStorage();
 
@@ -308,7 +314,9 @@ function runASCA() {
 
     // handle result
 	
-    let outputJoined = createOutput(res);
+    let outputJoined = res.was_ok() 
+	? (traceNumber === null ? createOutput(res, formatType) : createOutputTraced(res))
+	: createError(res);
     
     OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
     let outputArea = document.getElementById('output')!;
@@ -336,22 +344,52 @@ function escapeHTML(str: string): string {
   )
 }
 
-function createOutput(res: WasmResult) {
+function createError(res: WasmResult): string {
+	let outputJoined = "";
+	let lines = res.get_output()[0].split("\n");
+
+	let [head, ...tail] = lines[0].split(":");
+	head = `<span style="color: var(--red);">${head}:</span>`;
+	let rest = tail.join(':');
+
+	let line = `${head}${rest}`;
+	outputJoined += `<div class="out-line"><span>${line}</span></div>`;
+
+
+	let rg = new RegExp('\\^+');
+	if (lines.length > 3) {
+		let carets = rg.exec(lines[lines.length-2])![0];
+		lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+		lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--blue);">@</span>');
+	} else {
+		let carets = rg.exec(lines[lines.length-1])![0];
+		lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+	}
+
+	for(let i = 1; i < lines.length; i++) {
+		let line = lines[i].replace('|', '<span style="color: var(--blue);">|</span>');
+		outputJoined += `<div class="out-line"><span>${line}</span></div>`;
+	}
+
+	return outputJoined
+}
+
+function createOutputTraced(res: WasmResult) {
 	let outputJoined = "";
 	let output = res.get_output();
 	let unknowns = res.get_unknowns();
 	// If no unknowns
 	if (!unknowns.length) {
-		output.forEach((val) => {
-			val = escapeHTML(val);
-			if (val) {
-				if (val.startsWith('Applied &quot;')) {
-					val = val.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
-					val = val.replace(new RegExp(':$'), '</span>:');
+		output.forEach((line) => {
+			line = escapeHTML(line);
+			if (line) {
+				if (line.startsWith('Applied &quot;')) {
+					line = line.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
+					line = line.replace(new RegExp(':$'), '</span>:');
 				} else {
-					val = val.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
+					line = line.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
 				}
-				outputJoined += `<div class="out-line"><span>${val}</span></div>`
+				outputJoined += `<div class="out-line"><span>${line}</span></div>`
 			} else {
 				outputJoined += '<div class="out-line"><span><br></span></div>'
 			}
@@ -367,7 +405,7 @@ function createOutput(res: WasmResult) {
 
 	let unknownsUnique = [... new Set(unknowns)];
 	let lenUnique = Object.keys(unknownsUnique).length;
-	let colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
+	const colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
 
 	let occurence = -1;
 	output.forEach((val) => {
@@ -393,6 +431,121 @@ function createOutput(res: WasmResult) {
 			outputJoined += parts[parts.length - 1];
 		}
 		outputJoined += "</span></div>";
+	});
+
+	let string = unknownsUnique.map((val, ind) => {
+		let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+		let number = unknownsMap.get(val)!.length;
+		let counts = (number == 1) ? "count" : "counts";
+		val = escapeHTML(val);
+		return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
+	}).join('');
+
+	outputJoined += '<div class="out-line"><span><br></span></div>';
+	let header = '<div class="out-line"><span><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></span></div>';
+	outputJoined += `<div class="out-line"><span><b>${lenUnique} unique unknowns found:</b></span></div>${header}${string}`
+
+	return outputJoined;
+}
+
+function formatLine(val: string, formatType: OutputFormat, input: string, align: number): string {
+	val = escapeHTML(val);
+	if (val) {
+		switch (formatType) {
+			case "out": return `<div class="out-line"><span>${val}</span></div>`;
+			case "=>":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
+			case ">":   return`<div class="out-line"><span>${input} <span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
+			case "+=>": {
+				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
+				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
+			}
+			case "+>": {
+				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
+				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
+			}
+		}
+	} else {
+		return '<div class="out-line"><span><br></span></div>'
+	}
+}
+
+// A copy of asca::util::fix_combining_char_pad()
+function fixUnicodePadding(str: string): number {
+	let pad = 0;
+	[...str].forEach(ch => {
+		let code = ch.charCodeAt(0);
+
+		if (
+			   (code >= 0x0300 && code <= 0x036F) // Combining Diacritical Marks 
+			|| (code >= 0x1AB0 && code <= 0x1AFF) // Combining Diacritical Marks Extended
+			|| (code >= 0x1DC0 && code <= 0x1DFF) // Combining Diacritical Marks Supplement
+			|| (code >= 0x20D0 && code <= 0x20FF) // Combining Diacritical Marks for Symbols 
+			|| (code >= 0x2DE0 && code <= 0x2DFF) // Cyrillic Extended-A
+			|| (code >= 0xFE20 && code <= 0xFE2F) // Combining Half Marks
+			||  code == 0x3099 // Dakuten
+			||  code == 0x309A // Handakuten
+		) {
+			pad += 1;
+		}
+	});
+
+	return pad;
+}
+
+function getAlignment(res: WasmResult) {
+	let alignLength = 0;
+
+	res.get_input().forEach((line) => {
+		let len = line.length - fixUnicodePadding(line);
+		if (len > alignLength) {
+			alignLength = len;
+		}
+	})
+	return alignLength;
+}
+
+function createOutput(res: WasmResult, formatType: OutputFormat) {
+	let outputJoined = "";
+	let input = res.get_input();
+	let output = res.get_output();
+	let unknowns = res.get_unknowns();
+
+	let alignment = formatType.startsWith("+") ? getAlignment(res) : 0;
+
+	// If no unknowns
+	if (!unknowns.length) {
+		output.forEach((val, ind) => {
+			outputJoined += formatLine(val, formatType, input[ind], alignment)
+		});
+		return outputJoined;
+	}
+	// else handle unknowns
+	let unknownsMap: Map<string, number[]> = new Map;
+	unknowns.forEach((val, i) => {
+        if (!unknownsMap.has(val)) unknownsMap.set(val, []);
+		unknownsMap.get(val)!.push(i);
+	})
+
+	let unknownsUnique = [... new Set(unknowns)];
+	let lenUnique = Object.keys(unknownsUnique).length;
+	const colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
+
+	let occurence = -1;
+	output.forEach((line, ind) => {
+		line = formatLine(line, formatType, input[ind], alignment);
+		let parts = line.split('�')
+		if (parts.length == 1) {
+			outputJoined += line;
+		} else {
+			for (let p = 0; p < parts.length - 1; p++) {
+				occurence += 1;
+				outputJoined += parts[p];
+				let ind = unknownsUnique.indexOf(unknowns[occurence]);
+				let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+				outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
+			}
+			outputJoined += parts[parts.length - 1];
+		}
 	});
 
 	let string = unknownsUnique.map((val, ind) => {
@@ -548,6 +701,14 @@ document.querySelectorAll('dialog').forEach(item => {
 });
 
 LEXICON.addEventListener("keyup", () => updateTrace());
+
+TRACE.addEventListener("change", () => {
+	if (TRACE.value === "-1") {
+		FORMAT.disabled = false;
+	} else {
+		FORMAT.disabled = true;
+	}
+})
 
 document.addEventListener("keyup", (e) => globalHandleKeyUp(e));
 document.addEventListener("keydown", (e) => globalHandleKeyDown(e));

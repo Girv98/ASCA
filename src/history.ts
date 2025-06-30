@@ -1,13 +1,14 @@
 import { nanoid } from "nanoid";
 import { historyTemplate } from "./templates";
 import { type Rule, Rules as RulesClass }  from './rules.js';
-import { createHistoryEvents, resize, updateTrace } from "./main.js";
+import { createHistoryEvents, resize, updateTrace, type OutputFormat } from "./main.js";
 
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
 let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
 let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
+let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let HIST_MODAL = document.getElementById('history-modal') as HTMLDialogElement;
 
 class Data {
@@ -21,6 +22,7 @@ class Data {
     ruleStates: boolean[];
     ruleActives: boolean[];
     traceState: number;
+    formatState: OutputFormat;
 
     createdAt: number;
     lastModified: number;
@@ -36,9 +38,10 @@ class Data {
         ruleStates?: boolean[],
         ruleActives?: boolean[],
         traceState?: number,
+        formatState?: OutputFormat,
 
         createdAt?: number, 
-        lastModified?: number
+        lastModified?: number,
     ) {
         this.id = id;
         this.words = words ?? [];
@@ -49,6 +52,7 @@ class Data {
         this.ruleStates = ruleStates ?? new Array<boolean>(this.rules.length).fill(false);
         this.ruleActives = ruleActives ?? new Array<boolean>(this.rules.length).fill(true);
         this.traceState = traceState ?? -1;
+        this.formatState = formatState ?? "out";
 
         this.createdAt = createdAt ?? Date.now();
         this.lastModified = lastModified ?? this.createdAt;
@@ -62,6 +66,7 @@ class Data {
             && this.ruleStates.join() === other.ruleStates.join()
             && this.ruleActives.join() === other.ruleActives.join()
             && this.traceState === other.traceState
+            && this.formatState === other.formatState
     }
 }
 
@@ -161,13 +166,14 @@ export class Lines {
         ruleStates?: boolean[],
         ruleActives?: boolean[],
         traceState?: number,
+        formatState?: OutputFormat,
         createdAt?: number, 
         lastModified?: number,
     ) {
         let newID = id ?? this.createId();
         this.lines.set(
             newID, 
-            new Data(newID, words, rules, aliasFrom, aliasTo, ruleStates, ruleActives, traceState, createdAt, lastModified)
+            new Data(newID, words, rules, aliasFrom, aliasTo, ruleStates, ruleActives, traceState, formatState, createdAt, lastModified)
         )
 
         return newID;
@@ -219,7 +225,8 @@ export class Lines {
             ALIAS_INTO.value.split("\n"),
             RulesClass.getRuleClosedBoxes(),
             RulesClass.getRuleActiveBoxes(),
-            +(TRACE.value)
+            +(TRACE.value),
+            FORMAT.value as OutputFormat,
         )
     }
 
@@ -232,6 +239,7 @@ export class Lines {
         ruleStates?: boolean[],
         ruleActives?: boolean[],
         traceState?: number,
+        formatState?: OutputFormat,
         createdAt?: number, 
         lastModified?: number,
     ) {
@@ -245,6 +253,7 @@ export class Lines {
         data.ruleStates = ruleStates ?? RulesClass.getRuleClosedBoxes();
         data.ruleActives = ruleActives ?? RulesClass.getRuleActiveBoxes();
         data.traceState = traceState ?? +(TRACE.value);
+        data.formatState = formatState ?? FORMAT.value as OutputFormat; 
         data.createdAt = createdAt ?? data.createdAt;
         data.lastModified = lastModified ?? Date.now();
 
@@ -257,7 +266,6 @@ export class Lines {
     }
 
     public loadId(id: string) {
-        // console.log("Loading " + id);
 
         let line = this.getLineData(id)!;
 
@@ -268,7 +276,8 @@ export class Lines {
         
         let ruleStates = line.ruleStates;
         let ruleActive = line.ruleActives;
-        let traceState = line.traceState;
+        let traceState = line.traceState ?? -1;
+        let formatState = line.formatState ?? "out";
 
         this.view.clearForLoad();
 
@@ -318,15 +327,14 @@ export class Lines {
                     opt.value = `${i}`;
                     opt.innerHTML = w;
                     TRACE.append(opt);
-
-                    if ((traceState || traceState === 0) && traceState === i) {
-                        TRACE.value = `${traceState}`;
-                    }
                 }
             })		
         }
-    
+        
         updateTrace();
+        TRACE.value =  `${traceState}`;
+        FORMAT.value = formatState;
+        FORMAT.disabled  = TRACE.value !== "-1"
 
         this.setActiveId(id);
         console.log(id + " loaded");

@@ -479,7 +479,7 @@ textarea::placeholder,
 	background-color: var(--bg0);
 }
 
-#trace {
+#trace, #format {
 	width: 100%;
 	font-size: 1rem;
 	background-color: var(--bg2);
@@ -490,7 +490,7 @@ textarea::placeholder,
 	height: 1.5lh 
 }
 
-#trace:focus-visible {
+#trace:focus-visible, #format:focus-visible {
 	outline: 2px solid var(--green);
 }
 
@@ -499,7 +499,7 @@ label {
 }
 
 a,b {
-	color: #a7c080;
+	color: var(--green);
 }
 
 p {
@@ -692,13 +692,17 @@ footer {
 }
 
 /* Firefox */
-.custom-button::-moz-selection, .custom-button *::-moz-selection, 
+.custom-button::-moz-selection, 
+.join-left::-moz-selection, 
+.join-right::-moz-selection,
 .history-item-buttons button::-moz-selection { 
 	background: var(--select) !important;
 	color: var(--green) !important;
 }
   
-.custom-button::selection, .custom-button *::selection
+.custom-button::selection, 
+.join-left::selection, 
+.join-right::selection,
 .history-item-buttons button::selection { 
 	background: var(--select) !important;
 	color: var(--green) !important;
