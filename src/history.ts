@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { historyTemplate } from "./templates";
 import { type Rule, Rules as RulesClass }  from './rules.js';
-import { createHistoryEvents, resize } from "./main.js";
+import { createHistoryEvents, resize, updateTrace } from "./main.js";
 
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
@@ -326,6 +326,8 @@ export class Lines {
             })		
         }
     
+        updateTrace();
+
         this.setActiveId(id);
         console.log(id + " loaded");
     }
