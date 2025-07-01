@@ -223,7 +223,7 @@ function importLine(event: any) {
 // 	a.remove();
 // }
 
-export type OutputFormat = "out" | ">" | "+>" | "=>" | "+=>";
+export type OutputFormat = "out" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
 
 function getFormatState(): OutputFormat {
     return FORMAT.value as OutputFormat
@@ -448,17 +448,22 @@ function createOutputTraced(res: WasmResult) {
 
 	return outputJoined;
 }
-
+// →
 function formatLine(val: string, formatType: OutputFormat, input: string, align: number): string {
 	val = escapeHTML(val);
 	if (val) {
 		switch (formatType) {
 			case "out": return `<div class="out-line"><span>${val}</span></div>`;
 			case "=>":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
+			case "->":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">-&gt;</span> ${val}</span></div>`;
 			case ">":   return`<div class="out-line"><span>${input} <span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
 				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
+			}
+			case "+->": {
+				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
+				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">-&gt;</span> ${val}</span></div>`;
 			}
 			case "+>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));

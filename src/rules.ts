@@ -190,7 +190,7 @@ export class Rules {
             this.toCollapse = true;
         } else if (col === false) {
             COL_BUTTON.disabled = false;
-            COL_BUTTON.innerHTML = "Reexpand"
+            COL_BUTTON.innerHTML = "&nbsp;Expand&nbsp;"
             this.toCollapse = false;
         } else {
             COL_BUTTON.disabled = true;
