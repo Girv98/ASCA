@@ -258,7 +258,8 @@ export function updateTrace() {
         }
     })
 
-    traceBox.value = "-1"
+    traceBox.value = "-1";
+	FORMAT.disabled  = TRACE.value !== "-1";
 
 
     // if (e.key === 'Enter') {
@@ -703,11 +704,7 @@ document.querySelectorAll('dialog').forEach(item => {
 LEXICON.addEventListener("keyup", () => updateTrace());
 
 TRACE.addEventListener("change", () => {
-	if (TRACE.value === "-1") {
-		FORMAT.disabled = false;
-	} else {
-		FORMAT.disabled = true;
-	}
+	FORMAT.disabled = TRACE.value !== "-1";
 })
 
 document.addEventListener("keyup", (e) => globalHandleKeyUp(e));
