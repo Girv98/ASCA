@@ -154,23 +154,6 @@ function globalHandleKeyDown(e: KeyboardEvent) {
 
 // --------------------------------------------------
 
-// function onReaderLoad(event: any) {
-// 	console.log("Parsing file...")
-// 	var obj = JSON.parse(event.target.result);
-
-// 	if (!obj.words && !obj.rules) {
-// 		alert("Not able to parse json")
-// 		return
-// 	}
-
-// 	console.log("File parsed.")
-
-// 	console.log(event.target.name)
-
-// 	LINES.create(obj.words, obj.rules, obj.from, obj.into);
-// 	LINES.update();
-// }
-
 function importLine(event: any) {
 	var reader = new FileReader();
 	reader.onload = function (env: any) {
@@ -186,7 +169,7 @@ function importLine(event: any) {
 		var obj = JSON.parse(env.target.result);
 
 		if (!obj.words && !obj.rules) {
-			alert("Not able to parse json")
+			alert("Not able to parse json.")
 			return
 		}
 
@@ -195,6 +178,8 @@ function importLine(event: any) {
 		LINES.create(obj.words, obj.rules, obj.from, obj.into, id);
 		LINES.partialSetStorage(id);
         LINES.updateModal();
+
+		if (LINES.getActiveId() == id) { LINES.loadId(id); }
 	};
 	reader.readAsText(event.target.files[0]);
 	// LOAD.value = '';
