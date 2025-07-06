@@ -221,7 +221,6 @@ function getTraceState(): string {
 export function updateTrace() {
     // console.log(e)
     let traceBox = TRACE;
-    let lexList = LEXICON.value.split('\n');
     // let traceText = [...traceBox.options].map(o => o.text);
     // let traceVals = [...traceBox.options].map(o => o.value);
     
@@ -234,8 +233,9 @@ export function updateTrace() {
     // let eColNum = eLines[eLines.length-1].length+1;
     
     traceBox.length = 1;
-    lexList.map((w, i) => {
-        if (w.trim() !== "") {
+    LEXICON.value.split('\n').forEach((w, i) => {
+		let x = w.trim()
+        if (x !== "" && !x.startsWith("#")) {
             let opt = document.createElement("option");
             opt.value = `${i}`;
             opt.innerHTML = w;
@@ -244,7 +244,7 @@ export function updateTrace() {
     })
 
     traceBox.value = "-1";
-	FORMAT.disabled  = TRACE.value !== "-1";
+	FORMAT.disabled = TRACE.value !== "-1";
 
 
     // if (e.key === 'Enter') {
