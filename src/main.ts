@@ -18,7 +18,6 @@ let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
-
 export function createHistoryEvents(el: Element) {
 	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
 	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
@@ -185,28 +184,29 @@ function importLine(event: any) {
 	// LOAD.value = '';
 }
 
+function loadExample() {
+
+	let id = 'pie-to-proto-germanic';
+
+	if (LINES.contains(id)) {
+		if (!confirm(`An ID by the name "${id}" already exists, do you wish to overwrite it?`)) {
+			return;
+		}
+	}
+	
+	fetch(`/examples/${id}.json`)
+		.then(response => response.json())
+		.then(response => {
+			console.log(`Loading ${id} example`);
+			LINES.create(response.words, response.rules, response.from, response.into, id, new Array<boolean>(response.rules.length).fill(true));
+			LINES.partialSetStorage(id);
+			LINES.updateModal();
+
+			if (LINES.getActiveId() == id) { LINES.loadId(id); }
+		})
+}
+
 // TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-// Saving to JSON
-// function saveFile() {
-// 	let wordList = LEXICON.value;
-// 	let rules = RULES_VIEW.getRules();
-// 	let into = ALIAS_INTO.value;
-// 	let from = ALIAS_FROM.value;
-
-// 	let obj = {
-// 		words: wordList.split('\n'),
-// 		rules, 
-// 		into: into.split('\n'), 
-// 		from: from.split('\n')
-// 	}
-// 	let objJSON = JSON.stringify(obj);
-
-// 	let a = document.createElement('a');
-// 	a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(objJSON);
-// 	a.download = 'sound_changes.json';
-// 	a.click();
-// 	a.remove();
-// }
 
 export type OutputFormat = "out" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
 
@@ -288,7 +288,7 @@ function runASCA() {
 
     LINES.updateActiveStorage();
 
-    let wordList = rawWordList.split('\n')
+    let wordList = rawWordList.split('\n').map((line) => { return line.replace(/#.*/, "").trimEnd(); });
 
     // filter inactive rules
     ruleList = ruleList.filter((_val, index) => ruleActive[index]);
@@ -638,19 +638,15 @@ document.getElementById("rule-minimax")!.addEventListener("click", function(this
 	document.getElementById("rule-thing")!.classList.toggle('invisible');
 })
 
-document.getElementById("history-new")!.addEventListener("click", _ => {
-	LINES.createNew();
-})
+document.getElementById("history-new")!.addEventListener("click", _ => { LINES.createNew(); })
+document.getElementById("history-load")!.addEventListener("change", e => { importLine(e); });
+document.getElementById("history-example")!.addEventListener("click", _ => { loadExample(); });
 
 document.getElementById("history-load-label")!.addEventListener("keyup", e => {
 	const load = document.getElementById("history-load");
 	if (e.key === "Enter" && load) {
 		load.click();
 	}
-});
-
-document.getElementById("history-load")!.addEventListener("change", e => {
-	importLine(e)
 });
 
 document.getElementById("add")!.addEventListener("click", _ => RULES_VIEW.addRule());

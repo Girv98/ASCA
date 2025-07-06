@@ -20,7 +20,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.15.3</button></h1>
+			<h1 class="noto-sans">ASCA Beta <button id="version-modal-open">0.16</button></h1>
 		</div>
 	</header>
 
@@ -31,6 +31,14 @@
 				<button id="version-modal-close" class="delete"><i class="fas fa-times" aria-hidden="true"></i></button>
 			</header>
 			<div class="modal-content">
+				<h3>0.16</h3>
+				<ul>
+					<li><b>Lib:</b> <code>[-long]</code> matrices match correctly after an ellipsis</li>
+					<li><b>Lib:</b> A comment after a deletion rule with no environment no longer errors</li>
+					<li><b>Lib:</b> Special environment checking works properly with a following comment</li>
+					<li><b>Ui:</b>  Comments delimited by <code>#</code> now allowed in input</li>
+					<li><b>Ui:</b>  Added <code>pie-to-proto-germanic</code> example save</li>
+				</ul>
 				<h3>0.15</h3>
 				<ul>
 					<li><b>Lib:</b> Diacritic aliases are now preceded by <code>"</code> instead of <code>^</code> to remove ambiguity between <code>ʔ͡h</code> and <code>ʔʰ</code> which are now <code>?^h</code> and <code>?"h</code> respectively. </li>
@@ -149,6 +157,7 @@
 					<button id="history-new" class="custom-button" title="Create new save">New</button>
 					<label id="history-load-label" for="history-load" class="custom-button" title="Import file" tabindex=0>Import</label>
 					<input id="history-load" type="file" accept="application/json">
+					<button id="history-example" class="custom-button" title="Load example ruleset">Load Example</button>
 					<!-- <button id="history-clear" class="custom-button" title="Delete All">Delete All</button> -->
 				</div>
 				<div class="modal-content" tabindex="-1"> 
@@ -212,7 +221,9 @@
 			</div>
 		</div>
 		<div id="outlex" class="thirds">
-			<h1>Output</h1>
+			<div class="title-wrapper">
+				<h1>Output</h1>
+			</div>
 			<div class="options">
 				<label for="format">Format: </label>
 				<select name="format" id="format">
