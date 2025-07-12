@@ -332,7 +332,7 @@ function escapeHTML(str: string): string {
 
 function createError(res: WasmResult): string {
 	let outputJoined = "";
-	let lines = res.get_output()[0].split("\n");
+	let lines = res.get_output()[0].split("\n").map((l) => escapeHTML(l));
 
 	let [head, ...tail] = lines[0].split(":");
 	head = `<span style="color: var(--red);">${head}:</span>`;
