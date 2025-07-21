@@ -342,7 +342,7 @@ function createError(res: WasmResult): string {
 	outputJoined += `<div class="out-line"><span>${line}</span></div>`;
 
 
-	let rg = new RegExp('\\^+');
+	let rg = new RegExp('\\^(\\^| )*');
 	if (lines.length > 3) {
 		let carets = rg.exec(lines[lines.length-2])![0];
 		lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
