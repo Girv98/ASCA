@@ -13,6 +13,8 @@ let LINES = new Lines(RULES_VIEW);
 let DEMO = document.getElementById("demo") as HTMLDivElement;
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
+let ALIAS_OPEN = document.getElementById("alias-modal-open") as HTMLButtonElement;
+let ALIAS_TOGGLE= document.getElementById('alias-from-toggle') as HTMLButtonElement;
 let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
@@ -108,7 +110,11 @@ export function createRuleEvents(ruleEl: HTMLElement) {
 }
 
 function getAliases() {
-	return [ALIAS_INTO.value, ALIAS_FROM.value]
+	if (ALIAS_FROM.classList.contains('ignore')) {
+		return [ALIAS_INTO.value, ""]
+	} else {
+		return [ALIAS_INTO.value, ALIAS_FROM.value]
+	}
 }
 
 function globalHandleKeyUp(e: KeyboardEvent) {
@@ -677,6 +683,23 @@ document.getElementById("history-modal-open")!.addEventListener("click", () => {
 
 	modal.showModal();
 
+})
+
+document.getElementById('alias-from-toggle')!.addEventListener("click", () => {
+	let x = ALIAS_TOGGLE.querySelector('i')!;
+
+	
+	if (x.classList.contains('fa-toggle-off')) {
+		x.classList.replace('fa-toggle-off', 'fa-toggle-on');
+		ALIAS_TOGGLE.classList.remove('red');
+		ALIAS_OPEN.classList.remove('red');
+		ALIAS_FROM.classList.remove('ignore');
+	} else {
+		x.classList.replace('fa-toggle-on', 'fa-toggle-off');
+		ALIAS_TOGGLE.classList.add('red');
+		ALIAS_OPEN.classList.add('red');
+		ALIAS_FROM.classList.add('ignore');
+	}
 })
 
 document.querySelectorAll('dialog').forEach(item => {

@@ -376,7 +376,7 @@ h1 {
 	height: 100%;
 }
 
-.maxmin, .delete, .onoff, .clone {
+.maxmin, .delete, .onoff, .clone, #alias-from-toggle {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
@@ -391,10 +391,14 @@ h1 {
 	cursor: pointer;
 }
 
-.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .clone:focus-visible {
+.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .clone:focus-visible, #alias-from-toggle:focus-visible {
 	outline: var(--green) 2px solid;
 	outline-offset: 2px;
 	border-radius: 2px;
+}
+
+.alias-title-wrapper {
+	display: flex; flex-direction: row; align-items: center;
 }
 
 code {
@@ -723,6 +727,15 @@ footer {
 
 .active .history-id::selection {
 	color: var(--green);
+}
+
+
+.red {
+	background-color: var(--red);
+}
+
+#alias-from-toggle.red {
+	color: var(--red);
 }
 
 @media screen and (max-width: 2400px) {

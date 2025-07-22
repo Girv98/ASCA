@@ -9,7 +9,7 @@ Rule { Input Arrow Output (Slash Env)? (Pipe Env)? }
 Input { InputTerm ( "," InputTerm)* }
 InputTerm { Empty | InputElements }
 InputElements { ( InputElement )+ }
-InputElement { Ellipsis | SyllBound | Term }
+InputElement { Ellipsis | CrossBound | SyllBound | Term }
 
 Output { OutputTerm ("," OutputTerm)* }
 OutputTerm { Meta | Empty | OutputElements }
@@ -21,7 +21,7 @@ EnvSet { ":{" EnvTerms? "}:" }
 EnvTerms { EnvTerm ("," EnvTerm)* }
 EnvTerm { WordBound? EnvElements? Underline EnvElements? WordBound? }
 EnvElements { ( EnvElement )+ }
-EnvElement { SyllBound | Ellipsis | Optional | Term }
+EnvElement { CrossBound | SyllBound | Ellipsis | Optional | Term }
 
 Term { Syllable | Structure | Set | Segment | Variable }
 
@@ -65,6 +65,7 @@ Meta { "&" }
 Empty { "*" | "∅"}
 Ellipsis { "..."  | ".." | "…" }
 Boundary { WordBound | SyllBound }
+CrossBound { "##" }
 WordBound { "#" }
 SyllBound { "$" }
 

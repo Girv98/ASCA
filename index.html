@@ -20,7 +20,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA <button id="version-modal-open">0.17</button></h1>
+			<h1 class="noto-sans">ASCA <button id="version-modal-open">0.17.1</button></h1>
 		</div>
 	</header>
 
@@ -33,76 +33,77 @@
 			<div class="modal-content">
 				<h3>0.17</h3>
 				<ul>
-					<li><b>Lib:</b> Cross Boundary Interactions with <code>##</code> allowing for External Sandhi, Rebracketing, and Affixation <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#cross-word-boundary-operations" target="_blank" rel="noopener noreferrer">(see doc)</a></li>
-					<li><b>Lib:</b> New substitution implementation allowing for ellipses and implicit syllable boundary deletion/insertion</li>
-					<li><b>Lib:</b> Retroflex diacritic <code>ʵ</code> works as expected</li>
-					<li><b>Lib:</b> <code>Variables</code> are now called <code>References</code></li>
-					<li><b>Lib:</b> Long segments are correctly deleted and metathesised</li>
-					<li><b>Ui:</b>  Fixed potential HTML escaping issues when displaying errors</li>
-					<li><b>Ui:</b>  Updated <code>pie-to-proto-germanic</code> example save</li>
+					<li><b>Lib:</b> Cross Boundary Interactions with <code>##</code> allowing for External Sandhi, Rebracketing, and Affixation <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#cross-word-boundary-operations" target="_blank" rel="noopener noreferrer">(see docs)</a>.</li>
+					<li><b>Lib:</b> New substitution implementation allowing for ellipses and implicit syllable boundary deletion/insertion.</li>
+					<li><b>Lib:</b> Retroflex diacritic <code>ʵ</code> works as expected.</li>
+					<li><b>Lib:</b> <code>Variables</code> are now called <code>References</code>.</li>
+					<li><b>Lib:</b> Long segments are correctly deleted and metathesised.</li>
+					<li><b>Ui:</b>  Fixed potential HTML escaping issues when displaying errors.</li>
+					<li><b>Ui:</b>  Ability to toggle output romanisation.</li>
+					<li><b>Ui:</b>  Updated <code>pie-to-proto-germanic</code> example save.</li>
 
 				</ul>
 				<h3>0.16</h3>
 				<ul>
-					<li><b>Lib:</b> <code>[-long]</code> matrices match correctly after an ellipsis</li>
-					<li><b>Lib:</b> A comment after a deletion rule with no environment no longer errors</li>
-					<li><b>Lib:</b> Special environment checking works properly with a following comment</li>
-					<li><b>Lib:</b> Reworked segment rendering to reduce weird edgecases</li>
-					<li><b>Ui:</b>  Comments delimited by <code>#</code> now allowed in input</li>
-					<li><b>Ui:</b>  Added <code>pie-to-proto-germanic</code> example save</li>
+					<li><b>Lib:</b> <code>[-long]</code> matrices match correctly after an ellipsis.</li>
+					<li><b>Lib:</b> A comment after a deletion rule with no environment no longer errors.</li>
+					<li><b>Lib:</b> Special environment checking works properly with a following comment.</li>
+					<li><b>Lib:</b> Reworked segment rendering to reduce weird edgecases.</li>
+					<li><b>Ui:</b>  Comments delimited by <code>#</code> now allowed in input.</li>
+					<li><b>Ui:</b>  Added <code>pie-to-proto-germanic</code> example save.</li>
 				</ul>
 				<h3>0.15</h3>
 				<ul>
-					<li><b>Lib:</b> Diacritic aliases are now preceded by <code>"</code> instead of <code>^</code> to remove ambiguity between <code>ʔ͡h</code> and <code>ʔʰ</code> which are now <code>?^h</code> and <code>?"h</code> respectively. </li>
-					<li><b>Lib:</b> Added more inbuilt diacritic aliases using the new <code>"</code> prefix. </li>
+					<li><b>Lib:</b> Diacritic aliases are now preceded by <code>"</code> instead of <code>^</code> to remove ambiguity between <code>ʔ͡h</code> and <code>ʔʰ</code> which are now <code>?^h</code> and <code>?"h</code> respectively.</li>
+					<li><b>Lib:</b> Added more inbuilt diacritic aliases using the new <code>"</code> prefix.</li>
 					<li><b>Lib:</b> Removed dedicated americanist aliases in favour of custom aliasing. See <a href="https://github.com/Girv98/asca-rust/releases/tag/0.8.0" target="_blank" rel="noopener noreferrer">release notes</a> for a replacement.</li>
-					<li><b>Lib:</b> Prenasalised palatal and retroflex consonants now use consistent diacritics (<code>ᶮC</code> and <code>ᶯC</code> respectively). </li>
+					<li><b>Lib:</b> Prenasalised palatal and retroflex consonants now use consistent diacritics (<code>ᶮC</code> and <code>ᶯC</code> respectively).</li>
 					<li><b>Lib:</b> Fixed infinite loop caused by erroneous use of <code>^</code> in certain situations.</li>
-					<li><b>Lib:</b> Fixed <code>qǀ</code>, <code>qǃ</code>, <code>qǁ</code>, <code>q‼</code>, and <code>qǂ</code> being falsely encoded as <code>+voice</code></li>
+					<li><b>Lib:</b> Fixed <code>qǀ</code>, <code>qǃ</code>, <code>qǁ</code>, <code>q‼</code>, and <code>qǂ</code> being falsely encoded as <code>+voice</code>.</li>
 					<li><b>Lib:</b> Ellipses can now be wrapped in brackets i.e. <code>(..)</code> to skip 'zero or more' segments instead of 'one or more' segments.</li>
-					<li><b>Lib:</b> Options and Sets are now allowed in non-output Structures</li>
-					<li><b>Ui:</b>  Added formatting options for output </li>
+					<li><b>Lib:</b> Options and Sets are now allowed in non-output Structures.</li>
+					<li><b>Ui:</b>  Added formatting options for output.</li>
 				</ul>
 				<h3>0.14</h3>
 				<ul>
-					<li><b>Ui:</b> Brand-new saving system allowing for multiple files to be loaded at once. </li>
+					<li><b>Ui:</b> Brand-new saving system allowing for multiple files to be loaded at once.</li>
 				</ul>
 				<h3>0.13</h3>
 				<ul>
-					<li><b>Ui:</b> Move(ing) to CodeMirror inputs and added syntax highlighting. <br>
+					<li><b>Ui:</b> Move(ing) to CodeMirror inputs and added syntax highlighting.<br>
 						<b>Colours are work in progress and probably will change!</b></li>
-					<li><b>Ui:</b> Add section collapse buttons for mobile and small screens to reduce scrolling</li>
-					<li><b>Ui:</b> Added hotkeys for easier keyboard navigation</li>
+					<li><b>Ui:</b> Add section collapse buttons for mobile and small screens to reduce scrolling.</li>
+					<li><b>Ui:</b> Added hotkeys for easier keyboard navigation.</li>
 				</ul>
 				<h3>0.12</h3>
 				<ul>
-					<li><b>Lib:</b> Inbuilt aliases for common diacritics</li>
-					<li><b>Lib:</b> A <code>$</code> or <code>*</code> alone in the output of a deromanisation rule is now allowed</li>
-					<li><b>Lib:</b> Added easy right-to-left propagation with the tilde <code>~ | ~></code> operator <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#true-right-to-left-propagation" target="_blank" rel="noopener noreferrer">(see doc)</a></li>
-					<li><b>Lib:</b> Aliases now work correctly when tracing</li>
-					<li><b>Lib:</b> Segment length character <code>ː</code> is correctly omitted when removing a long segment</li>
+					<li><b>Lib:</b> Inbuilt aliases for common diacritics.</li>
+					<li><b>Lib:</b> A <code>$</code> or <code>*</code> alone in the output of a deromanisation rule is now allowed.</li>
+					<li><b>Lib:</b> Added easy right-to-left propagation with the tilde <code>~ | ~></code> operator <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#true-right-to-left-propagation" target="_blank" rel="noopener noreferrer">(see docs)</a>.</li>
+					<li><b>Lib:</b> Aliases now work correctly when tracing.</li>
+					<li><b>Lib:</b> Segment length character <code>ː</code> is correctly omitted when removing a long segment.</li>
 					<li><b>Ui:</b> The values of any segments that couldn't be represented are now displayed at the bottom of the output.</li>
 					<li><b>Ui:</b> These unknown segments are colour-coded in the output for easier debugging.</li>
-					<li><b>Ui:</b> Traced rules are now highlighted</li>
+					<li><b>Ui:</b> Traced rules are now highlighted.</li>
 				</ul>
 				<h3>0.11</h3>
 				<ul>
-					<li><b>Lib:</b> A given word or phrase can now be traced throughout its evolution</li>
-					<li><b>Lib:</b> Multiple words can now be placed on the same line separated by a space</li>
-					<li><b>Lib:</b> Fixed infinite loop when inserting after a boundary in certain cases</li>
-					<li><b>Ui:</b> Ability to specify adding a rule to either the beginning or the end of the list</li>
-					<li><b>Ui:</b> Ability to duplicate a given rule</li>
-					<li><b>Ui:</b> Sticky UI elements to reduce scrolling</li>
+					<li><b>Lib:</b> A given word or phrase can now be traced throughout its evolution.</li>
+					<li><b>Lib:</b> Multiple words can now be placed on the same line separated by a space.</li>
+					<li><b>Lib:</b> Fixed infinite loop when inserting after a boundary in certain cases.</li>
+					<li><b>Ui:</b> Ability to specify adding a rule to either the beginning or the end of the list.</li>
+					<li><b>Ui:</b> Ability to duplicate a given rule.</li>
+					<li><b>Ui:</b> Sticky UI elements to reduce scrolling.</li>
 				</ul>
 				<h3>0.10</h3>
 				<ul>
 					<li><b>Lib:</b> Rules can now have single-line comments delimited by <code>;;</code></li>
-					<li><b>Lib:</b> Multiple contiguous underlines are now allowed in environments</li>
-					<li><b>Lib:</b> Environments can now be grouped so they can be checked all at once, similarly to a set <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#environment-sets" target="_blank" rel="noopener noreferrer">(see doc)</a></li>
-					<li><b>Lib:</b> Structural Matching <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#syllable-structure-matching" target="_blank" rel="noopener noreferrer">(see doc)</a></li>
-					<li><b>Lib:</b> Various performance improvements and bug fixes, see releases <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.5.0">0.5.0</a> and <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.5.1">0.5.1</a></li>
-					<li><b>Ui:</b> Ability to temporarily enable/disable rules with quick global toggle button </li>
-					<li><b>Ui:</b> Updated global rule collapse button change to also expand all </li>
+					<li><b>Lib:</b> Multiple contiguous underlines are now allowed in environments.</li>
+					<li><b>Lib:</b> Environments can now be grouped so they can be checked all at once, similarly to a set <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#environment-sets" target="_blank" rel="noopener noreferrer">(see docs)</a>.</li>
+					<li><b>Lib:</b> Structural Matching <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#syllable-structure-matching" target="_blank" rel="noopener noreferrer">(see docs)</a>.</li>
+					<li><b>Lib:</b> Various performance improvements and bug fixes, see releases <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.5.0">0.5.0</a> and <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.5.1">0.5.1</a>.</li>
+					<li><b>Ui:</b> Ability to temporarily enable/disable rules with quick global toggle button.</li>
+					<li><b>Ui:</b> Updated global rule collapse button change to also expand all.</li>
 				</ul>
 				<h3>0.9</h3>
 				<ul>
@@ -152,8 +153,13 @@
 			<div class="modal-content">
 				<h3>Into IPA</h3>
 				<textarea id="alias-into" spellcheck="false" autocapitalize="off" placeholder="Convert input into IPA (deromanisation)"></textarea>
-				<h3>From IPA</h3>
-				<textarea id="alias-from" spellcheck="false" autocapitalize="off" placeholder="Convert output from IPA (romanisation)"></textarea>
+				<div>
+					<div class="alias-title-wrapper">
+						<h3>From IPA</h3>
+						<button id="alias-from-toggle" title="Toggle Romanisation" aria-label="Toggle Romanisation"><i class="fas fa-toggle-on" aria-hidden="true"></i></button>
+					</div>
+					<textarea id="alias-from" spellcheck="false" autocapitalize="off" placeholder="Convert output from IPA (romanisation)"></textarea>
+				</div>
 			</div>
 		</div>
 	</dialog>

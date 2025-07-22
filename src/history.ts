@@ -5,6 +5,8 @@ import { createHistoryEvents, resize, updateTrace, type OutputFormat } from "./m
 
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
+let ALIAS_OPEN = document.getElementById("alias-modal-open") as HTMLButtonElement;
+let ALIAS_TOGGLE= document.getElementById('alias-from-toggle') as HTMLButtonElement;
 let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
 let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
@@ -24,6 +26,8 @@ class Data {
     traceState: number;
     formatState: OutputFormat;
 
+    aliasFromOn: boolean;
+
     createdAt: number;
     lastModified: number;
 
@@ -40,6 +44,8 @@ class Data {
         traceState?: number,
         formatState?: OutputFormat,
 
+        aliasFromOn?: boolean,
+
         createdAt?: number, 
         lastModified?: number,
     ) {
@@ -54,6 +60,8 @@ class Data {
         this.traceState = traceState ?? -1;
         this.formatState = formatState ?? "out";
 
+        this.aliasFromOn = aliasFromOn ?? true;
+
         this.createdAt = createdAt ?? Date.now();
         this.lastModified = lastModified ?? this.createdAt;
     }
@@ -67,6 +75,7 @@ class Data {
             && this.ruleActives.join() === other.ruleActives.join()
             && this.traceState === other.traceState
             && this.formatState === other.formatState
+            && this.aliasFromOn === other.aliasFromOn
     }
 }
 
@@ -167,13 +176,14 @@ export class Lines {
         ruleActives?: boolean[],
         traceState?: number,
         formatState?: OutputFormat,
+        aliasFromOn?: boolean,
         createdAt?: number, 
         lastModified?: number,
     ) {
         let newID = id ?? this.createId();
         this.lines.set(
             newID, 
-            new Data(newID, words, rules, aliasFrom, aliasTo, ruleStates, ruleActives, traceState, formatState, createdAt, lastModified)
+            new Data(newID, words, rules, aliasFrom, aliasTo, ruleStates, ruleActives, traceState, formatState, aliasFromOn, createdAt, lastModified)
         )
 
         return newID;
@@ -240,6 +250,7 @@ export class Lines {
         ruleActives?: boolean[],
         traceState?: number,
         formatState?: OutputFormat,
+        aliasFromOn?: boolean,
         createdAt?: number, 
         lastModified?: number,
     ) {
@@ -256,6 +267,8 @@ export class Lines {
         data.formatState = formatState ?? FORMAT.value as OutputFormat; 
         data.createdAt = createdAt ?? data.createdAt;
         data.lastModified = lastModified ?? Date.now();
+
+        data.aliasFromOn = aliasFromOn ?? !ALIAS_FROM.classList.contains('ignore');
 
         this.lines.set(id, data);
         this.partialSetStorage(id);
@@ -278,6 +291,8 @@ export class Lines {
         let ruleActive = line.ruleActives;
         let traceState = line.traceState ?? -1;
         let formatState = line.formatState ?? "out";
+
+        let aliasFromOn = line.aliasFromOn ?? true;
 
         this.view.clearForLoad();
 
@@ -335,6 +350,19 @@ export class Lines {
         TRACE.value =  `${traceState}`;
         FORMAT.value = formatState;
         FORMAT.disabled  = TRACE.value !== "-1"
+
+        let ti = ALIAS_TOGGLE.querySelector('i')!;
+        if (aliasFromOn) {
+            ti.classList.replace('fa-toggle-off', 'fa-toggle-on');
+            ALIAS_FROM.classList.remove('ignore');
+            ALIAS_OPEN.classList.remove('red');
+            ALIAS_TOGGLE.classList.remove('red');
+        } else {
+            ti.classList.replace('fa-toggle-on', 'fa-toggle-off');
+            ALIAS_TOGGLE.classList.add('red');
+            ALIAS_OPEN.classList.add('red');
+            ALIAS_FROM.classList.add('ignore');
+        }
 
         this.setActiveId(id);
         console.log(id + " loaded");
