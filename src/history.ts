@@ -237,6 +237,7 @@ export class Lines {
             RulesClass.getRuleActiveBoxes(),
             +(TRACE.value),
             FORMAT.value as OutputFormat,
+            !ALIAS_FROM.classList.contains('ignore')
         )
     }
 
