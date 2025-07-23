@@ -348,14 +348,20 @@ function createError(res: WasmResult): string {
 	outputJoined += `<div class="out-line"><span>${line}</span></div>`;
 
 
-	let rg = new RegExp('\\^(\\^| )*');
+	var rg = new RegExp('\\^(\\^| )*');
 	if (lines.length > 3) {
-		let carets = rg.exec(lines[lines.length-2])![0];
-		lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
-		lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--blue);">@</span>');
+		let maybe_carets = rg.exec(lines[lines.length-2]);
+		if (maybe_carets && maybe_carets.length) {
+			let carets = maybe_carets[0];
+			lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+			lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--blue);">@</span>');
+		}
 	} else {
-		let carets = rg.exec(lines[lines.length-1])![0];
-		lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+		let maybe_carets = rg.exec(lines[lines.length-1]);
+		if (maybe_carets && maybe_carets.length) {
+			let carets = maybe_carets[0];
+			lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+		}
 	}
 
 	for(let i = 1; i < lines.length; i++) {
