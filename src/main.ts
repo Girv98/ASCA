@@ -6,6 +6,7 @@ import { Rules as RulesClass }  from './rules.js';
 import { type Rule } from './rules.js';
 import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
 import { Lines } from './history.js';
+import { decode } from 'js-base64';
 
 let RULES_VIEW = new RulesClass();
 let LINES = new Lines(RULES_VIEW);
@@ -23,6 +24,7 @@ let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 export function createHistoryEvents(el: Element) {
 	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
 	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
+	let shareButton = el.querySelector<HTMLButtonElement>(".history-item-share")!;
 	let deleteButton = el.querySelector<HTMLButtonElement>(".history-item-delete")!;
 
 	let idField = el.querySelector<HTMLSpanElement>(".history-id")!;
@@ -50,6 +52,10 @@ export function createHistoryEvents(el: Element) {
 
 	exportButton.addEventListener("click", function() {
 		LINES.histExport(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
+	});
+
+	shareButton.addEventListener("click", function() {
+		LINES.histShare(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
 	});
 
 	deleteButton.addEventListener("click", function(this: HTMLButtonElement) {
@@ -603,6 +609,68 @@ function onLoadNew() {
 
 	if (!updateTo14()) {
 		LINES.loadFromStorage();
+	}
+
+	if (window.location.search) {
+		let params = new URLSearchParams(window.location.search);
+		let Mline = params.get('share');
+
+		if (!Mline) {
+			alert(`Unknown query string, must start '?share='`)
+			window.history.pushState({}, document.title, window.location.pathname);
+			return
+		}
+
+		let response = LINES.parseData(decode(Mline));
+
+		if (response === null) {
+			alert("Shared link is invalid aand could not be correctly parsed")
+			window.history.pushState({}, document.title, window.location.pathname);
+			return
+		}
+
+		if (LINES.contains(response.id)) {
+			if (!LINES.sharedEq(response)) {
+				while (true) {
+					let new_id = prompt(`The shared link's ID is "${response.id}" which already exists.\nPlease enter a new ID or press Cancel to abort:`)
+					if (new_id === null) { 
+						window.history.pushState({}, document.title, window.location.pathname);
+						return
+					}
+
+					if (!new_id) {
+						alert("New ID cannot be empty");
+						continue;
+					}
+
+					if (!LINES.contains(new_id)) {
+						response.id = new_id;
+						break;
+					}
+				}
+			}
+		}
+
+		LINES.create(
+			response.words, 
+			response.rules, 
+			response.aliasFrom, 
+			response.aliasInto, 
+			response.id, 
+			response.ruleStates,
+			response.ruleActives,
+			response.traceState,
+			response.formatState,
+			response.aliasFromOn,
+			response.createdAt,
+			response.lastModified,
+		);
+		LINES.partialSetStorage(response.id);
+		LINES.updateModal();
+
+		LINES.loadId(response.id);
+
+		window.history.pushState({}, document.title, window.location.pathname);
 	}
 }
 

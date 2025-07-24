@@ -30,6 +30,7 @@ export const historyTemplate = `
 	<div class="history-item-buttons">
 		<button class="history-item-load" title="Load save into ASCA" aria-label="Load">Load</button>
 		<button class="history-item-save" title="Download save to computer" aria-label="Export">Export</button>
+		<button class="history-item-share" title="Copy link to this save to clipboard" aria-label="Share">Share</button>
 		<button class="history-item-delete" title="Delete save" aria-label="Delete">Delete</button>
 	</div>
 </div>

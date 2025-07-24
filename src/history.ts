@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { historyTemplate } from "./templates";
 import { type Rule, Rules as RulesClass }  from './rules.js';
 import { createHistoryEvents, resize, updateTrace, type OutputFormat } from "./main.js";
+import { encode } from "js-base64";
 
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
@@ -13,7 +14,7 @@ let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let HIST_MODAL = document.getElementById('history-modal') as HTMLDialogElement;
 
-class Data {
+export class Data {
     id: string;
 
     words: string[];
@@ -66,7 +67,7 @@ class Data {
         this.lastModified = lastModified ?? this.createdAt;
     }
 
-    equals(other: Data): boolean {
+    public equals(other: Data): boolean {
         return this.words.join() === other.words.join()
             && JSON.stringify(this.rules) === JSON.stringify(other.rules)
             && this.aliasFrom.join() === other.aliasFrom.join()
@@ -120,6 +121,45 @@ export class Lines {
 
     getLineData(id: string) { 
         return this.lines.get(id); 
+    }
+
+    // WHY JAVASCRIPT WHY
+    sharedEq(shared: Data): boolean {
+        let x = this.getLineStorage().get(shared.id);
+        if (x === undefined) { return false }
+        
+        let d = new Data(
+            x.id,
+            x.words,
+            x.rules,
+            x.aliasFrom,
+            x.aliasInto,
+            x.ruleStates,
+            x.ruleActives,
+            x.traceState,
+            x.formatState,
+            x.aliasFromOn,
+            x.createdAt,
+            x.lastModified
+        );
+        
+        return d.equals(shared)
+    }
+
+    createShare(id: string) {
+        const line = this.getLineData(id)!;        
+        const encodedLine = encode(JSON.stringify(line), true);
+
+        return `https://asca.girv.dev/?share=${encodedLine}`
+    }
+
+    parseData(str: string): Data | null {
+        str = str != null && str.length ? str : '{}';
+        try {
+            return JSON.parse(str) as Data;
+        } catch {
+            return null;
+        }
     }
 
     parseJSON(json: any): Map<string, Data> {
@@ -201,7 +241,7 @@ export class Lines {
     setNewCustomId(curId: string, newId: string) {
         if (curId === newId) { return }
 
-        if (newId === "") {
+        if (!newId.trim()) {
             alert("New ID cannot be empty.");
             return this.populateModal(HIST_MODAL);
         }
@@ -379,7 +419,7 @@ export class Lines {
 
     private checkUnsaved() {
         let current  = this.getDeFacto();
-        let stored = this.getLineStorage().get(this.activeId);
+        let stored = this.getLineStorage().get(this.activeId)!;
 
         if (stored === undefined || current.equals(stored)) { return true }
 
@@ -462,6 +502,13 @@ export class Lines {
         this.exportLine(id);
     }
 
+    public histShare(id: string) {
+        const link = this.createShare(id);
+        console.log(link);
+        navigator.clipboard.writeText(link);
+        alert(`Link for '${id}' copied to clipboard. Backup printed to browser console.`);
+    }
+
     public histRename(newId: string, origId: string) {
         this.setNewCustomId(origId, newId)
     }
@@ -517,6 +564,3 @@ function getTimeDiff(now: Date, then: Date) {
         return `${then.toLocaleDateString([], {dateStyle: 'short'})} ${then.toLocaleTimeString([], {timeStyle: 'short'})}`
     }
 }
-
-
-// TODO: option to load examples using this system
