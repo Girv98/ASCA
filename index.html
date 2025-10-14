@@ -20,7 +20,7 @@
 <body>
 	<header>
 		<div>
-			<h1 class="noto-sans">ASCA <button id="version-modal-open">0.18</button></h1>
+			<h1 class="noto-sans">ASCA <button id="version-modal-open">0.18.1</button></h1>
 		</div>
 	</header>
 
@@ -36,6 +36,7 @@
 					<li><b>Lib:</b> <code>Structures</code> and <code>References</code> now allowed inside sets</li>
 					<li><b>Lib:</b> Various bug fixes. See <a href="https://github.com/Girv98/asca-rust/releases/tag/0.9.1" target="_blank" rel="noopener noreferrer">release notes</a></li>
 					<li><b>Ui:</b>  Saves can now be shared</li>
+					<li><b>Ui:</b>  Comments can now be retained in the output</li>
 				</ul>
 				<h3>0.17</h3>
 				<ul>
@@ -252,6 +253,7 @@
 				<label for="format">Format: </label>
 				<select name="format" id="format">
 					<option value="out">Output</option>
+					<option value="+#">Output # Comment</option>
 					<option value=">">Input >&nbsp; Output</option>
 					<option value="->">Input -> Output</option>
 					<option value="=>">Input => Output</option>

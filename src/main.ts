@@ -220,7 +220,7 @@ function loadExample() {
 
 // TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 
-export type OutputFormat = "out" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
+export type OutputFormat = "out" | "+#" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
 
 function getFormatState(): OutputFormat {
     return FORMAT.value as OutputFormat
@@ -300,7 +300,13 @@ function runASCA() {
 
     LINES.updateActiveStorage();
 
-    let wordList = rawWordList.split('\n').map((line) => { return line.replace(/#.*/, "").trimEnd(); });
+	let wc = rawWordList.split('\n').map((line) => {
+		return line.split(/#(.*)/s)
+	});
+
+	let wordList = wc.map(l => l[0].trimEnd());
+	let comments = wc.map(l => l[1]);
+
 
     // filter inactive rules
     ruleList = ruleList.filter((_val, index) => ruleActive[index]);
@@ -311,9 +317,8 @@ function runASCA() {
     console.log("Done");
 
     // handle result
-	
     let outputJoined = res.was_ok() 
-	? (traceNumber === null ? createOutput(res, formatType) : createOutputTraced(res))
+	? (traceNumber === null ? createOutput(res, formatType, comments) : createOutputTraced(res))
 	: createError(res);
     
     OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
@@ -452,14 +457,14 @@ function createOutputTraced(res: WasmResult) {
 	return outputJoined;
 }
 // →
-function formatLine(val: string, formatType: OutputFormat, input: string, align: number): string {
+function formatLine(val: string, formatType: OutputFormat, input: string, align: number, comment: string): string {
 	val = escapeHTML(val);
 	if (val) {
 		switch (formatType) {
 			case "out": return `<div class="out-line"><span>${val}</span></div>`;
 			case "=>":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
 			case "->":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">-&gt;</span> ${val}</span></div>`;
-			case ">":   return`<div class="out-line"><span>${input} <span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
+			case ">":   return `<div class="out-line"><span>${input} <span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
 				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
@@ -472,9 +477,19 @@ function formatLine(val: string, formatType: OutputFormat, input: string, align:
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
 				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
 			}
+			case "+#": {
+				if (comment != undefined) {
+					let pad = " ".repeat(align-val.length+fixUnicodePadding(val));
+					return `<div class="out-line"><span>${val} ${pad}<span style="color: var(--grey1);">#${comment}</span></span></div>`;
+				} else {
+					return `<div class="out-line"><span>${val}</span></div>`;
+				}
+			}
 		}
+	} else if (formatType == "+#" && comment != undefined) {
+		return `<div class="out-line"><span><span style="color: var(--grey1);">#${comment}</span></span></div>`;
 	} else {
-		return '<div class="out-line"><span><br></span></div>'
+		return '<div class="out-line"><span><br></span></div>';
 	}
 }
 
@@ -485,10 +500,10 @@ function fixUnicodePadding(str: string): number {
 		let code = ch.charCodeAt(0);
 
 		if (
-			   (code >= 0x0300 && code <= 0x036F) // Combining Diacritical Marks 
+			   (code >= 0x0300 && code <= 0x036F) // Combining Diacritical Marks
 			|| (code >= 0x1AB0 && code <= 0x1AFF) // Combining Diacritical Marks Extended
 			|| (code >= 0x1DC0 && code <= 0x1DFF) // Combining Diacritical Marks Supplement
-			|| (code >= 0x20D0 && code <= 0x20FF) // Combining Diacritical Marks for Symbols 
+			|| (code >= 0x20D0 && code <= 0x20FF) // Combining Diacritical Marks for Symbols
 			|| (code >= 0x2DE0 && code <= 0x2DFF) // Cyrillic Extended-A
 			|| (code >= 0xFE20 && code <= 0xFE2F) // Combining Half Marks
 			||  code == 0x3099 // Dakuten
@@ -501,7 +516,7 @@ function fixUnicodePadding(str: string): number {
 	return pad;
 }
 
-function getAlignment(res: WasmResult) {
+function getInputAlignment(res: WasmResult) {
 	let alignLength = 0;
 
 	res.get_input().forEach((line) => {
@@ -513,18 +528,32 @@ function getAlignment(res: WasmResult) {
 	return alignLength;
 }
 
-function createOutput(res: WasmResult, formatType: OutputFormat) {
+function getOutputAlignment(res: WasmResult) {
+	let alignLength = 0;
+
+	res.get_output().forEach((line) => {
+		let len = line.length - fixUnicodePadding(line);
+		if (len > alignLength) {
+			alignLength = len;
+		}
+	})
+	return alignLength;
+}
+
+function createOutput(res: WasmResult, formatType: OutputFormat, comments: string[]) {
 	let outputJoined = "";
 	let input = res.get_input();
 	let output = res.get_output();
 	let unknowns = res.get_unknowns();
 
-	let alignment = formatType.startsWith("+") ? getAlignment(res) : 0;
+	let alignment = formatType == "+#"
+		? getOutputAlignment(res) 
+		: formatType.startsWith("+") ? getInputAlignment(res) : 0;
 
 	// If no unknowns
 	if (!unknowns.length) {
 		output.forEach((val, ind) => {
-			outputJoined += formatLine(val, formatType, input[ind], alignment)
+			outputJoined += formatLine(val, formatType, input[ind], alignment, comments[ind])
 		});
 		return outputJoined;
 	}
@@ -541,7 +570,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat) {
 
 	let occurence = -1;
 	output.forEach((line, ind) => {
-		line = formatLine(line, formatType, input[ind], alignment);
+		line = formatLine(line, formatType, input[ind], alignment, comments[ind]);
 		let parts = line.split('�')
 		if (parts.length == 1) {
 			outputJoined += line;
