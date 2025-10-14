@@ -210,7 +210,17 @@ function loadExample() {
 		.then(response => response.json())
 		.then(response => {
 			console.log(`Loading ${id} example`);
-			LINES.create(response.words, response.rules, response.from, response.into, id, new Array<boolean>(response.rules.length).fill(true));
+			LINES.create(
+				response.words, 
+				response.rules, 
+				response.from, 
+				response.into, 
+				id, 
+				new Array<boolean>(response.rules.length).fill(true), 
+				new Array<boolean>(response.rules.length).fill(true), 
+				-1, 
+				"+#", 
+			);
 			LINES.partialSetStorage(id);
 			LINES.updateModal();
 
