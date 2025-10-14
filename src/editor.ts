@@ -10,33 +10,33 @@ import { styleTags, tags } from "@lezer/highlight";
 
 // Very much work in progress
 const syntax_colors = syntaxHighlighting(
-  HighlightStyle.define(
-    [
-    //   { tag: tags.name, color: "var(--fg)" },
-      { tag: tags.propertyName, color: "var(--purple)" },
-      { tag: tags.variableName, color: "var(--yellow)" },
-      { tag: tags.comment, color: "var(--grey1)" },
-      { tag: tags.atom, color: "var(--blue)" },
+    HighlightStyle.define(
+        [
+            //   { tag: tags.name, color: "var(--fg)" },
+            { tag: tags.propertyName, color: "var(--purple)" },
+            { tag: tags.variableName, color: "var(--yellow)" },
+            { tag: tags.comment, color: "var(--grey1)" },
+            { tag: tags.atom, color: "var(--blue)" },
 
-      { tag: tags.punctuation, color: "var(--grey1)" },
-      { tag: tags.literal, color: "var(--green)" },
+            { tag: tags.punctuation, color: "var(--grey1)" },
+            { tag: tags.literal, color: "var(--green)" },
 
-      { tag: tags.operator, color: "var(--blue)", /*fontWeight: "bold"*/ },
-      { tag: tags.keyword, color: "var(--red)" },
-      { tag: tags.number, color: "var(--purple)" },
-			
-      { tag: tags.angleBracket, color: "var(--red)" },
-      { tag: tags.brace, color: "var(--red)" },
-      { tag: tags.paren, color: "var(--aqua)" },
-      { tag: tags.separator, color: "var(--grey1)" },
-      { tag: tags.squareBracket, color: "var(--grey1)" },
+            { tag: tags.operator, color: "var(--blue)", /*fontWeight: "bold"*/ },
+            { tag: tags.keyword, color: "var(--red)" },
+            { tag: tags.number, color: "var(--purple)" },
+                    
+            { tag: tags.angleBracket, color: "var(--red)" },
+            { tag: tags.brace, color: "var(--red)" },
+            { tag: tags.paren, color: "var(--aqua)" },
+            { tag: tags.separator, color: "var(--grey1)" },
+            { tag: tags.squareBracket, color: "var(--grey1)" },
 
-      { tag: tags.special(tags.atom), color: "var(--orange)" },
-      { tag: tags.special(tags.keyword), color: "var(--orange)" },
-      { tag: tags.special(tags.operator), color: "var(--blue)" },
-    ],
+            { tag: tags.special(tags.atom), color: "var(--orange)" },
+            { tag: tags.special(tags.keyword), color: "var(--orange)" },
+            { tag: tags.special(tags.operator), color: "var(--blue)" },
+        ],
     // { all: { color: "#585858" } }
-  )
+    )
 );
 
 
@@ -78,25 +78,25 @@ const parserWithMeta = parser.configure({
 });
     
 const language = LRLanguage.define({
-        parser: parserWithMeta,
-        languageData: {
-        commentTokens: { line: ";;" },
-    },
+    parser: parserWithMeta,
+    languageData: {
+      commentTokens: { line: ";;" },
+  },
 });
 
 // So that hotkeys still work
 let preventDefault: Command = (_ev: EditorView) => { return true }
 const customBindings: KeyBinding[] = [
-  {key: "Shift-Enter", run: preventDefault, preventDefault: true}, 
-  {key: "Shift-Backspace", run: preventDefault , preventDefault: true},
-  {key: "Ctrl-;", run: toggleComment , preventDefault: true},
-  {key: "Tab", run: insertTab, preventDefault: true}
+    {key: "Shift-Enter", run: preventDefault, preventDefault: true}, 
+    {key: "Shift-Backspace", run: preventDefault , preventDefault: true},
+    {key: "Ctrl-;", run: toggleComment , preventDefault: true},
+    {key: "Tab", run: insertTab, preventDefault: true}
 ]
 
 function createState(initial: string) {
     return EditorState.create({
-          doc: initial,
-          extensions: [
+        doc: initial,
+        extensions: [
             history(),
             Prec.highest(keymap.of(customBindings)),
             keymap.of([indentWithTab]),
@@ -108,11 +108,10 @@ function createState(initial: string) {
             closeBrackets(),
             syntax_colors,
             placeholder("Enter rule(s) here..."),
-          ],
+        ],
     });
 }
 
 export function createEditor(parent: Element, initial: string = "") {
     return new EditorView({ state: createState(initial), parent });
 }
-
