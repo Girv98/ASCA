@@ -1,7 +1,7 @@
 import { parser } from "./editor/parser.ts"
 
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
-import { defaultKeymap, history, historyKeymap, toggleComment } from "@codemirror/commands";
+import { defaultKeymap, history, historyKeymap, toggleComment, indentWithTab, insertTab } from "@codemirror/commands";
 import { HighlightStyle, LRLanguage, syntaxHighlighting } from "@codemirror/language";
 import { EditorState, Prec } from "@codemirror/state";
 import { EditorView, keymap, placeholder, type Command, type KeyBinding } from "@codemirror/view";
@@ -90,6 +90,7 @@ const customBindings: KeyBinding[] = [
   {key: "Shift-Enter", run: preventDefault, preventDefault: true}, 
   {key: "Shift-Backspace", run: preventDefault , preventDefault: true},
   {key: "Ctrl-;", run: toggleComment , preventDefault: true},
+  {key: "Tab", run: insertTab, preventDefault: true}
 ]
 
 function createState(initial: string) {
@@ -98,6 +99,7 @@ function createState(initial: string) {
           extensions: [
             history(),
             Prec.highest(keymap.of(customBindings)),
+            keymap.of([indentWithTab]),
             keymap.of(historyKeymap),
             keymap.of(closeBracketsKeymap),
             keymap.of(defaultKeymap),
