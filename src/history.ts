@@ -1,15 +1,16 @@
 import { nanoid } from "nanoid";
 import { historyTemplate } from "./templates";
 import { type Rule, Rules as RulesClass }  from './rules.js';
-import { createHistoryEvents, resize, updateTrace, type OutputFormat } from "./main.js";
+import { createHistoryEvents, resize, type OutputFormat } from "./main.js";
 import { encode } from "js-base64";
+import type { EditorView } from "@codemirror/view";
+import { createInput } from "./input.js";
 
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
 let ALIAS_OPEN = document.getElementById("alias-modal-open") as HTMLButtonElement;
 let ALIAS_TOGGLE= document.getElementById('alias-from-toggle') as HTMLButtonElement;
 let CLEAR_ALL= document.getElementById("clear-all") as HTMLButtonElement;
-let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let HIST_MODAL = document.getElementById('history-modal') as HTMLDialogElement;
@@ -80,13 +81,66 @@ export class Data {
     }
 }
 
+
+export class InputView {
+
+    private editor: EditorView;
+    
+    constructor(parentElement: HTMLElement) {
+        this.editor = createInput(parentElement)
+    }
+
+    public getString() {
+        return this.editor.state.doc.toString()
+    }
+
+    public getLines() {
+        return this.editor.state.doc.toString().split('\n')
+    }
+
+    setContent(str: string) {
+        this.editor.dispatch(this.editor.state.update({
+            changes: {
+                from: 0, 
+                to: this.editor.state.doc.length, 
+                insert: str
+            }
+        }))
+    }
+
+    // public getSplit() {
+    //     // TODO: return ([words], [comments])
+    // }
+
+    // TODO: Optimise so that we aren't recreating lines that haven't changed
+    public updateTrace() {
+        TRACE.length = 1;
+        this.getLines().forEach((w, i) => {
+            let line = w.trim();
+            if (line && !line.startsWith("#")) {
+                let opt = document.createElement("option");
+                opt.value = `${i}`
+                opt.innerHTML = line;
+                TRACE.append(opt)
+            }
+        })
+
+        TRACE.value = "-1";
+	    FORMAT.disabled = TRACE.value !== "-1";
+    }
+
+    // clearForLoad() { }
+}
+
 export class Lines {
-    private view: RulesClass;
+    private inputView: InputView;
+    private rulesView: RulesClass;
     private lines: Map<string, Data>;
     private activeId: string;
 
-    constructor(editorView: RulesClass) {
-        this.view = editorView;
+    constructor(editorView: RulesClass, inputView: InputView) {
+        this.inputView = inputView
+        this.rulesView = editorView;
         this.lines = new Map();
         this.activeId = "";
     }
@@ -269,8 +323,8 @@ export class Lines {
     getDeFacto() {
         return new Data(
             this.activeId,
-            LEXICON.value.split("\n"),
-            this.view.getRules(),
+            this.inputView.getLines(),
+            this.rulesView.getRules(),
             ALIAS_FROM.value.split("\n"),
             ALIAS_INTO.value.split("\n"),
             RulesClass.getRuleClosedBoxes(),
@@ -298,8 +352,8 @@ export class Lines {
 
         let data = this.getLineData(id)!;
         
-        data.words = words ?? LEXICON.value.split("\n");
-        data.rules = rules ?? this.view.getRules();
+        data.words = words ?? this.inputView.getLines();
+        data.rules = rules ?? this.rulesView.getRules();
         data.aliasFrom = aliasFrom ?? ALIAS_FROM.value.split("\n");
         data.aliasInto = aliasTo ?? ALIAS_INTO.value.split("\n");
         data.ruleStates = ruleStates ?? RulesClass.getRuleClosedBoxes();
@@ -335,32 +389,34 @@ export class Lines {
 
         let aliasFromOn = line.aliasFromOn ?? true;
 
-        this.view.clearForLoad();
+        this.rulesView.clearForLoad();
 
         if (ruleStates && rules) {
             if (ruleStates.length) {
-                this.view.updateCollapse(ruleStates.some((e) => e == false))
+                this.rulesView.updateCollapse(ruleStates.some((e) => e == false))
             } else {
-                this.view.updateCollapse(null)
+                this.rulesView.updateCollapse(null)
             }
-	    } else if (rules.length > 0) { this.view.updateCollapse(true) } else { this.view.updateCollapse(null) }
+	    } else if (rules.length > 0) { this.rulesView.updateCollapse(true) } else { this.rulesView.updateCollapse(null) }
 	
         if (ruleActive) {
             if (ruleActive.length) {
-                this.view.updateActive(!ruleActive.some((e) => e == false));
+                this.rulesView.updateActive(!ruleActive.some((e) => e == false));
             } else {
-                this.view.updateActive(null)
+                this.rulesView.updateActive(null)
             }
-        } else if (rules.length > 0) { this.view.updateActive(true) } else { this.view.updateActive(null) }
+        } else if (rules.length > 0) { this.rulesView.updateActive(true) } else { this.rulesView.updateActive(null) }
 
 
         CLEAR_ALL.disabled = !rules.length;
 
-        
         // Populate textareas 
-        if (words) { LEXICON.value = words.join('\n') } else { LEXICON.value = '' }
-        resize(LEXICON);
-    
+        if (words) {
+            this.inputView.setContent(words.join('\n'));
+        } else {
+            this.inputView.setContent('');
+        }
+        
         if (aliasTo) { ALIAS_INTO.value = aliasTo.join('\n') } else { ALIAS_INTO.value = '' }
         resize(ALIAS_INTO);
     
@@ -372,7 +428,7 @@ export class Lines {
                 // Otherwise, this would be a breaking change
 			    let rs = ruleStates ? ruleStates[i] : true;
 			    let ra = ruleActive ? ruleActive[i] : true; 
-                this.view.makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
+                this.rulesView.makeRule(rules[i].name, rules[i].rule.join('\n'), rules[i].description, rs, ra);
             }
         }
 
@@ -387,7 +443,7 @@ export class Lines {
             })		
         }
         
-        updateTrace();
+        this.inputView.updateTrace();
         TRACE.value =  `${traceState}`;
         FORMAT.value = formatState;
         FORMAT.disabled  = TRACE.value !== "-1"

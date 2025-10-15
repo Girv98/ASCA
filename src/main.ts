@@ -5,18 +5,21 @@ import init, { run_wasm, WasmResult } from '../libasca/asca.js'
 import { Rules as RulesClass }  from './rules.js';
 import { type Rule } from './rules.js';
 import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
-import { Lines } from './history.js';
+import { InputView, Lines } from './history.js';
 import { decode } from 'js-base64';
 
+let INLEX_WRAP = document.getElementById("lex-wrap") as HTMLDivElement;
+
+let INPUT_VIEW = new InputView(INLEX_WRAP);
 let RULES_VIEW = new RulesClass();
-let LINES = new Lines(RULES_VIEW);
+let LINES = new Lines(RULES_VIEW, INPUT_VIEW);
 
 let DEMO = document.getElementById("demo") as HTMLDivElement;
 let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
 let ALIAS_OPEN = document.getElementById("alias-modal-open") as HTMLButtonElement;
-let ALIAS_TOGGLE= document.getElementById('alias-from-toggle') as HTMLButtonElement;
-let LEXICON = document.getElementById("lexicon") as HTMLTextAreaElement;
+let ALIAS_TOGGLE = document.getElementById('alias-from-toggle') as HTMLButtonElement;
+let INLEX_CONTENT = INLEX_WRAP.querySelector(".cm-content") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
@@ -134,7 +137,7 @@ function globalHandleKeyUp(e: KeyboardEvent) {
 			// Move to input
 			case 'w':
 				e.preventDefault();
-				LEXICON.focus();
+				INLEX_CONTENT.focus();
 				return;
 			// Add rule
 			case 'a': e.preventDefault(); RULES_VIEW.addRule(); return;
@@ -240,86 +243,80 @@ function getTraceState(): string {
     return TRACE.value
 }
 
-export function updateTrace() {
-    // console.log(e)
-    let traceBox = TRACE;
-    // let traceText = [...traceBox.options].map(o => o.text);
-    // let traceVals = [...traceBox.options].map(o => o.value);
+// export function updateTrace() {
+//     // console.log(e)
+//     let traceBox = TRACE;
+//     // let traceText = [...traceBox.options].map(o => o.text);
+//     // let traceVals = [...traceBox.options].map(o => o.value);
     
-    // let lexLines = lex.value.substr(0, lex.selectionStart).split("\n");
-    // let lexLineNum = lexLines.length;
-    // let lexColNum = lexLines[lexLines.length-1].length+1;
+//     // let lexLines = lex.value.substr(0, lex.selectionStart).split("\n");
+//     // let lexLineNum = lexLines.length;
+//     // let lexColNum = lexLines[lexLines.length-1].length+1;
 
-    // let eLines = lex.value.substr(0, e.target.selectionStart).split("\n");
-    // let eLineNum = eLines.length;
-    // let eColNum = eLines[eLines.length-1].length+1;
+//     // let eLines = lex.value.substr(0, e.target.selectionStart).split("\n");
+//     // let eLineNum = eLines.length;
+//     // let eColNum = eLines[eLines.length-1].length+1;
     
-    traceBox.length = 1;
-    LEXICON.value.split('\n').forEach((w, i) => {
-		let x = w.trim()
-        if (x !== "" && !x.startsWith("#")) {
-            let opt = document.createElement("option");
-            opt.value = `${i}`;
-            opt.innerHTML = w;
-            traceBox.append(opt);
-        }
-    })
+//     traceBox.length = 1;
+//     LEXICON.value.split('\n').forEach((w, i) => {
+// 		let x = w.trim()
+//         if (x !== "" && !x.startsWith("#")) {
+//             let opt = document.createElement("option");
+//             opt.value = `${i}`;
+//             opt.innerHTML = w;
+//             traceBox.append(opt);
+//         }
+//     })
 
-    traceBox.value = "-1";
-	FORMAT.disabled = TRACE.value !== "-1";
+//     traceBox.value = "-1";
+// 	FORMAT.disabled = TRACE.value !== "-1";
 
 
-    // if (e.key === 'Enter') {
-    // 	traceBox.length = 1;
-    // 	lexList.map((w, i) => {
-    // 		if (w !== "") {
-    // 			let opt = document.createElement("option");
-    // 			opt.value = i;
-    // 			opt.innerHTML = w;
-    // 			traceBox.append(opt);
-    // 		}
-    // 	})
-    // } else if (e.key === 'Backspace') {
-    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-    // } else if (e.key === 'Delete') { 
-    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-    // } else if (lexList[lexLineNum-1].trim() !== "") {
-    // 	if (traceText.length <= 1) {
-    // 		let opt = document.createElement("option");
-    // 		opt.value = lexLineNum;
-    // 		opt.innerHTML = lexList[lexLineNum-1];
-    // 		traceBox.append(opt);
-    // 	} else {
-    // 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
-    // 	}
-    // }
-
-}
+//     // if (e.key === 'Enter') {
+//     // 	traceBox.length = 1;
+//     // 	lexList.map((w, i) => {
+//     // 		if (w !== "") {
+//     // 			let opt = document.createElement("option");
+//     // 			opt.value = i;
+//     // 			opt.innerHTML = w;
+//     // 			traceBox.append(opt);
+//     // 		}
+//     // 	})
+//     // } else if (e.key === 'Backspace') {
+//     // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+//     // } else if (e.key === 'Delete') { 
+//     // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+//     // } else if (lexList[lexLineNum-1].trim() !== "") {
+//     // 	if (traceText.length <= 1) {
+//     // 		let opt = document.createElement("option");
+//     // 		opt.value = lexLineNum;
+//     // 		opt.innerHTML = lexList[lexLineNum-1];
+//     // 		traceBox.append(opt);
+//     // 	} else {
+//     // 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
+//     // 	}
+//     // }
+// }
 
 // Run ASCA
 function runASCA() {
 	RulesClass.removeTrace();
 
-    let rawWordList = LEXICON.value;
-    let ruleList = RULES_VIEW.getRules();
-    // let ruleClosed = RulesClass.getRuleClosedBoxes();
+    LINES.updateActiveStorage();
+
     let ruleActive = RulesClass.getRuleActiveBoxes();
     let traceState = getTraceState();
     let [aliasInto, aliasFrom] = getAliases();
-	let formatType = getFormatState();
 
-    LINES.updateActiveStorage();
-
-	let wc = rawWordList.split('\n').map((line) => {
+	let wc = INPUT_VIEW.getLines().map((line) => {
 		return line.split(/#(.*)/s)
 	});
 
 	let wordList = wc.map(l => l[0].trimEnd());
 	let comments = wc.map(l => l[1]);
 
-
     // filter inactive rules
-    ruleList = ruleList.filter((_val, index) => ruleActive[index]);
+    let ruleList = RULES_VIEW.getRules().filter((_val, index) => ruleActive[index]);
 
     let traceNumber = (+traceState >= 0) ? +traceState : null;
     console.log("Running ASCA...");
@@ -328,7 +325,7 @@ function runASCA() {
 
     // handle result
     let outputJoined = res.was_ok() 
-	? (traceNumber === null ? createOutput(res, formatType, comments) : createOutputTraced(res))
+	? (traceNumber === null ? createOutput(res, getFormatState(), comments) : createOutputTraced(res))
 	: createError(res);
     
     OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
@@ -337,7 +334,6 @@ function runASCA() {
     resize(outputArea);
 
 	// handle traces
-
 	let trace_indices = res.get_traces();
 
 	RulesClass.traceRules(trace_indices);
@@ -642,7 +638,6 @@ function updateTo14() {
 }
 
 function onLoadNew() {
-	addResizeEvents(LEXICON)
     addResizeEvents(ALIAS_INTO)
     addResizeEvents(ALIAS_FROM)
 
@@ -742,7 +737,7 @@ document.getElementById("input-minimax")!.addEventListener("click", function(thi
 	} else {
 		i.classList.replace('fa-plus', 'fa-minus');
 	}
-	document.getElementById("lex-wrap")!.classList.toggle('invisible')
+	INLEX_WRAP.classList.toggle('invisible')
 });
 
 document.getElementById("rule-minimax")!.addEventListener("click", function(this: HTMLElement) {
@@ -823,7 +818,7 @@ document.querySelectorAll('dialog').forEach(item => {
     })
 });
 
-LEXICON.addEventListener("keyup", () => updateTrace());
+document.addEventListener("InputViewChange", () => INPUT_VIEW.updateTrace());
 
 TRACE.addEventListener("change", () => {
 	FORMAT.disabled = TRACE.value !== "-1";
@@ -833,7 +828,6 @@ document.addEventListener("keyup", (e) => globalHandleKeyUp(e));
 document.addEventListener("keydown", (e) => globalHandleKeyDown(e));
 
 // VSCode-like Alt Reordering
-LEXICON.addEventListener("keydown", (e) => checkMoveOrDup(e));
 ALIAS_INTO.addEventListener("keydown", (e) => checkMoveOrDup(e));
 ALIAS_FROM.addEventListener("keydown", (e) => checkMoveOrDup(e));
 

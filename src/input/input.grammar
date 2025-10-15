@@ -1,0 +1,14 @@
+@top all { line* }
+
+@skip { Comment }
+
+line { emptyLine | Phrase (Newline | Eof) }
+
+emptyLine { Newline }
+
+@tokens {
+    Comment { "#" ![\n]* }
+    Phrase { ![#\t\n\r]+ }
+    Newline { ("\r\n" | "\n") }
+    Eof { @eof }
+}

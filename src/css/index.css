@@ -429,7 +429,6 @@ textarea, #output {
 	scrollbar-color: var(--green)  var(--bg1) !important;
 }
 
-#lexicon,
 #output {
 	background: var(--bg2);
 	color: var(--fg);
@@ -799,9 +798,12 @@ footer {
 		width: auto !important;
 	}
 
-	#lexicon, #output {
+	#output {
 		min-height: 4lh;
 	}
+
+	#lex-wrap .cm-scroller { min-height: 4lh !important; }
+	#lex-wrap .cm-content  { min-height: 4lh !important; }
 
 	#alias-into, #alias-from {
 		min-height: 4lh;
