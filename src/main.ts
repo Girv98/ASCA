@@ -339,16 +339,17 @@ function runASCA() {
 	RulesClass.traceRules(trace_indices);
 }
 
-function escapeHTML(str: string): string {
+export function escapeHTML(str: string): string {
 	return str.replace(
-    /[&<>'"]/g,
+    /[&<>'" ]/g,
     tag =>
       ({
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         "'": '&#39;',
-        '"': '&quot;'
+        '"': '&quot;',
+		' ': '&nbsp;',
       }[tag] || tag)
   )
 }
@@ -398,8 +399,8 @@ function createOutputTraced(res: WasmResult) {
 		output.forEach((line) => {
 			line = escapeHTML(line);
 			if (line) {
-				if (line.startsWith('Applied &quot;')) {
-					line = line.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
+				if (line.startsWith('Applied&nbsp;&quot;')) {
+					line = line.replace('Applied&nbsp;&quot;', '<span style="color: var(--green);">&quot;');
 					line = line.replace(new RegExp(':$'), '</span>:');
 				} else {
 					line = line.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
@@ -426,8 +427,8 @@ function createOutputTraced(res: WasmResult) {
 	output.forEach((val) => {
 		val = escapeHTML(val);
 		outputJoined += '<div class="out-line"><span>'
-		if (val.startsWith('Applied &quot;')) {
-			val = val.replace('Applied &quot;', '<span style="color: var(--green);">&quot;');
+		if (val.startsWith('Applied&nbsp;&quot;')) {
+			val = val.replace('Applied&nbsp;&quot;', '<span style="color: var(--green);">&quot;');
 			val = val.replace(new RegExp(':$'), '</span>:');
 		} else {
 			val = val.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
@@ -463,32 +464,34 @@ function createOutputTraced(res: WasmResult) {
 	return outputJoined;
 }
 // →
-function formatLine(val: string, formatType: OutputFormat, input: string, align: number, comment: string): string {
-	val = escapeHTML(val);
-	if (val) {
+function formatLine(val: string, formatType: OutputFormat, input: string, align: number, comment: string | undefined): string {
+	let escapedInp = escapeHTML(input);
+	let escapedVal = escapeHTML(val);
+	if (escapedVal) {
 		switch (formatType) {
-			case "out": return `<div class="out-line"><span>${val}</span></div>`;
-			case "=>":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
-			case "->":  return `<div class="out-line"><span>${input} <span style="color: var(--blue);">-&gt;</span> ${val}</span></div>`;
-			case ">":   return `<div class="out-line"><span>${input} <span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
+			case "out": return `<div class="out-line"><span>${escapedVal}</span></div>`;
+			case "=>":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">=&gt;</span> ${escapedVal}</span></div>`;
+			case "->":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">-&gt;</span> ${escapedVal}</span></div>`;
+			case ">":   return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">&gt;</span> ${escapedVal}</span></div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">=&gt;</span> ${val}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">=&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+->": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">-&gt;</span> ${val}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">-&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${input} ${pad}<span style="color: var(--blue);">&gt;</span> ${val}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+#": {
 				if (comment != undefined) {
 					let pad = " ".repeat(align-val.length+fixUnicodePadding(val));
-					return `<div class="out-line"><span>${val} ${pad}<span style="color: var(--grey1);">#${comment}</span></span></div>`;
+					comment = escapeHTML(comment);
+					return `<div class="out-line"><span>${escapedVal} ${pad}<span style="color: var(--grey1);">#${comment}</span></span></div>`;
 				} else {
-					return `<div class="out-line"><span>${val}</span></div>`;
+					return `<div class="out-line"><span>${escapedVal}</span></div>`;
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { historyTemplate } from "./templates";
 import { type Rule, Rules as RulesClass }  from './rules.js';
-import { createHistoryEvents, resize, type OutputFormat } from "./main.js";
+import { createHistoryEvents, escapeHTML, resize, type OutputFormat } from "./main.js";
 import { encode } from "js-base64";
 import type { EditorView } from "@codemirror/view";
 import { createInput } from "./input.js";
@@ -120,7 +120,7 @@ export class InputView {
             if (line && !line.startsWith("#")) {
                 let opt = document.createElement("option");
                 opt.value = `${i}`
-                opt.innerHTML = line;
+                opt.innerHTML = escapeHTML(line);
                 TRACE.append(opt)
             }
         })
