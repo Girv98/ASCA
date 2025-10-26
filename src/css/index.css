@@ -1,3 +1,5 @@
+@import "./editor.css";
+
 /*  Based on Everforest theme https://github.com/sainnhe/everforest */
 :root {
 	--bg_dim: #232A2E;	
@@ -811,6 +813,10 @@ footer {
 
 	dialog {
 		min-width: 93%;
+	}
+
+	.modal-wrapper {
+		padding: 1rem .5rem;
 	}
 }
 
