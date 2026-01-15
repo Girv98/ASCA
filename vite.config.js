@@ -8,8 +8,13 @@ export default defineConfig({
     }
   },
   build: {
-
-    target: 'esnext'
+    target: 'esnext',
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        changelog: './changelog.html',
+      }
+    }
   },
   base: './',
 })
