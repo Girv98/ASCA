@@ -24,6 +24,8 @@ let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
+let isSmallScreen: boolean | null = null;
+
 export function createHistoryEvents(el: Element) {
 	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
 	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
@@ -778,8 +780,8 @@ document.getElementById("collapse")!.addEventListener("click", _ => RULES_VIEW.c
 document.getElementById("activate")!.addEventListener("click", _ => RULES_VIEW.activateRules());
 document.getElementById("clear-all")!.addEventListener("click", _ => RULES_VIEW.clearRules());
 
-document.getElementById("version-modal-close")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).close());
-document.getElementById("version-modal-open")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).showModal())
+// document.getElementById("version-modal-close")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).close());
+// document.getElementById("version-modal-open")!.addEventListener("click", () => (document.getElementById('version-modal')! as HTMLDialogElement).showModal())
 
 document.getElementById("alias-modal-close")!.addEventListener("click", () => (document.getElementById('alias-modal')! as HTMLDialogElement).close());
 document.getElementById("alias-modal-open")!.addEventListener("click", () => showAliasModal())
@@ -874,8 +876,6 @@ export function resize(el: HTMLElement) {
 // ----------------------------------
 
 await init()
-
-let isSmallScreen: boolean | null = null;
 
 function onResize() {
 	if (window.innerWidth > 650 && (isSmallScreen === null || isSmallScreen)) {
