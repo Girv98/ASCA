@@ -1,0 +1,199 @@
+
+/*  Based on Everforest theme https://github.com/sainnhe/everforest */
+/* :root.everforest {
+	--bg_dim: #232A2E;
+	--bg0:    #2D353B;
+	--bg1:    #343F44;
+	--bg2:    #3D484D;
+	--bg3:    #475258;
+	--bg4:    #4F585E;
+	--select: #543A48;
+	--fg:     #D3C6AA;
+	--red:    #E67E80;
+	--orange: #E69875;
+	--yellow: #DBBC7F;
+	--green:  #A7C080;
+	--aqua:   #83C092;
+	--blue:   #7FBBB3;
+	--purple: #D699B6;
+	--grey0:  #7A8478;
+	--grey1:  #859289;
+} */
+
+/* :root.everforest-light {
+	--bg_dim: #e5dfc5;
+	--bg0:    #f3ead3;
+	--bg1:    #eae4ca;
+	--bg2:    #e5dfc5;
+	--bg3:    #ddd8be;
+	--bg4:    #d8d3ba;
+	--select: #f85654;
+	--fg:     #5c6a72;
+	--red:    #f85552;
+	--orange: #f57d26;
+	--yellow: #dfa000;
+	--green:  #8da101;
+	--aqua:   #35a77c;
+	--blue:   #3a94c5;
+	--purple: #df69ba;
+	--grey0:  #a6b0a0;
+	--grey1:  #939f91;
+} */
+
+/* Work in Progress */
+
+/* :root.gruvbox {
+    --bg_dim: #1d2021;
+    --bg0:    #32302f;
+	--bg1:    #3c3836;
+	--bg2:    #504945;
+	--bg3:    #665c54;
+	--bg4:    #7c6f64;
+	--select: #cc241d;
+	--fg:     #ebdbb2;
+	--red:    #fb4934;
+	--orange: #fe8019;
+	--yellow: #fabd2f;
+	--green:  #b8bb26;
+	--aqua:   #8ec07c;
+	--blue:   #83a598;
+	--purple: #d3869b;
+	--grey0:  #a89984;
+	--grey1:  #928374;
+} */
+
+/* :root.cat-mocha {
+	--bg_dim: #1e1e2e;
+	--bg0:    #313244;
+	--bg1:    #45475a;
+	--bg2:    #585b70;
+	--bg3:    #6c7086;
+	--bg4:    #7f849c;
+	--select: #11111b;
+	--fg:     #cdd6f4;
+	--red:    #f38ba8;
+	--orange: #fab387;
+	--yellow: #f9e2af;
+	--green:  #a6e3a1;
+	--aqua:   #94e2d5;
+	--blue:   #89b4fa;
+	--purple: #cba6f7;
+	--grey0:  #a6adc8;
+	--grey1:  #bac2de;
+} */
+
+/* I like this one better */
+/* :root.cat-mac {
+	--bg_dim: #24273a;
+	--bg0:    #363a4f;
+	--bg1:    #494d64;
+	--bg2:    #5b6078;
+	--bg3:    #6e738d;
+	--bg4:    #8087a2;
+	--select: #1e2030;
+	--fg:     #cad3f5;
+	--red:    #ed8796;
+	--orange: #f5a97f;
+	--yellow: #eed49f;
+	--green:  #a6d189;
+	--aqua:   #8bd5ca;
+	--blue:   #8aadf4;
+	--purple: #c6a0f6;
+	--grey0:  #a5adcb;
+	--grey1:  #b8c0e0;
+} */
+
+/* :root.cat-frappe {
+	--bg_dim: #303446;
+	--bg0:    #414559;
+	--bg1:    #51576d;
+	--bg2:    #626880;
+	--bg3:    #737994;
+	--bg4:    #838ba7;
+	--select: #292c3c;
+	--fg:     #c6d0f5;
+	--red:    #e78284;
+	--orange: #ef9f76;
+	--yellow: #e5c890;
+	--green:  #a6d189;
+	--aqua:   #81c8be;
+	--blue:   #8caaee;
+	--purple: #ca9ee6;
+	--grey0:  #a5adce;
+	--grey1:  #b5bfe2;
+} */
+
+
+:root {
+    --primary-bg:  #232A2E; /* var(--bg_dim); */
+    --primary-fg:  #D3C6AA; /* var(--fg); */
+    
+    --thirds-bg:   #2D353B; /* var(--bg0); */
+    --modal-bg:    #3D484D; /* var(--bg2); */
+    
+    --rule-box-bg: #3D484D; /* var(--bg2); */
+    --rule-bg:     #2D353B; /* var(--bg0); */
+    --rule-fg:     #A7C080; /* var(--green); */
+    
+	--caret-color: #D3C6AA;
+	--xput-bg: #3D484D; /* var(--bg2); */
+	--xput-fg: #D3C6AA; /* var(--fg); */
+	--xput-scroll-bg: #343F44; /* var(--bg1); */
+
+	--text-on-accent: #232A2E;
+
+    --accent: #A7C080; /* var(--green); */
+	--trace-accent: #7FBBB3;
+	--off: #E67E80;
+    
+    --select-bg: #543A48; /* var(--select); */
+    --select-fg: #A7C080; /* var(--green); */
+
+    --primary-button-bg: #A7C080; /* var(--green); */
+    --primary-button-fg: #232A2E; /* var(--bg_dim); */;
+    --secondary-button-bg: #2D353B; /* var(--bg0); */;
+    --secondary-button-fg: #A7C080; /* var(--green); */
+
+	--modal-bg: #3D484D;
+	--save-item-bg: #475258;
+	--save-text-fg: #a7c080;
+	--save-text-bg: #343F44;
+
+	--placeholder: #859289;
+	--grabber-color: #859289;
+	
+	--dialog-backdrop: #232A2E;
+	
+
+	--comment: #859289;
+
+	/* Rule Syntax Colours */
+	--angle-bracket: #E67E80;
+	--brace: #E67E80;
+	--paren: #83C092;
+	--comma: #859289;
+	--square: #859289;
+	--operator: #7FBBB3;
+	--literal: #A7C080;
+	--keyword: #E67E80;
+	--number: #D699B6;
+	--feature: #D699B6;
+	--arg: #7FBBB3;
+	--empty-meta: #E69875;
+	--syllable: #E69875;
+	--delim: #7FBBB3;
+	--group: #DBBC7F;
+
+	/* Output Colours */
+	--unknown1: #A7C080;
+	--unknown2: #7FBBB3;
+	--unknown3: #E69875;
+	--unknown4: #D699B6;
+	--unknown5: #E67E80;
+	--unknown6: #DBBC7F;
+
+	--error: #E67E80;
+	--error-highlight: #7FBBB3;
+	--format-arrow: #7FBBB3;
+	--trace-name: #A7C080;
+}

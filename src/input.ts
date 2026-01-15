@@ -9,8 +9,7 @@ import { styleTags, tags } from "@lezer/highlight";
 
 const syntax_colors = syntaxHighlighting(
     HighlightStyle.define([
-        { tag: tags.comment, color: "var(--grey1)" },
-        // { tag: tags.special(tags.string), color: "var(--fg)" },
+        { tag: tags.comment, color: "var(--comment)" },
     ])
 );
 

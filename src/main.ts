@@ -359,7 +359,7 @@ function createError(res: WasmResult): string {
 	let lines = res.get_output()[0].split("\n").map((l) => escapeHTML(l));
 
 	let [head, ...tail] = lines[0].split(":");
-	head = `<span style="color: var(--red);">${head}:</span>`;
+	head = `<span style="color: var(--error);">${head}:</span>`;
 	let rest = tail.join(':');
 
 	let line = `${head}${rest}`;
@@ -371,19 +371,19 @@ function createError(res: WasmResult): string {
 		let maybe_carets = rg.exec(lines[lines.length-2]);
 		if (maybe_carets && maybe_carets.length) {
 			let carets = maybe_carets[0];
-			lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
-			lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--blue);">@</span>');
+			lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--error);">${carets}</span>`)
+			lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--error-highlight);">@</span>');
 		}
 	} else {
 		let maybe_carets = rg.exec(lines[lines.length-1]);
 		if (maybe_carets && maybe_carets.length) {
 			let carets = maybe_carets[0];
-			lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--red);">${carets}</span>`)
+			lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--error);">${carets}</span>`)
 		}
 	}
 
 	for(let i = 1; i < lines.length; i++) {
-		let line = lines[i].replace('|', '<span style="color: var(--blue);">|</span>');
+		let line = lines[i].replace('|', '<span style="color: var(--error-highlight);">|</span>');
 		outputJoined += `<div class="out-line"><span>${line}</span></div>`;
 	}
 
@@ -400,10 +400,10 @@ function createOutputTraced(res: WasmResult) {
 			line = escapeHTML(line);
 			if (line) {
 				if (line.startsWith('Applied&nbsp;&quot;')) {
-					line = line.replace('Applied&nbsp;&quot;', '<span style="color: var(--green);">&quot;');
+					line = line.replace('Applied&nbsp;&quot;', '<span style="color: var(--trace-name);">&quot;');
 					line = line.replace(new RegExp(':$'), '</span>:');
 				} else {
-					line = line.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
+					line = line.replace("=&gt;", '<span style="color: var(--format-arrow);">=&gt;</span>');
 				}
 				outputJoined += `<div class="out-line"><span>${line}</span></div>`
 			} else {
@@ -421,17 +421,17 @@ function createOutputTraced(res: WasmResult) {
 
 	let unknownsUnique = [... new Set(unknowns)];
 	let lenUnique = Object.keys(unknownsUnique).length;
-	const colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
+	const colours = ["var(--unknown1)", "var(--unknown2)", "var(--unknown3)", "var(--unknown4)", "var(--unknown5)", "var(--unknown6)"]
 
 	let occurence = -1;
 	output.forEach((val) => {
 		val = escapeHTML(val);
 		outputJoined += '<div class="out-line"><span>'
 		if (val.startsWith('Applied&nbsp;&quot;')) {
-			val = val.replace('Applied&nbsp;&quot;', '<span style="color: var(--green);">&quot;');
+			val = val.replace('Applied&nbsp;&quot;', '<span style="color: var(--trace-name);">&quot;');
 			val = val.replace(new RegExp(':$'), '</span>:');
 		} else {
-			val = val.replace("=&gt;", '<span style="color: var(--blue);">=&gt;</span>');
+			val = val.replace("=&gt;", '<span style="color: var(--format-arrow);">=&gt;</span>');
 		}
 		let parts = val.split('�')
 		if (parts.length == 1) {
@@ -441,7 +441,7 @@ function createOutputTraced(res: WasmResult) {
 				occurence += 1;
 				outputJoined += parts[p];
 				let ind = unknownsUnique.indexOf(unknowns[occurence]);
-				let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+				let color = (ind < lenUnique) ? colours[ind] : "var(--xput-fg)";
 				outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
 			}
 			outputJoined += parts[parts.length - 1];
@@ -450,7 +450,7 @@ function createOutputTraced(res: WasmResult) {
 	});
 
 	let string = unknownsUnique.map((val, ind) => {
-		let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+		let color = (ind < lenUnique) ? colours[ind] : "var(--xput-fg)";
 		let number = unknownsMap.get(val)!.length;
 		let counts = (number == 1) ? "count" : "counts";
 		val = escapeHTML(val);
@@ -470,33 +470,33 @@ function formatLine(val: string, formatType: OutputFormat, input: string, align:
 	if (escapedVal) {
 		switch (formatType) {
 			case "out": return `<div class="out-line"><span>${escapedVal}</span></div>`;
-			case "=>":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">=&gt;</span> ${escapedVal}</span></div>`;
-			case "->":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">-&gt;</span> ${escapedVal}</span></div>`;
-			case ">":   return `<div class="out-line"><span>${escapedInp} <span style="color: var(--blue);">&gt;</span> ${escapedVal}</span></div>`;
+			case "=>":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</span></div>`;
+			case "->":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</span></div>`;
+			case ">":   return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</span></div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">=&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+->": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">-&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--blue);">&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</span></div>`;
 			}
 			case "+#": {
 				if (comment != undefined) {
 					let pad = " ".repeat(align-val.length+fixUnicodePadding(val));
 					comment = escapeHTML(comment);
-					return `<div class="out-line"><span>${escapedVal} ${pad}<span style="color: var(--grey1);">#${comment}</span></span></div>`;
+					return `<div class="out-line"><span>${escapedVal} ${pad}<span style="color: var(--comment);">#${comment}</span></span></div>`;
 				} else {
 					return `<div class="out-line"><span>${escapedVal}</span></div>`;
 				}
 			}
 		}
 	} else if (formatType == "+#" && comment != undefined) {
-		return `<div class="out-line"><span><span style="color: var(--grey1);">#${comment}</span></span></div>`;
+		return `<div class="out-line"><span><span style="color: var(--comment);">#${comment}</span></span></div>`;
 	} else {
 		return '<div class="out-line"><span><br></span></div>';
 	}
@@ -575,7 +575,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat, comments: strin
 
 	let unknownsUnique = [... new Set(unknowns)];
 	let lenUnique = Object.keys(unknownsUnique).length;
-	const colours = ["var(--green)", "var(--blue)", "var(--orange)", "var(--purple)", "var(--red)", "var(--yellow)"]
+	const colours = ["var(--unknown1)", "var(--unknown2)", "var(--unknown3)", "var(--unknown4)", "var(--unknown5)", "var(--unknown6)"]
 
 	let occurence = -1;
 	output.forEach((line, ind) => {
@@ -588,7 +588,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat, comments: strin
 				occurence += 1;
 				outputJoined += parts[p];
 				let ind = unknownsUnique.indexOf(unknowns[occurence]);
-				let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+				let color = (ind < lenUnique) ? colours[ind] : "var(--xput-fg)";
 				outputJoined += `<span style="color: ${color};" title="${unknowns[occurence]}">�</span>`
 			}
 			outputJoined += parts[parts.length - 1];
@@ -596,7 +596,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat, comments: strin
 	});
 
 	let string = unknownsUnique.map((val, ind) => {
-		let color = (ind < lenUnique) ? colours[ind] : "var(--fg)";
+		let color = (ind < lenUnique) ? colours[ind] : "var(--xput-fg)";
 		let number = unknownsMap.get(val)!.length;
 		let counts = (number == 1) ? "count" : "counts";
 		val = escapeHTML(val);
@@ -713,7 +713,7 @@ function onLoadNew() {
 
 // Drag and drop
 Sortable.create(DEMO, {
-	handle: ".title",
+	handle: ".handle", // Large factor = .title, small factor = .grabber
 	filter: "button, input",
 	preventOnFilter: false,
 	direction: 'horizontal',
@@ -727,6 +727,11 @@ Sortable.create(DEMO, {
 	onEnd(evt) {
 		RULES_VIEW.move(evt.oldIndex!, evt.newIndex!);
 	},
+});
+
+
+window.addEventListener("resize", () => {
+	onResize();
 });
 
 
@@ -802,13 +807,13 @@ document.getElementById('alias-from-toggle')!.addEventListener("click", () => {
 	
 	if (x.classList.contains('fa-toggle-off')) {
 		x.classList.replace('fa-toggle-off', 'fa-toggle-on');
-		ALIAS_TOGGLE.classList.remove('red');
-		ALIAS_OPEN.classList.remove('red');
+		ALIAS_TOGGLE.classList.remove('off');
+		ALIAS_OPEN.classList.remove('off');
 		ALIAS_FROM.classList.remove('ignore');
 	} else {
 		x.classList.replace('fa-toggle-on', 'fa-toggle-off');
-		ALIAS_TOGGLE.classList.add('red');
-		ALIAS_OPEN.classList.add('red');
+		ALIAS_TOGGLE.classList.add('off');
+		ALIAS_OPEN.classList.add('off');
 		ALIAS_FROM.classList.add('ignore');
 	}
 })
@@ -869,4 +874,18 @@ export function resize(el: HTMLElement) {
 // ----------------------------------
 
 await init()
+
+let isSmallScreen: boolean | null = null;
+
+function onResize() {
+	if (window.innerWidth > 650 && (isSmallScreen === null || isSmallScreen)) {
+		document.querySelectorAll(".title").forEach((x) => x.classList.add("handle"));
+		document.querySelectorAll(".grabber").forEach((x) => x.classList.remove("handle"));
+	} else if (isSmallScreen === null || !isSmallScreen) {
+		document.querySelectorAll(".title").forEach((x) => x.classList.remove("handle"));
+		document.querySelectorAll(".grabber").forEach((x) => x.classList.add("handle"));
+	}
+}
+
+onResize()
 onLoadNew()

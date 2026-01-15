@@ -10,7 +10,7 @@
     font-family: FontNoto !important;
 	font-optical-sizing: none !important;
 	font-variation-settings: "wdth" 80;
-    background: var(--bg0);	
+    background: var(--rule-bg);	
     width: 100%;
     border-radius: 10px;
 	outline: none;
@@ -28,13 +28,13 @@
 }
 #lex-wrap .cm-editor { 
     font-size: 1.2rem;
-    background: var(--bg2);
+    background: var(--xput-bg);
     width: 100% !important;
     border-radius: 5px;
 }
 
 .cm-editor.cm-focused { 
-    box-shadow: inset 0 0 1px 1px var(--green);
+    box-shadow: inset 0 0 1px 1px var(--accent);
 	outline:none;
 }
 
@@ -45,69 +45,32 @@
     min-height: 4lh;
     scrollbar-width: thin !important;
     scrollbar-gutter: stable;
-	scrollbar-color: var(--green)  var(--bg1) !important;
+	scrollbar-color: var(--accent)  var(--xput-scroll-bg) !important;
 }
 #lex-wrap .cm-scroller { min-height: 18lh; }
 
 .cm-placeholder {
-    color: var(--grey1) !important;
+    color: var(--placeholder) !important;
     overflow: hidden !important;
 }
 
 .cm-content {
-    caret-color: var(--fg) !important;
+    caret-color: var(--caret-color) !important;
     min-height: 4lh  !important;
 }
 #lex-wrap .cm-content { min-height: 18lh  !important; }
 
 .cm-line {
-    color: var(--green);
+    color: var(--accent);
     width: 1px !important;
 }
-#lex-wrap .cm-line { color: var(--fg); padding-left: 4px }
+#lex-wrap .cm-line { color: var(--xput-fg); padding-left: 4px }
 
 
 #lex-wrap .cm-cursor {
-    border-color: var(--fg);
+    border-color: var(--xput-fg);
 }
 
 #lex-wrap .cm-selectionBackground {
-    background: var(--select) !important;
+    background: var(--select-bg) !important;
 }
-
-/* .tok-name {
-    color: var(--fg) !important;
-}*/
-
-/* .tok-propertyName {
-    color: var(--purple) !important;
-} */
-
-
-/* .tok-keyword {
-    color: var(--red) !important;
-} */
-
-/* .tok-operator {
-    color: var(--blue) !important;
-} */
-
-/* .tok-comment {
-    color: var(--grey1) !important;
-} */
-
-/* .tok-number {
-    color: var(--purple) !important;
-} */
-
-/* .tok-atom {
-    color: var(--blue) !important;
-} */
-
-/* .tok-variableName {
-    color: var(--purple) !important;
-} */
-
-/* .tok-punctuation {
-    color: var(--grey1) !important;
-}  */

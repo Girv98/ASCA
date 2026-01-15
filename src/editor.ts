@@ -12,28 +12,26 @@ import { styleTags, tags } from "@lezer/highlight";
 const syntax_colors = syntaxHighlighting(
     HighlightStyle.define(
         [
-            //   { tag: tags.name, color: "var(--fg)" },
-            { tag: tags.propertyName, color: "var(--purple)" },
-            { tag: tags.variableName, color: "var(--yellow)" },
-            { tag: tags.comment, color: "var(--grey1)" },
-            { tag: tags.atom, color: "var(--blue)" },
+            { tag: tags.propertyName, color: "var(--feature)" },
+            { tag: tags.variableName, color: "var(--group)" },
+            { tag: tags.comment, color: "var(--comment)" },
+            { tag: tags.atom, color: "var(--arg)" },
 
-            { tag: tags.punctuation, color: "var(--grey1)" },
-            { tag: tags.literal, color: "var(--green)" },
+            { tag: tags.literal, color: "var(--literal)" },
 
-            { tag: tags.operator, color: "var(--blue)", /*fontWeight: "bold"*/ },
-            { tag: tags.keyword, color: "var(--red)" },
-            { tag: tags.number, color: "var(--purple)" },
+            { tag: tags.operator, color: "var(--operator)", /*fontWeight: "bold"*/ },
+            { tag: tags.keyword, color: "var(--keyword)" },
+            { tag: tags.number, color: "var(--number)" },
                     
-            { tag: tags.angleBracket, color: "var(--red)" },
-            { tag: tags.brace, color: "var(--red)" },
-            { tag: tags.paren, color: "var(--aqua)" },
-            { tag: tags.separator, color: "var(--grey1)" },
-            { tag: tags.squareBracket, color: "var(--grey1)" },
+            { tag: tags.angleBracket, color: "var(--angle-bracket)" },
+            { tag: tags.brace, color: "var(--brace)" },
+            { tag: tags.paren, color: "var(--paren)" },
+            { tag: tags.separator, color: "var(--comma)" },
+            { tag: tags.squareBracket, color: "var(--square)" },
 
-            { tag: tags.special(tags.atom), color: "var(--orange)" },
-            { tag: tags.special(tags.keyword), color: "var(--orange)" },
-            { tag: tags.special(tags.operator), color: "var(--blue)" },
+            { tag: tags.special(tags.atom), color: "var(--empty-meta)" },
+            { tag: tags.special(tags.keyword), color: "var(--syllable)" },
+            { tag: tags.special(tags.operator), color: "var(--delim)" },
         ],
     // { all: { color: "#585858" } }
     )

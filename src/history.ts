@@ -452,12 +452,12 @@ export class Lines {
         if (aliasFromOn) {
             ti.classList.replace('fa-toggle-off', 'fa-toggle-on');
             ALIAS_FROM.classList.remove('ignore');
-            ALIAS_OPEN.classList.remove('red');
-            ALIAS_TOGGLE.classList.remove('red');
+            ALIAS_OPEN.classList.remove('off');
+            ALIAS_TOGGLE.classList.remove('off');
         } else {
             ti.classList.replace('fa-toggle-on', 'fa-toggle-off');
-            ALIAS_TOGGLE.classList.add('red');
-            ALIAS_OPEN.classList.add('red');
+            ALIAS_TOGGLE.classList.add('off');
+            ALIAS_OPEN.classList.add('off');
             ALIAS_FROM.classList.add('ignore');
         }
 

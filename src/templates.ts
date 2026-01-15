@@ -1,14 +1,21 @@
 export const blockTemplate = `
 	<div class="draggable-element" tabindex="0">
-		<div class="title">
-			<input type="text" class="name" placeholder = "Sound Change Title...">
-			<div class="title-btns">
-				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
-				<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
-				<button class="clone" title="Copy Rule Below" aria-label="Copy Rule"><i class="fas fa-clone" aria-hidden="true"></i></button>
-				<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on" aria-hidden="true"></i></button>
-				<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus" aria-hidden="true"></i></button>
-				<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times" aria-hidden="true"></i></button>
+		<div class="element-asdf">
+			<div class="grabber">
+				<i class="fas fa-grip-vertical"></i>
+			</div>
+			<div class="element-body">
+				<div class="title">
+				<input type="text" class="name" placeholder = "Sound Change Title...">
+					<div class="title-btns">
+						<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
+						<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
+						<button class="clone" title="Copy Rule Below" aria-label="Copy Rule"><i class="fas fa-clone" aria-hidden="true"></i></button>
+						<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-toggle-on" aria-hidden="true"></i></button>
+						<button class="maxmin" title="Minimise Rule" aria-label="Minimise Rule"><i class="fas fa-minus" aria-hidden="true"></i></button>
+						<button class="delete" title="Remove Rule" aria-label="Remove Rule"><i class="fas fa-times" aria-hidden="true"></i></button>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="cont">
