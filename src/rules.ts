@@ -101,6 +101,16 @@ export class Rules {
         RULE_HIDDEN.textContent = `${this.editors.length} ${plurality} hidden`;
     }
 
+    public addHandle(ruleEl: HTMLElement) {
+        if (window.innerWidth > 650 ) {
+            ruleEl.querySelector(".title")!.classList.add("handle");
+            ruleEl.querySelector(".grabber")!.classList.remove("handle");
+        } else {
+            ruleEl.querySelector(".title")!.classList.remove("handle");
+            ruleEl.querySelector(".grabber")!.classList.add("handle");
+        }
+    }
+
     public addRuleEnd() {
         DEMO.insertAdjacentHTML("beforeend", blockTemplate);
         DEMO.lastElementChild!.querySelector(".clone i")!.classList.add('fa-rotate-90')
@@ -108,6 +118,7 @@ export class Rules {
         createRuleEvents(DEMO.lastElementChild as HTMLElement);
         this.updateCollapse(true);
         this.updateActive(true);
+        this.addHandle(DEMO.lastElementChild as HTMLElement);
         this.updateHidden();
     }
 
@@ -118,6 +129,7 @@ export class Rules {
         createRuleEvents(DEMO.firstElementChild as HTMLElement);
         this.updateCollapse(true);
         this.updateActive(true);
+        this.addHandle(DEMO.firstElementChild as HTMLElement);
         this.updateHidden();
     }
 
@@ -374,6 +386,7 @@ export class Rules {
         }
 
         createRuleEvents(ruleElement);
+        this.addHandle(ruleElement);
         this.updateHidden();
     }
 

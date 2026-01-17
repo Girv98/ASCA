@@ -887,5 +887,5 @@ function onResize() {
 	}
 }
 
-onResize()
 onLoadNew()
+onResize()

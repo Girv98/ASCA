@@ -78,7 +78,9 @@ div.thirds.sounds {
 
 	h1 { flex-grow: 1; }
 
-	button {
+	position: relative;
+
+	.minimax {
 		height: 100%;
 		font-weight: bold;
 		font-size: 1.6rem;
@@ -89,10 +91,13 @@ div.thirds.sounds {
 		color: var(--accent);
 		outline:none;
 		cursor: pointer;
-		padding: 0;
+		padding: 1rem;
 
-		position: relative;
-		right: .6rem;
+		position: absolute;
+		
+		&.right {
+			right: 0;
+		}
 	}
 }
 
@@ -802,6 +807,10 @@ footer {
 	.element-asdf {
 		display: flex;
 		overflow: hidden;
+
+		&.right {
+			flex-direction: row-reverse;
+		}
 	}
 
 	.grabber {
