@@ -631,6 +631,41 @@ dialog {
 
 footer {
 	margin: 2vh;
+
+	overflow: hidden;
+	/* position: relative;
+
+	.icons {
+		width: fit-content;
+		height: 100%;
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		/* This works on chrome but not firefox */
+		/* justify-self: end;
+		align-self: anchor-center;
+
+		display: flex;
+		align-items: center;
+
+		.icon {
+			font-size: 2rem;
+			margin-right: 1.5rem;
+		}
+	} */
+
+	.icons {
+		display: flex;
+		align-items: center;
+		justify-items: center;
+		justify-content: center;
+		/* gap: 2rem; */
+
+		.icon {
+			font-size: 2rem;
+			padding: 1rem;
+		}
+	}
 }
 
 /* Firefox */
@@ -798,6 +833,12 @@ footer {
 
 /* Small screens */
 
+@media screen and (min-width: 650px) {
+	#small-screen-direction {
+		display:none !important;
+	}
+}
+
 @media screen and (max-width: 650px) {
 
 	.options {
@@ -810,6 +851,10 @@ footer {
 
 		&.right {
 			flex-direction: row-reverse;
+
+			input {
+				margin-left: 1ch;
+			}
 		}
 	}
 

@@ -111,6 +111,15 @@ export class Rules {
         }
     }
 
+    public handleLeftRight(ruleEl: HTMLElement) {
+        console.log("Hiu")
+        if (document.getElementById("small-screen-direction")!.querySelector("i")!.classList.contains("fa-align-right")) {
+            ruleEl.querySelector(".element-asdf")!.classList.add("right");
+        } else {
+            ruleEl.querySelector(".element-asdf")!.classList.remove("right");
+        }
+    }
+
     public addRuleEnd() {
         DEMO.insertAdjacentHTML("beforeend", blockTemplate);
         DEMO.lastElementChild!.querySelector(".clone i")!.classList.add('fa-rotate-90')
@@ -119,6 +128,7 @@ export class Rules {
         this.updateCollapse(true);
         this.updateActive(true);
         this.addHandle(DEMO.lastElementChild as HTMLElement);
+        this.handleLeftRight(DEMO.lastElementChild as HTMLElement)
         this.updateHidden();
     }
 
@@ -130,6 +140,7 @@ export class Rules {
         this.updateCollapse(true);
         this.updateActive(true);
         this.addHandle(DEMO.firstElementChild as HTMLElement);
+        this.handleLeftRight(DEMO.firstElementChild as HTMLElement)
         this.updateHidden();
     }
 
@@ -358,7 +369,6 @@ export class Rules {
     }
 
     public makeRule(name: string, rule: string, desc: string, ruleClosed: boolean, ruleActive: boolean) {
-
         DEMO.insertAdjacentHTML("beforeend", blockTemplate);
         let ruleElement = DEMO.lastChild! as HTMLElement;
 
@@ -387,6 +397,7 @@ export class Rules {
 
         createRuleEvents(ruleElement);
         this.addHandle(ruleElement);
+        this.handleLeftRight(ruleElement);
         this.updateHidden();
     }
 

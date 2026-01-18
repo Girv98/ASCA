@@ -842,6 +842,25 @@ ALIAS_INTO.addEventListener("keydown", (e) => checkMoveOrDup(e));
 ALIAS_FROM.addEventListener("keydown", (e) => checkMoveOrDup(e));
 
 
+document.getElementById("small-screen-direction")!.addEventListener("click", () => {
+	let x = document.getElementById("small-screen-direction")!.querySelector('i')!;
+
+	if (x.classList.contains('fa-align-left')) {
+		x.classList.replace('fa-align-left', 'fa-align-right');
+		document.getElementById("input-minimax")!.classList.add("right");
+		document.getElementById("rule-minimax")!.classList.add("right");
+		DEMO.querySelectorAll(".element-asdf").forEach(el => { el.classList.add("right"); });
+		localStorage.setItem("asca-handedness-right", "true")
+	} else {
+		x.classList.replace('fa-align-right', 'fa-align-left');
+		document.getElementById("input-minimax")!.classList.remove("right");
+		document.getElementById("rule-minimax")!.classList.remove("right");
+		DEMO.querySelectorAll(".element-asdf").forEach(el => { el.classList.remove("right"); });
+		localStorage.setItem("asca-handedness-right", "false")
+	}
+})
+
+
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
 
@@ -885,6 +904,13 @@ function onResize() {
 		document.querySelectorAll(".title").forEach((x) => x.classList.remove("handle"));
 		document.querySelectorAll(".grabber").forEach((x) => x.classList.add("handle"));
 	}
+}
+
+if (localStorage.getItem("asca-handedness-right") === "true") {
+	let x = document.getElementById("small-screen-direction")!.querySelector('i')!;
+	x.classList.replace('fa-align-left', 'fa-align-right');
+	document.getElementById("input-minimax")!.classList.add("right");
+	document.getElementById("rule-minimax")!.classList.add("right");
 }
 
 onLoadNew()
