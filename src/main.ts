@@ -26,6 +26,8 @@ let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
 let isSmallScreen: boolean | null = null;
 
+export const smallScreenWidth = 640;
+
 export function createHistoryEvents(el: Element) {
 	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
 	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
@@ -897,7 +899,7 @@ export function resize(el: HTMLElement) {
 await init()
 
 function onResize() {
-	if (window.innerWidth > 650 && (isSmallScreen === null || isSmallScreen)) {
+	if (window.innerWidth > smallScreenWidth && (isSmallScreen === null || isSmallScreen)) {
 		document.querySelectorAll(".title").forEach((x) => x.classList.add("handle"));
 		document.querySelectorAll(".grabber").forEach((x) => x.classList.remove("handle"));
 	} else if (isSmallScreen === null || !isSmallScreen) {

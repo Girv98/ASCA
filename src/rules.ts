@@ -1,6 +1,6 @@
 
 import { createEditor } from "./editor";
-import { /*addResizeEvents, */createRuleEvents, resize } from "./main";
+import { createRuleEvents, resize, smallScreenWidth } from "./main";
 import { blockTemplate } from "./templates";
 import { EditorView } from '@codemirror/view';
 
@@ -102,7 +102,7 @@ export class Rules {
     }
 
     public addHandle(ruleEl: HTMLElement) {
-        if (window.innerWidth > 650 ) {
+        if (window.innerWidth > smallScreenWidth ) {
             ruleEl.querySelector(".title")!.classList.add("handle");
             ruleEl.querySelector(".grabber")!.classList.remove("handle");
         } else {
@@ -112,7 +112,6 @@ export class Rules {
     }
 
     public handleLeftRight(ruleEl: HTMLElement) {
-        console.log("Hiu")
         if (document.getElementById("small-screen-direction")!.querySelector("i")!.classList.contains("fa-align-right")) {
             ruleEl.querySelector(".element-asdf")!.classList.add("right");
         } else {

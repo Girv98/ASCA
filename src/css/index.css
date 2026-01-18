@@ -50,6 +50,18 @@ header {
 	}
 }
 
+#version-number {
+	position: relative;
+}
+
+#version-number::after {
+	position: absolute;
+	font-family: "Font Awesome 5 Free";
+	content: "\f35d";
+	font-size: 1rem;
+	right: -1.2rem;
+}
+
 section {
 	background-color: var(--primary-bg);
 	box-sizing:border-box;
@@ -793,6 +805,11 @@ footer {
 		margin: 0.5vw !important;
 	}
 
+	.options {
+		padding-left: 1%;
+		padding-right: 1%;
+	}
+
 	#output {
 		min-height: 4lh;
 	}
@@ -833,13 +850,13 @@ footer {
 
 /* Small screens */
 
-@media screen and (min-width: 650px) {
+@media screen and (min-width: 641px) {
 	#small-screen-direction {
 		display:none !important;
 	}
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 640px) {
 
 	.options {
 		padding: 2%;
