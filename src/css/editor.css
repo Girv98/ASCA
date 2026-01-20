@@ -17,10 +17,7 @@
 	border: none;
     white-space: pre !important;
 
-    padding-top: 2px;
-    padding-bottom: 2px;
-
-    padding: 2px 0px;
+    padding: 2px 0px !important;
 
     flex-grow: 1;
 	flex-shrink: 0;
@@ -43,6 +40,7 @@
     overflow: auto !important;
     resize: vertical;
     min-height: 4lh;
+    line-height: 1.3 !important;
     scrollbar-width: thin !important;
     scrollbar-gutter: stable;
 	scrollbar-color: var(--accent)  var(--xput-scroll-bg) !important;

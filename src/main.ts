@@ -335,7 +335,7 @@ function runASCA() {
     OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
     let outputArea = document.getElementById('output')!;
     outputArea.innerHTML = outputJoined;
-    resize(outputArea);
+    // resize(outputArea);
 
 	// handle traces
 	let trace_indices = res.get_traces();
@@ -367,7 +367,7 @@ function createError(res: WasmResult): string {
 	let rest = tail.join(':');
 
 	let line = `${head}${rest}`;
-	outputJoined += `<div class="out-line"><span>${line}</span></div>`;
+	outputJoined += `<div class="out-line">${line}</div>`;
 
 
 	var rg = new RegExp('\\^(\\^| )*');
@@ -388,7 +388,7 @@ function createError(res: WasmResult): string {
 
 	for(let i = 1; i < lines.length; i++) {
 		let line = lines[i].replace('|', '<span style="color: var(--error-highlight);">|</span>');
-		outputJoined += `<div class="out-line"><span>${line}</span></div>`;
+		outputJoined += `<div class="out-line">${line}</div>`;
 	}
 
 	return outputJoined
@@ -409,9 +409,9 @@ function createOutputTraced(res: WasmResult) {
 				} else {
 					line = line.replace("=&gt;", '<span style="color: var(--format-arrow);">=&gt;</span>');
 				}
-				outputJoined += `<div class="out-line"><span>${line}</span></div>`
+				outputJoined += `<div class="out-line">${line}</div>`
 			} else {
-				outputJoined += '<div class="out-line"><span><br></span></div>'
+				outputJoined += '<div class="out-line"><br></div>'
 			}
 		});
 		return outputJoined;
@@ -430,7 +430,7 @@ function createOutputTraced(res: WasmResult) {
 	let occurence = -1;
 	output.forEach((val) => {
 		val = escapeHTML(val);
-		outputJoined += '<div class="out-line"><span>'
+		outputJoined += '<div class="out-line">'
 		if (val.startsWith('Applied&nbsp;&quot;')) {
 			val = val.replace('Applied&nbsp;&quot;', '<span style="color: var(--trace-name);">&quot;');
 			val = val.replace(new RegExp(':$'), '</span>:');
@@ -450,7 +450,7 @@ function createOutputTraced(res: WasmResult) {
 			}
 			outputJoined += parts[parts.length - 1];
 		}
-		outputJoined += "</span></div>";
+		outputJoined += "</div>";
 	});
 
 	let string = unknownsUnique.map((val, ind) => {
@@ -458,12 +458,12 @@ function createOutputTraced(res: WasmResult) {
 		let number = unknownsMap.get(val)!.length;
 		let counts = (number == 1) ? "count" : "counts";
 		val = escapeHTML(val);
-		return `<div class="out-line"><span>${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</span></div>`
+		return `<div class="out-line">${val} <span style="color: ${color};" title="${val}">�</span> ${number} ${counts}</div>`
 	}).join('');
 
-	outputJoined += '<div class="out-line"><span><br></span></div>';
-	let header = '<div class="out-line"><span><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></span></div>';
-	outputJoined += `<div class="out-line"><span><b>${lenUnique} unique unknowns found:</b></span></div>${header}${string}`
+	outputJoined += '<div class="out-line"><br></div>';
+	let header = '<div class="out-line"><strong>rut| manner |lar|lb|cr|dorsal|pr</strong></div>';
+	outputJoined += `<div class="out-line"><b>${lenUnique} unique unknowns found:</b></div>${header}${string}`
 
 	return outputJoined;
 }
@@ -473,36 +473,36 @@ function formatLine(val: string, formatType: OutputFormat, input: string, align:
 	let escapedVal = escapeHTML(val);
 	if (escapedVal) {
 		switch (formatType) {
-			case "out": return `<div class="out-line"><span>${escapedVal}</span></div>`;
-			case "=>":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</span></div>`;
-			case "->":  return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</span></div>`;
-			case ">":   return `<div class="out-line"><span>${escapedInp} <span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</span></div>`;
+			case "out": return `<div class="out-line">${escapedVal}</div>`;
+			case "=>":  return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
+			case "->":  return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
+			case ">":   return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+->": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line"><span>${escapedInp} ${pad}<span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</span></div>`;
+				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+#": {
 				if (comment != undefined) {
 					let pad = " ".repeat(align-val.length+fixUnicodePadding(val));
 					comment = escapeHTML(comment);
-					return `<div class="out-line"><span>${escapedVal} ${pad}<span style="color: var(--comment);">#${comment}</span></span></div>`;
+					return `<div class="out-line">${escapedVal} ${pad}<span style="color: var(--comment);">#${comment}</span></div>`;
 				} else {
-					return `<div class="out-line"><span>${escapedVal}</span></div>`;
+					return `<div class="out-line">${escapedVal}</div>`;
 				}
 			}
 		}
 	} else if (formatType == "+#" && comment != undefined) {
-		return `<div class="out-line"><span><span style="color: var(--comment);">#${comment}</span></span></div>`;
+		return `<div class="out-line"><span style="color: var(--comment);">#${comment}</span></div>`;
 	} else {
-		return '<div class="out-line"><span><br></span></div>';
+		return '<div class="out-line"><br></div>';
 	}
 }
 
