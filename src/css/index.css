@@ -301,7 +301,6 @@ h1 {
 }
 
 .title {
-	cursor: move;
 	padding: 1%;
 }
 
@@ -733,7 +732,16 @@ footer {
 
 .grabber {
 	display: none;
-	cursor: move;
+}
+
+.handle {
+	cursor: grab;
+}
+
+.sortable-chosen {
+	.handle {
+		cursor: grabbing !important;
+	}
 }
 
 @media screen and (max-width: 2400px) {
