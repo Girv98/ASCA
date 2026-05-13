@@ -3,8 +3,8 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   optimizeDeps: {
-    esbuildOptions: {
-      target: 'esnext'
+    rolldownOptions: {
+      "target": 'esnext'
     }
   },
   build: {

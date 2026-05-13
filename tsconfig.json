@@ -6,7 +6,7 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "outDir": "dist",
-    "baseUrl": "./",
+    // "baseUrl": "./",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
