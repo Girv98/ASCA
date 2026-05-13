@@ -19,8 +19,10 @@
     </header>
     <div class="change-body">
         <div class="version"> <!-- 0.19 -->
-            <h2>0.19 &mdash; To be Finalised</h2>
-            <p style="word-break: break-word;">A few more days work is needed for version <b>0.19</b> to be ready. However, (as I've been itching to release it) frontend changes are live now as they can be done so without issue. <br><br> Consider this a teaser for some of what's to come!</p>
+            <h2>0.19 &mdash; Coming Soon</h2>
+            <p style="word-break: break-word;"><b>13<sup>th</sup> May: </b>Apologies for the delay on releasing <b>0.19</b>. To make up for it, this release will have a few more features 
+                than planned. I'm currently implementing a full rework of sets so that they are more powerful and useful than current.</p>
+            <!-- <p style="word-break: break-word;">A few more days work is needed for version <b>0.19</b> to be ready. However, (as I've been itching to release it) frontend changes are live now as they can be done so without issue. <br><br> Consider this a teaser for some of what's to come!</p> -->
             <h4>Library Changes (Not yet live)</h4>
             <ul>
                 <li>Rules such as <code>
@@ -28,7 +30,7 @@
                     <span style="color: var(--operator);">&gt;</span>
                     <span style="color: var(--literal);">e</span></code> now preserve length</li>
                     <ul>
-                        <li>Previously, this rule would cause a word such as <code>ha:t</code> to become <code>het</code>.</li>
+                        <li>Previously, this rule would cause a word such as <code><span>ha:t</span></code> to become <code><span>het</span></code>.</li>
                         <li>This change now brings the behaviour of IPA Literals in line with Groups and Matrices.</li>
                         <li>Previous behaviour is preserved when the input is matched by length e.g. 
                             <code>
@@ -62,19 +64,63 @@
                             instead of <code><span style="color: var(--group);">VN</span> <span style="color: var(--delim);">&gt;</span> <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">nas</span><span style="color: var(--square);">]</span> <span style="color: var(--delim);">/</span> <span style="color: var(--operator);">_</span><span style="color: var(--keyword);">$</span></code> guarantees <code><span style="color: var(--group);">V</span></code> and <code><span style="color: var(--group);">N</span></code> are of the same syllable and <code><span style="color: var(--group);">N</span></code> is coda.</li>
                     </ul>
                 <br>
-                <li>Allow for sets, as a whole, to be modified by a matrix.</li>
-                <ul>
-                    <li>e.g. <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span></code> rather than <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span></code></li>
-                </ul>
+                <li>Rework of Sets</li>
+                    <ul>
+                        <li>Allow for multiple items in set choices</li>
+                        <ul>
+                            <li>e.g. 
+                                <code>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> 
+                                    <span style="color: var(--literal);">e</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
+                                    <span style="color: var(--delim);">&gt;</span>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">aj</span><span style="color: var(--comma);">,</span>
+                                    <span style="color: var(--literal);">aw</span><span style="color: var(--brace);">}</span>
+                                </code>
+                            </li>
+                            <li>These items can be mixed type e.g. 
+                                <code>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">k</span><span style="color: var(--angle-bracket);">&lt;</span><span style="color: var(--group);">CV</span><span style="color: var(--angle-bracket);">&gt;</span><span style="color: var(--comma);">,</span>
+                                    <span style="color: var(--group);">N</span><span style="color: var(--keyword);">$</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
+                                </code>
+
+                            </li>
+                        </ul>
+
+                        <li>Allow for sets, as a whole, to be modified by a matrix.</li>
+                        <ul>
+                            <li>e.g. 
+                                <code>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span></code> rather than <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
+                                </code>
+                            </li>
+                        </ul>
+
+                        <li>Allow for sets to be used to preserve sub-orderings in Metathesis rules</li>
+                        <ul>
+                            <li>e.g. 
+                                <code>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">pf</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
+                                    <span style="color: var(--delim);">&gt;</span>
+                                    <span style="color: var(--empty-meta);">&</span></code> results in 
+                                <code><span>pfas</span> <span style="color: var(--delim);">&gt;</span> <span>sapf</span></code> 
+                                not 
+                                <code><span>pfas</span> <span style="color: var(--delim);">&gt;</span> <span>safp</span></code> 
+                            </li>
+                        </ul>
+                    </ul>
                 <br>
                 <li>Corrected some error highlighting</li>
             </ul>
             <h4>Web Changes (Already live)</h4>
             <ul>
-                <li>Separate this changelog from main page</li>
+                <li>Separate this changelog from main page to decrease unnecessary loads</li>
                 <li>Add grabber on rule blocks on mobile for easier scrolling</li>
                 <li>Add <code>handedness</code> toggle for mobile so you can move rules with your preferred hand</li>
                 <li>Decrease padding and margins to increase useful space</li>
+            </ul>
+            <h4>Web Changes (Not yet live)</h4>
+            <ul>
+                <li>Ability to see which words have been affected by the last run</li>
             </ul>
         </div>
 
