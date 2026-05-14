@@ -95,7 +95,7 @@
                             </li>
                         </ul>
 
-                        <li>Allow for sets to be used to preserve sub-orderings in Metathesis rules</li>
+                        <!-- <li>Allow for sets to be used to preserve sub-orderings in Metathesis rules</li>
                         <ul>
                             <li>e.g. 
                                 <code>
@@ -106,8 +106,23 @@
                                 not 
                                 <code><span>pfas</span> <span style="color: var(--delim);">&gt;</span> <span>safp</span></code> 
                             </li>
-                        </ul>
+                        </ul> -->
                     </ul>
+                <br>
+                <li>Fixes to Metathesis logic</li>
+                <ul>
+                    <li>Swapping segments of different lengths in the same syllable works as expected</li>
+                    <li>Ellipses will act to group elements on either side (exact behaviour to be determined)</li>
+                    <ul>
+                        <li> e.g. 
+                            <code>
+                                <span style="color: var(--literal);">pf</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
+                                <span style="color: var(--delim);">&gt;</span>
+                                <span style="color: var(--empty-meta);">&</span></code> to result in 
+                            <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sapf</span></code> 
+                        </li>
+                    </ul>
+                </ul>
                 <br>
                 <li>Corrected some error highlighting</li>
             </ul>
