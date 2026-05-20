@@ -71,7 +71,7 @@
                             <li>e.g. 
                                 <code>
                                     <span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> 
-                                    <span style="color: var(--literal);">e</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
+                                    <span style="color: var(--literal);">u</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
                                     <span style="color: var(--delim);">&gt;</span>
                                     <span style="color: var(--brace);">{</span><span style="color: var(--literal);">aj</span><span style="color: var(--comma);">,</span>
                                     <span style="color: var(--literal);">aw</span><span style="color: var(--brace);">}</span>
@@ -90,7 +90,7 @@
                         <ul>
                             <li>e.g. 
                                 <code>
-                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span></code> rather than <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">e</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
+                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">u</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span></code> rather than <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">i</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--comma);">,</span> <span style="color: var(--literal);">u</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span>
                                 </code>
                             </li>
                         </ul>
@@ -112,19 +112,22 @@
                 <li>Fixes to Metathesis logic</li>
                 <ul>
                     <li>Swapping segments of different lengths in the same syllable works as expected</li>
-                    <li>Ellipses will act to group elements on either side (exact behaviour to be determined)</li>
+                    <li>Ellipses will act to group elements on either side</li>
                     <ul>
                         <li> e.g. 
                             <code>
                                 <span style="color: var(--literal);">pf</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
                                 <span style="color: var(--delim);">&gt;</span>
-                                <span style="color: var(--empty-meta);">&</span></code> to result in 
+                                <span style="color: var(--empty-meta);">&</span></code> 
+                            to result in 
                             <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sapf</span></code> 
+                            whereas it currently would render
+                            <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sfap</span></code> 
                         </li>
                     </ul>
                 </ul>
                 <br>
-                <li>Corrected some error highlighting</li>
+                <li>Added aliases <code>J</code> and <code>W</code> for <code>ʝ</code> and <code>ɯ</code> respectively</li>
             </ul>
             <h4>Web Changes (Already live)</h4>
             <ul>
@@ -132,6 +135,8 @@
                 <li>Add grabber on rule blocks on mobile for easier scrolling</li>
                 <li>Add <code>handedness</code> toggle for mobile so you can move rules with your preferred hand</li>
                 <li>Decrease padding and margins to increase useful space</li>
+                <li>A rule block where an error occurs is now highlighted</li>
+                <li>When an error occurs, the erroring rule block is now highlighted</li>
             </ul>
             <h4>Web Changes (Not yet live)</h4>
             <ul>
