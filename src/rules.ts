@@ -289,9 +289,24 @@ export class Rules {
         })
     }
 
-    public static removeTrace() {
+    public static traceError(num: number)  {
+        if (num == 0) { return }
+
+        let els = [...document.querySelectorAll(".draggable-element")];
+        
+        let actives = this.getRuleActiveBoxes();
+
+        els = els.filter((_val, index) => actives[index])
+
+        els[num-1].classList.add('error');
+    }
+
+    public static removeHighlights() {
         let els = document.querySelectorAll(".draggable-element");
-        els.forEach((el) => el.classList.remove('traced'));
+        els.forEach((el) => {
+            el.classList.remove('traced');
+            el.classList.remove('error');
+        });
     }
 
     public getRules(): Rule[] {

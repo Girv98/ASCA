@@ -304,7 +304,7 @@ function getTraceState(): string {
 
 // Run ASCA
 function runASCA() {
-	RulesClass.removeTrace();
+	RulesClass.removeHighlights();
 
     LINES.updateActiveStorage();
 
@@ -337,10 +337,19 @@ function runASCA() {
     outputArea.innerHTML = outputJoined;
     // resize(outputArea);
 
-	// handle traces
-	let trace_indices = res.get_traces();
-
-	RulesClass.traceRules(trace_indices);
+	// handle highlighting
+	if (res.was_ok()) {
+		RulesClass.traceRules(res.get_traces());
+	} else {
+		let lines = res.get_output()[0].split("\n");
+		let line = lines[lines.length - 1];
+		let rg = new RegExp('Rule ([0-9]+),');
+		let regRes = rg.exec(line);
+		if (regRes) {
+			let num = +regRes[1];
+			RulesClass.traceError(num);
+		}
+	}
 }
 
 export function escapeHTML(str: string): string {

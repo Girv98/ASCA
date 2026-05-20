@@ -204,6 +204,11 @@ a:focus-visible {
 		outline-offset: 2px;
 	}
 
+	&.error {
+		outline: var(--error) 2px solid;
+		outline-offset: 2px;
+	}
+
 	&:focus, &:focus-visible {
 		outline: var(--accent) 2px solid;
 		outline-offset: 2px;
