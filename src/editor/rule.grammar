@@ -19,7 +19,7 @@ OutputElement { Syllable | Structure | Set | Segment | Variable | SyllBound }
 Env { EnvSet ( "," EnvSet)* | EnvTerms }
 EnvSet { ":{" EnvTerms? "}:" }
 EnvTerms { EnvTerm ("," EnvTerm)* }
-EnvTerm { WordBound? EnvElements? Underline EnvElements? WordBound? }
+EnvTerm { WordBound? EnvElements? Underline+ EnvElements? WordBound? }
 EnvElements { ( EnvElement )+ }
 EnvElement { CrossBound | SyllBound | Ellipsis | Optional | Term }
 
@@ -28,11 +28,11 @@ Term { Syllable | Structure | Set | Segment | Variable }
 Syllable { "%" (":" Params)? VarAssign? }
 Structure {StructOpen SyllableTerms? StructClose (":" Params)? VarAssign? }
 SyllableTerms { (SyllableTerm)+ }
-SyllableTerm { Segment | Ellipsis | Variable }
+SyllableTerm { Segment | Ellipsis | Variable | Underline }
 StructOpen { StructOpenSimp | StructOpenComp }
 StructClose { StructCloseSimp | StructCloseComp }
 
-Set { "{" SetTerm ("," SetTerm)* "}" }
+Set { "{" SetTerm* ("," SetTerm*)* "}" (":" Params)? }
 SetTerm { Segment | Boundary | Syllable }
 
 Optional { "(" OptionalTerms ("," Number (":" Number)?)? ")" }
@@ -61,7 +61,7 @@ Arg {
 ArgChar {Greek | Upper}
 
 
-Meta { "&" }
+Meta { "&" | "@" }
 Empty { "*" | "∅"}
 Ellipsis { "..."  | ".." | "…" }
 Boundary { WordBound | SyllBound }
@@ -70,7 +70,7 @@ WordBound { "#" }
 SyllBound { "$" }
 
 emptyLine { Newline }
-Underline { "_"+ }
+Underline { "_" }
 
 
 @tokens {
