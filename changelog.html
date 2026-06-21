@@ -18,13 +18,39 @@
         <h1>What's new</h1>
     </header>
     <div class="change-body">
-        <div class="version"> <!-- 0.19 -->
-            <h2>0.19 &mdash; Coming Soon</h2>
-            <p style="word-break: break-word;"><b>13<sup>th</sup> May: </b>Apologies for the delay on releasing <b>0.19</b>. To make up for it, this release will have a few more features 
-                than planned. I'm currently implementing a full rework of sets so that they are more powerful and useful than current.</p>
-            <!-- <p style="word-break: break-word;">A few more days work is needed for version <b>0.19</b> to be ready. However, (as I've been itching to release it) frontend changes are live now as they can be done so without issue. <br><br> Consider this a teaser for some of what's to come!</p> -->
-            <h4>Library Changes (Not yet live)</h4>
+        <div class="version"> <!-- 0.20 -->
+            <h2>0.20</h2>
+            <br>
+            <b>BREAKING CHANGES</b>
             <ul>
+                <li>Group <code><span style="color: var(--group);">C</span></code> now stands for 
+                    <code>
+                        <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">cons</span>,
+                        <span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span></code>, no longer just 
+                    <code>
+                        <span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span>
+                    </code>
+                </li>
+                <ul>
+                    <li>This is motivated in part so that 
+                        <code><span style="color: var(--group);">C</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span></code> 
+                        has the expected behaviour.
+                    </li>
+                    <li>
+                        Note that as glides are 
+                        <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">cons</span><span style="color: var(--square);">]</span></code>,
+                        they are no longer covered under 
+                        <code><span style="color: var(--group);">C</span></code>,
+                        use 
+                        <code><span style="color: var(--brace);">{</span><span style="color: var(--group);">C</span><span style="color: var(--comma);">,</span><span style="color: var(--group);">G</span><span style="color: var(--brace);">}</span></code> 
+                        or 
+                        <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span></code> 
+                        to capture both consonants and glides.
+                    </li>
+                </ul>
+                <br>
+                <li>Glottalic consonants (e.g. <code>h</code>, <code>ʔ</code>) are now <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">cons</span><span style="color: var(--square);">]</span></code></li>
+                <br>
                 <li>Rules such as <code>
                     <span style="color: var(--literal);">a</span> 
                     <span style="color: var(--operator);">&gt;</span>
@@ -47,6 +73,10 @@
                         <li>See <a href="https://github.com/Girv98/asca-rust/blob/ed82cfc45e556addda79bdcbfed7b0bf08e1ba8d/doc/doc.md#substituting-long-ipa" target="_blank">here</a> for an archived explanation for the previous behaviour.</li>
                     </ul>
                 <br>
+                </ul>
+                <b>New Features & Fixes</b>
+                <br>
+                <ul>
                 <li>Allow for multi-dimensional suprasegmentals (stress and length) to be referenced with one alpha.  </li>
                     <ul>
                         <li><code><span style="color: var(--square);">[</span><span style="color: var(--arg);">A</span> <span style="color: var(--feature);">long</span>, <span style="color: var(--arg);">B</span> <span style="color: var(--feature);">overlong</span><span style="color: var(--square);">]</span></code> can be replaced with just <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">A</span> <span style="color: var(--feature);">length</span><span style="color: var(--square);">]</span></code></li>
@@ -95,24 +125,12 @@
                             </li>
                         </ul>
 
-                        <!-- <li>Allow for sets to be used to preserve sub-orderings in Metathesis rules</li>
-                        <ul>
-                            <li>e.g. 
-                                <code>
-                                    <span style="color: var(--brace);">{</span><span style="color: var(--literal);">pf</span><span style="color: var(--brace);">}</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
-                                    <span style="color: var(--delim);">&gt;</span>
-                                    <span style="color: var(--empty-meta);">&</span></code> results in 
-                                <code><span>pfas</span> <span style="color: var(--delim);">&gt;</span> <span>sapf</span></code> 
-                                not 
-                                <code><span>pfas</span> <span style="color: var(--delim);">&gt;</span> <span>safp</span></code> 
-                            </li>
-                        </ul> -->
                     </ul>
                 <br>
-                <li>Fixes to Metathesis logic</li>
+                <li>Rework of Metathesis logic</li>
                 <ul>
                     <li>Swapping segments of different lengths in the same syllable works as expected</li>
-                    <li>Ellipses will act to group elements on either side</li>
+                    <li>Ellipses act to group elements on either side</li>
                     <ul>
                         <li> e.g. 
                             <code>
@@ -129,19 +147,23 @@
                 <br>
                 <li>Added aliases <code>J</code> and <code>W</code> for <code>ʝ</code> and <code>ɯ</code> respectively</li>
             </ul>
-            <h4>Web Changes (Already live)</h4>
+        </div>
+
+        <div class="version"> <!-- 0.19 -->
+            <h2>0.19</h2>
+            
+            <h4>Web Changes</h4>
             <ul>
                 <li>Separate this changelog from main page to decrease unnecessary loads</li>
                 <li>Add grabber on rule blocks on mobile for easier scrolling</li>
                 <li>Add <code>handedness</code> toggle for mobile so you can move rules with your preferred hand</li>
                 <li>Decrease padding and margins to increase useful space</li>
-                <li>A rule block where an error occurs is now highlighted</li>
                 <li>When an error occurs, the erroring rule block is now highlighted</li>
             </ul>
-            <h4>Web Changes (Not yet live)</h4>
+            <!-- <h4>Web Changes (Not yet live)</h4>
             <ul>
                 <li>Ability to see which words have been affected by the last run</li>
-            </ul>
+            </ul> -->
         </div>
 
         <div class="version"> <!-- 0.18 -->

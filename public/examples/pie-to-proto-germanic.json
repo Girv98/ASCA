@@ -133,7 +133,7 @@
         "{h, x, ɣʷ} > * / #_                         ;; Lost word initial",
         "V:[+long], V:[-long] > [+overlong], [+long] / _{h, x, ɣʷ} | _$  ",
         "{h, x, ɣʷ} > * / V_                         ;; Lost after vowels with comp. lenghtening above",
-        "V:[+hi] > G:[-tense] / V_$                  ;; u, i > w, j after vowels in the same syll.",
+        "V:[+hi, -long] > G:[-tense] / V_$           ;; u, i > w, j after vowels in the same syll.",
         "$G > & / _$"
       ],
       "description": "Lost of laryngeals word-initially and after vowels, with compensatory lengthening"
@@ -181,7 +181,7 @@
         "",
         "G ~ * / _V:[-hi, -str, -long]# ;; Any preceding glide deletes",
         "V:[-hi, -str, -long] ~ * / _#  ;; The vowel itself deletes",
-        "$C ~ & / _# ;; Syllable repair"
+        "$[-syll] ~ & / _#              ;; Syllable repair"
       ],
       "description": "Short /a/, /e/, /o/, and any preceding glide, is lost.\n\ne.g. wóyde, tósyo, unswé => *wóyd, tós, úns"
     },
@@ -270,8 +270,8 @@
         "ə:[-str] > *      ;; unstressed schwa deletes",
         "ə > ɑ             ;; stressed schwa becomes /ɑ/",
         ";; Syllable Fixing",
-        "$C > & / _$O, _#",
-        "C$ > & / $_{V, G}"
+        "$[-syll] > & / _$O, _#",
+        "[-syll]$ > & / $_{V, G}"
       ],
       "description": "Unstressed schwa deletes\nStressed schwa becomes ɑ"
     },
