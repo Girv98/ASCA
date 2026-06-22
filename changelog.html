@@ -74,8 +74,7 @@
                     </ul>
                 <br>
                 </ul>
-                <b>New Features & Fixes</b>
-                <br>
+                <b>New Features</b>
                 <ul>
                 <li>Allow for multi-dimensional suprasegmentals (stress and length) to be referenced with one alpha.  </li>
                     <ul>
@@ -128,24 +127,68 @@
                     </ul>
                 <br>
                 <li>Rework of Metathesis logic</li>
-                <ul>
-                    <li>Swapping segments of different lengths in the same syllable works as expected</li>
-                    <li>Ellipses act to group elements on either side</li>
                     <ul>
-                        <li> e.g. 
-                            <code>
-                                <span style="color: var(--literal);">pf</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
-                                <span style="color: var(--delim);">&gt;</span>
-                                <span style="color: var(--empty-meta);">&</span></code> 
-                            to result in 
-                            <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sapf</span></code> 
-                            whereas it currently would render
-                            <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sfap</span></code> 
-                        </li>
+                        <li>Ellipses act to group elements on either side</li>
+                            <ul>
+                                <li> e.g. 
+                                    <code>
+                                        <span style="color: var(--literal);">pf</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
+                                        <span style="color: var(--delim);">&gt;</span>
+                                        <span style="color: var(--empty-meta);">&</span></code> 
+                                    to result in 
+                                    <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>safp</span></code> 
+                                    whereas it currently would render
+                                    <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sfap</span></code> 
+                                </li>
+                                <li>In general: <code>abcd..ef..ghi <span style="color: var(--delim);">=&gt;</span> ihg..fe..dcba</code></li>
+                            </ul>
+                        <li>New <code><span style="color: var(--empty-meta);">@</span></code> metathesis operator which allows for maintaining grouped element orderings</li>
+                            <ul>
+                                <li> e.g. 
+                                    <code>
+                                        <span style="color: var(--literal);">pf</span><span style="color: var(--operator);">..</span><span style="color: var(--literal);">s</span>
+                                        <span style="color: var(--delim);">&gt;</span>
+                                        <span style="color: var(--empty-meta);">@</span></code> 
+                                    to result in 
+                                    <code><span>pfas</span> <span style="color: var(--delim);">=&gt;</span> <span>sapf</span></code> 
+                                </li>
+                                <li>In general: <code>abcd..ef..ghi <span style="color: var(--delim);">=&gt;</span> ghi..ef..abcd</code></li>
+                            </ul>
                     </ul>
-                </ul>
                 <br>
                 <li>Added aliases <code>J</code> and <code>W</code> for <code>ʝ</code> and <code>ɯ</code> respectively</li>
+            </ul>
+            <b>Fixes</b>
+            <ul>
+                <li><code>ʁ̞</code> is correctly encoded as <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">cons</span><span style="color: var(--square);">]</span></code></li>
+                <li>(Metathesis) Swapping segments of different lengths in the same syllable works as expected</li>
+                <li>Corrected structure location error highlighting</li>
+                <li>Removed redundant error locations from error messages</li>
+                <br>
+                <li>Increased Stability</li>
+                <ul>
+                    <li>Attempt to detect hanging rules and provide error to user</li>
+                    <li>Rules such as 
+                        <code>
+                            <span style="color: var(--keyword);">$</span> 
+                            <span style="color: var(--delim);">&gt;</span>
+                            <span style="color: var(--literal);">a</span><span style="color: var(--keyword);">$</span></code>
+                        no longer hang
+                    </li>
+                    <li>Insertion rules with optionals that match zero times should no longer hang</li>
+                </ul>
+                <br>
+                <li>Potential matches with ellipsis input are not skipped if a previous match has the wrong environment</li>
+                <ul>
+                    <li>
+                        e.g.
+                        <code>k..h > & | #_</code>
+                        results in
+                        <code>ka.ko.he <span style="color: var(--delim);">=&gt;</span> ka.ho.ke</code>
+                        rather than previous
+                        <code>ka.ko.he <span style="color: var(--delim);">=&gt;</span> ka.ko.he</code>
+                    </li>
+                </ul>
             </ul>
         </div>
 
