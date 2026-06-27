@@ -71,6 +71,7 @@ const parserWithMeta = parser.configure({
             WordBound: tags.keyword,
             SyllBound: tags.keyword,
             Syllable: tags.special(tags.keyword),
+            Neg: tags.operator
         })
     ]
 });

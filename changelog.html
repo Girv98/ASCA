@@ -18,6 +18,52 @@
         <h1>What's new</h1>
     </header>
     <div class="change-body">
+        <div class="version"> <!-- 0.20.1 -->
+            <h2>0.20.1</h2>
+            <br>
+            <b>New Features</b>
+            <ul>
+                <li>Segments and matrices can be negated in input and environment with <code><span style="color: var(--operator);">-</span></code> or <code><span style="color: var(--operator);">¬</span></code></li>
+                <ul>
+                    <li>e.g. 
+                        <code>
+                            <span style="color: var(--angle-bracket);">&lt;</span><span style="color: var(--operator);">(..)-</span><span style="color: var(--group);">G</span><span style="color: var(--angle-bracket);">&gt;</span>
+                            <span style="color: var(--delim);">&gt;</span>
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">str</span><span style="color: var(--square);">]</span> 
+                            <span style="color: var(--comment)">;; a syllable that doesn't have an off-glide is stressed</span>
+                        </code>
+                    </li>
+                    <ul>
+                        <li><code>saj.nam <span style="color: var(--delim);">=&gt;</span> saj'nam</code></li>
+                    </ul>
+                </ul>
+                <li>Boundaries can be used at the periphery of structures</li>
+                <ul>
+                    <li>Allows for boundary manipulation with all the benefits of underline structures</li>
+                    <li>e.g. 
+                        <code>
+                            <span style="color: var(--group);">V</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">str</span><span style="color: var(--square);">]</span> 
+                            <span style="color: var(--keyword);">$</span>
+                            <span style="color: var(--delim);">&gt;</span>
+                            <span style="color: var(--keyword);">*</span>
+                            <span style="color: var(--operator);">/</span>
+                            <span style="color: var(--operator);">_</span><span style="color: var(--group);">S</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">str</span><span style="color: var(--square);">]</span> 
+                            <span style="color: var(--operator);">|</span>
+                            <span style="color: var(--keyword);">#</span><span style="color: var(--angle-bracket)">&lt;</span><span style="color: var(--paren)">(</span><span style="color: var(--operator)">..</span><span style="color: var(--paren)">)</span><span style="color: var(--operator)">_</span><span style="color: var(--angle-bracket)">&gt;</span>
+                        </code>
+                    </li>
+                    <ul>
+                        <li><code>me.da'ra.ni <span style="color: var(--delim);">=&gt;</span> me'dra.ni</code></li>
+                        <li><code>ka'ra.sa&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--delim);">=&gt;</span> ka'ra.sa</code></li>
+                    </ul>
+                </ul>
+            </ul>
+            <b>Fixes</b>
+            <ul>
+                <li>Options at the beginning or end of a structure properly check if they fill a syllable</li>
+            </ul>
+        </div>
+
         <div class="version"> <!-- 0.20 -->
             <h2>0.20</h2>
             <br>
@@ -40,11 +86,13 @@
                         Note that as glides are 
                         <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">cons</span><span style="color: var(--square);">]</span></code>,
                         they are no longer covered under 
-                        <code><span style="color: var(--group);">C</span></code>,
-                        use 
-                        <code><span style="color: var(--brace);">{</span><span style="color: var(--group);">C</span><span style="color: var(--comma);">,</span><span style="color: var(--group);">G</span><span style="color: var(--brace);">}</span></code> 
-                        or 
-                        <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span></code> 
+                        <code><span style="color: var(--group);">C</span></code>.
+                        Use 
+                        <code><span style="color: var(--brace);">{</span><span style="color: var(--group);">C</span><span style="color: var(--comma);">,</span><span style="color: var(--group);">G</span><span style="color: var(--brace);">}</span></code>
+                        or
+                        <code><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">syll</span><span style="color: var(--square);">]</span></code>
+                        (or after <b>0.20.1</b>  
+                        <code><span style="color: var(--operator);">-</span><span style="color: var(--group);">V</span></code>)
                         to capture both consonants and glides.
                     </li>
                 </ul>
@@ -74,7 +122,7 @@
                     </ul>
                 <br>
                 </ul>
-                <b>New Features</b>
+            <b>New Features</b>
                 <ul>
                 <li>Allow for multi-dimensional suprasegmentals (stress and length) to be referenced with one alpha.  </li>
                     <ul>

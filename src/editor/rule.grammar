@@ -2,33 +2,34 @@
 
 @skip { Comment | WS }
 
-line { emptyLine | Rule (Newline | Eof) }
+line { EmptyLine | Rule (Newline | Eof) }
 
 Rule { Input Arrow Output (Slash Env)? (Pipe Env)? }
 
 Input { InputTerm ( "," InputTerm)* }
 InputTerm { Empty | InputElements }
 InputElements { ( InputElement )+ }
-InputElement { Ellipsis | CrossBound | SyllBound | Term }
+InputElement { Ellipsis | CrossBound | SyllBound | NegTerm | Term }
 
 Output { OutputTerm ("," OutputTerm)* }
 OutputTerm { Meta | Empty | OutputElements }
 OutputElements { ( OutputElement )+ }
-OutputElement { Syllable | Structure | Set | Segment | Variable | SyllBound }
+OutputElement { Syllable | Structure | Set | NegTerm | Segment | Reference | SyllBound }
 
 Env { EnvSet ( "," EnvSet)* | EnvTerms }
 EnvSet { ":{" EnvTerms? "}:" }
 EnvTerms { EnvTerm ("," EnvTerm)* }
 EnvTerm { WordBound? EnvElements? Underline+ EnvElements? WordBound? }
 EnvElements { ( EnvElement )+ }
-EnvElement { CrossBound | SyllBound | Ellipsis | Optional | Term }
+EnvElement { CrossBound | SyllBound | Ellipsis | Optional | NegTerm | Term }
 
-Term { Syllable | Structure | Set | Segment | Variable }
+NegTerm { Neg (Segment | Reference)  }
+Term { Syllable | Structure | Set | Segment | Reference }
 
 Syllable { "%" (":" Params)? VarAssign? }
 Structure {StructOpen SyllableTerms? StructClose (":" Params)? VarAssign? }
 SyllableTerms { (SyllableTerm)+ }
-SyllableTerm { Segment | Ellipsis | Variable | Underline }
+SyllableTerm { Segment | Ellipsis | Reference | Underline }
 StructOpen { StructOpenSimp | StructOpenComp }
 StructClose { StructCloseSimp | StructCloseComp }
 
@@ -37,13 +38,13 @@ SetTerm { Segment | Boundary | Syllable }
 
 Optional { "(" OptionalTerms ("," Number (":" Number)?)? ")" }
 OptionalTerms { (OptionalTerm)+ }
-OptionalTerm { Boundary | Syllable | Set | Segment | Variable }
+OptionalTerm { Boundary | Syllable | Set | Segment | Reference }
 
 Segment { Ipa (":" Params)? | Matrix VarAssign? }
 Matrix { Group (":" Params)? | Params }
 Group { "C" | "O" | "S" | "P" | "F" | "L" | "N" | "G" | "V" }
 
-Variable { Number (":" Params)? }
+Reference { Number (":" Params)? }
 VarAssign { "=" Number }
 
 
@@ -60,7 +61,7 @@ Arg {
 }
 ArgChar {Greek | Upper}
 
-
+Neg { "-" | "¬" }
 Meta { "&" | "@" }
 Empty { "*" | "∅"}
 Ellipsis { "..."  | ".." | "…" }
@@ -69,7 +70,7 @@ CrossBound { "##" }
 WordBound { "#" }
 SyllBound { "$" }
 
-emptyLine { Newline }
+EmptyLine { Newline }
 Underline { "_" }
 
 
@@ -83,7 +84,7 @@ Underline { "_" }
     String { $[A-Za-z.]+ }
     Upper { $[A-Z] }
     Number { $[0-9]+ }
-    Ipa { ![ \,.=>()*[\]<|{}⟨⟩+?/…∅\-_:!~$%@#&\t\n\r0-9A-Z;]+ }
+    Ipa { ![ \,.=>()*[\]<|{}⟨⟩+?/…∅\-¬_:!~$%@#&\t\n\r0-9A-Z;]+ }
     Newline { ("\r\n" | "\n") }
     @precedence { String , Upper }
     @precedence { ":{", ":" }
