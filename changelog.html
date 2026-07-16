@@ -18,6 +18,24 @@
         <h1>What's new</h1>
     </header>
     <div class="change-body">
+        <div class="version"> <!-- 0.20.2 -->
+            <h2>0.20.2</h2>
+            <br>
+            <b>Fixes</b>
+            <ul>
+                <li>Fixes a regression introduced in <b>0.20.1</b> that affected right-hand boundary checking within an underline structure</li>
+                <ul>
+                    <li>Specifically, rules such as 
+                        <code>
+                            <span style="color: var(--group);">VN</span>
+                            <span style="color: var(--delim);">&gt;</span>
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">nas</span><span style="color: var(--square);">]</span>
+                            <span style="color: var(--delim);">/</span>
+                            <span style="color: var(--angle-bracket);">&lt;</span><span style="color: var(--paren);">(</span><span style="color: var(--operator);">..</span><span style="color: var(--paren);">)</span><span style="color: var(--operator);">_</span><span style="color: var(--angle-bracket);">&gt;</span></code>
+                        now work as expected</li>
+                </ul>
+            </ul>
+        </div>
         <div class="version"> <!-- 0.20.1 -->
             <h2>0.20.1</h2>
             <br>
@@ -64,8 +82,8 @@
             </ul>
         </div>
 
-        <div class="version"> <!-- 0.20 -->
-            <h2>0.20</h2>
+        <div class="version"> <!-- 0.20.0 -->
+            <h2>0.20.0</h2>
             <br>
             <b>BREAKING CHANGES</b>
             <ul>
