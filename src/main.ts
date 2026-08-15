@@ -674,7 +674,7 @@ function onLoadNew() {
 		let response = LINES.parseData(decode(Mline));
 
 		if (response === null) {
-			alert("Shared link is invalid aand could not be correctly parsed")
+			alert("Shared link is invalid and could not be correctly parsed")
 			window.history.pushState({}, document.title, window.location.pathname);
 			return
 		}
