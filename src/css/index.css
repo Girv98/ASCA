@@ -56,7 +56,7 @@ header {
 
 #version-number::after {
 	position: absolute;
-	font-family: "Font Awesome 5 Free";
+	font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'Font Awesome' !important;
 	content: "\f35d";
 	font-size: 1rem;
 	right: -1.2rem;
@@ -352,13 +352,12 @@ h1 {
 	height: 100%;
 }
 
-.maxmin, .delete, .onoff, .clone, #alias-from-toggle {
+#asc-desc {
 	height: 100%;
 	margin: 0 2px;
 	font-weight: bold;
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 	text-align: center;
-	float:left;
 	border: None;
 	background-color: Transparent;
 	box-shadow: none;
@@ -367,7 +366,22 @@ h1 {
 	cursor: pointer;
 }
 
-.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .clone:focus-visible, #alias-from-toggle:focus-visible {
+.maxmin, .delete, .onoff, .clone, #alias-from-toggle {
+	height: 100%;
+	margin: 0 2px;
+	font-weight: bold;
+	font-size: 1.2rem;
+	text-align: center;
+	float: left;
+	border: None;
+	background-color: Transparent;
+	box-shadow: none;
+	color: var(--accent);
+    outline:none;
+	cursor: pointer;
+}
+
+.maxmin:focus-visible, .delete:focus-visible, .onoff:focus-visible, .clone:focus-visible, #alias-from-toggle:focus-visible, #asc-desc:focus-visible {
 	outline: var(--accent) 2px solid;
 	outline-offset: 2px;
 	border-radius: 2px;
@@ -449,6 +463,10 @@ textarea::placeholder,
 	color:var(--placeholder);
 }
 
+select, option {
+	cursor: pointer;
+}
+
 .options {
 	padding: 2% 0;
 	display: flex;
@@ -461,7 +479,7 @@ textarea::placeholder,
 	z-index: 1;
 }
 
-#trace, #format {
+#trace, #format, #save-sort {
 	width: 100%;
 	font-size: 1rem;
 	background-color: var(--xput-bg);
@@ -469,10 +487,10 @@ textarea::placeholder,
 	border: none;
 	border-radius: 4px;
 	scrollbar-width: thin;
-	height: 1.5lh 
+	height: 1.5lh;
 }
 
-#trace:focus-visible, #format:focus-visible {
+#trace:focus-visible, #format:focus-visible, #save-sort:focus-visible {
 	outline: 2px solid var(--accent);
 }
 
@@ -547,6 +565,62 @@ dialog {
 	padding: .7ch 1ch;
 }
 
+.history-buttons {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.sort-options {
+	height: 100%;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	margin-left: auto;
+	/* background: var(--accent); */
+	/* background-color: var(--save-text-bg); */
+	/* border-radius: 10px; */
+
+}
+
+#asc-desc {
+	background: var(--secondary-button-bg);
+	border-radius: 10px 0px 0px 10px;
+	margin: 0;
+	margin-right: 1px;
+
+	&:focus-visible {
+		border-radius: 10px 0px 0px 10px;
+	}
+}
+
+.select-wrapper {
+	position: relative;
+}
+
+#save-sort {
+	background: var(--secondary-button-bg);
+	border-radius: 0px 10px 10px 0px;
+	padding-left: 6px;
+	padding-right: 1.8rem;
+
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.select-wrapper::after {
+	font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'Font Awesome' !important;
+    font-weight: 900;
+   	content: "\f078";
+	font-size: 1rem;
+	top: 25%;
+	right: .5rem;
+	position: absolute;
+	pointer-events: none;
+	color: var(--accent);
+}
+
 .history-item {
 	box-sizing: border-box;
 	display: flex;
@@ -611,7 +685,7 @@ dialog {
 }
 
 .active .history-item-buttons button:focus-visible {
-	outline-color: var(--save-id-color);
+	outline-color: var(--save-text-bg);
 }
 
 .history-id {
@@ -938,6 +1012,19 @@ footer {
 	}
 }
 
+@media screen and (max-width: 471px) {
+	.history-buttons {
+		justify-content: center;
+
+		.custom-button {
+			margin: 4px;
+		}
+	}
+
+	.sort-options {
+		margin: 4px;
+	}
+}
 
 
 @media screen and (max-width: 400px) {

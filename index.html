@@ -54,6 +54,25 @@
 					<input id="history-load" type="file" accept="application/json">
 					<button id="history-example" class="custom-button" title="Load example ruleset">Load Example</button>
 					<!-- <button id="history-clear" class="custom-button" title="Delete All">Delete All</button> -->
+					<div class="sort-options">
+						<button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-1-9"></i></button>
+						<div class="select-wrapper">
+							<select name="save-sort" id="save-sort">
+								<option value="created">Created</option>
+								<option value="modified">Modified</option>
+								<option value="name">Name</option>
+							</select>
+						</div>
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-a-z"></i></button> -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-z-a"></i></button> -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-9-1"></i></button> -->
+
+						<!-- Potentially -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-a-z"></i></button> -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-up-a-z"></i></button> -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-down-1-9"></i></button> -->
+						<!-- <button id="asc-desc" title="Ascending" aria-label="Toggle Rule"><i class="fa-solid fa-arrow-up-1-9"></i></button> -->
+					</div>
 				</div>
 				<div class="modal-content" tabindex="-1"> 
 					<!-- Histories go here  -->

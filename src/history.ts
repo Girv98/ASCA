@@ -132,6 +132,9 @@ export class InputView {
     // clearForLoad() { }
 }
 
+export type SaveStrategy  = "created" | "modified" | "name";
+export type SaveDirection = "ascend" | "descend";
+
 export class Lines {
     private inputView: InputView;
     private rulesView: RulesClass;
@@ -504,11 +507,40 @@ export class Lines {
         a.remove();
     }
 
-    public populateModal(modal: HTMLDialogElement) {
+    sortStrat(): ((a: [string, Data], b: [string, Data]) => number) {
+        let val = localStorage.getItem('asca-save-sort-strategy') as (SaveStrategy | null);
+        let dir = localStorage.getItem('asca-save-sort-direction') as (SaveDirection | null);
 
-        let sortedLines = [...this.lines].sort((a, b) => 
-            a[1].createdAt - b[1].createdAt
-        )
+        switch (val) {
+            case "name":
+                switch (dir) {
+                    case "descend": return (a:[string, Data], b:[string, Data]) => b[1].id.localeCompare(a[1].id)
+                    // @ts-expect-error
+                    case null: localStorage.setItem('asca-save-sort-direction', "ascend"); 
+                    case "ascend":  return (a:[string, Data], b:[string, Data]) => a[1].id.localeCompare(b[1].id)
+                }
+            case "modified":
+                switch (dir) {
+                    case "descend": return (a:[string, Data], b:[string, Data]) => b[1].lastModified - a[1].lastModified
+                    // @ts-expect-error
+                    case null: localStorage.setItem('asca-save-sort-direction', "ascend");
+                    case "ascend":  return (a:[string, Data], b:[string, Data]) => a[1].lastModified - b[1].lastModified
+                }
+            // @ts-expect-error
+            case null: localStorage.setItem('asca-save-sort-strategy', "created"); case "created":
+                switch (dir) {
+                    case "descend": return (a:[string, Data], b:[string, Data]) => b[1].createdAt - a[1].createdAt
+                    // @ts-expect-error
+                    case null: localStorage.setItem('asca-save-sort-direction', "ascend")
+                    case "ascend":  return (a:[string, Data], b:[string, Data]) => a[1].createdAt - b[1].createdAt
+                }
+        }
+    }
+
+    public populateModal(modal: HTMLDialogElement) {
+        let strat = this.sortStrat();
+
+        let sortedLines = [...this.lines].sort(strat)
 
         let content = modal.querySelector(".modal-content")!;
         content.querySelectorAll(".history-item").forEach(e => e.remove());

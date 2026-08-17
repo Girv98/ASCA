@@ -5,7 +5,7 @@ import init, { run_wasm, WasmResult } from '../libasca/asca.js'
 import { Rules as RulesClass }  from './rules.js';
 import { type Rule } from './rules.js';
 import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
-import { InputView, Lines } from './history.js';
+import { InputView, Lines, type SaveDirection, type SaveStrategy } from './history.js';
 import { decode } from 'js-base64';
 
 let INLEX_WRAP = document.getElementById("lex-wrap") as HTMLDivElement;
@@ -22,6 +22,7 @@ let ALIAS_TOGGLE = document.getElementById('alias-from-toggle') as HTMLButtonEle
 let INLEX_CONTENT = INLEX_WRAP.querySelector(".cm-content") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
+let SORT = document.getElementById("save-sort") as HTMLSelectElement;
 let OUTLEX = document.getElementById("outlex") as HTMLDivElement;
 
 let isSmallScreen: boolean | null = null;
@@ -237,6 +238,8 @@ function loadExample() {
 
 // TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 
+
+// + means aligned
 export type OutputFormat = "out" | "+#" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
 
 function getFormatState(): OutputFormat {
@@ -245,6 +248,10 @@ function getFormatState(): OutputFormat {
 
 function getTraceState(): string {
     return TRACE.value
+}
+
+function getSortStrategyState(): SaveStrategy {
+	return SORT.value as SaveStrategy
 }
 
 // export function updateTrace() {
@@ -776,6 +783,63 @@ document.getElementById("rule-minimax")!.addEventListener("click", function(this
 document.getElementById("history-new")!.addEventListener("click", _ => { LINES.createNew(); })
 document.getElementById("history-load")!.addEventListener("change", e => { importLine(e); });
 document.getElementById("history-example")!.addEventListener("click", _ => { loadExample(); });
+
+const DESCEND: SaveDirection = "descend";
+const ASCEND:  SaveDirection = "ascend";
+
+SORT.addEventListener("change", () => {
+	let i = document.getElementById("asc-desc")!.querySelector("i")!;
+	
+	let val = getSortStrategyState();
+	localStorage.setItem('asca-save-sort-strategy', val)
+
+	let dir = localStorage.getItem('asca-save-sort-direction') as SaveDirection | null;
+	if (dir === null) { dir = ASCEND; localStorage.setItem('asca-save-sort-direction', dir) }
+
+	// Remove Asc/Desc Icon
+	i.className = (i.className.split(" ").filter(c => !c.startsWith("fa-arrow-"))).join(" ").trim();
+
+	switch (val) {
+		case "name":
+			switch (dir) {
+				case 'ascend':
+					i.classList.add('fa-arrow-down-a-z'); break;
+				case 'descend':
+					i.classList.add('fa-arrow-down-z-a'); break;
+			}
+			break
+		case 'created': case 'modified':
+			switch (dir) {
+				case 'ascend':
+					i.classList.add('fa-arrow-down-1-9'); break;
+				case 'descend':
+					i.classList.add('fa-arrow-down-9-1'); break;
+				}
+			break
+	} 
+
+	LINES.updateModal();
+})
+
+document.getElementById("asc-desc")!.addEventListener("click", function(this: HTMLElement) {
+	let i = this.querySelector("i")!;
+
+	if (i.classList.contains('fa-arrow-down-a-z')) {
+		i.classList.replace('fa-arrow-down-a-z', 'fa-arrow-down-z-a');
+		localStorage.setItem('asca-save-sort-direction', DESCEND)
+	} else if (i.classList.contains('fa-arrow-down-z-a')) {
+		i.classList.replace('fa-arrow-down-z-a', 'fa-arrow-down-a-z');
+		localStorage.setItem('asca-save-sort-direction', ASCEND)
+	} else if (i.classList.contains('fa-arrow-down-1-9')) {
+		i.classList.replace('fa-arrow-down-1-9', 'fa-arrow-down-9-1');
+		localStorage.setItem('asca-save-sort-direction', DESCEND)
+	} else if (i.classList.contains('fa-arrow-down-9-1')) {
+		i.classList.replace('fa-arrow-down-9-1', 'fa-arrow-down-1-9');
+		localStorage.setItem('asca-save-sort-direction', ASCEND)
+	}
+
+	LINES.updateModal();
+})
 
 document.getElementById("history-load-label")!.addEventListener("keyup", e => {
 	const load = document.getElementById("history-load");
