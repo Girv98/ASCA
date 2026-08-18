@@ -298,7 +298,9 @@ export class Lines {
     setNewCustomId(curId: string, newId: string) {
         if (curId === newId) { return }
 
-        if (!newId.trim()) {
+        newId = newId.trim();
+
+        if (!newId) {
             alert("New ID cannot be empty.");
             return this.populateModal(HIST_MODAL);
         }
@@ -507,6 +509,36 @@ export class Lines {
         a.remove();
     }
 
+    public cloneLine(id: string) {
+        let line = (id === this.activeId) ? this.getDeFacto() : this.getLineData(id)!;
+
+        let x = structuredClone(line);
+        let newID = `${id} (1)`
+
+        let i = 1;
+        while (this.lines.has(newID)) {
+            i++;
+            newID = `${id} (${i})`
+        }
+
+        x.id = newID;
+
+        this.create(
+            x.words,
+            x.rules,
+            x.aliasFrom,
+            x.aliasInto,
+            x.id,
+            x.ruleStates,
+            x.ruleActives,
+            x.traceState,
+            x.formatState,
+            x.aliasFromOn,
+        );
+        this.partialSetStorage(newID);
+        this.updateModal();
+    }
+
     sortStrat(): ((a: [string, Data], b: [string, Data]) => number) {
         let val = localStorage.getItem('asca-save-sort-strategy') as (SaveStrategy | null);
         let dir = localStorage.getItem('asca-save-sort-direction') as (SaveDirection | null);
@@ -590,6 +622,10 @@ export class Lines {
         this.exportLine(id);
     }
 
+    public histClone(id: string) {
+        this.cloneLine(id);
+    }
+
     public histShare(id: string) {
         const link = this.createShare(id);
         console.log(link);
@@ -602,9 +638,9 @@ export class Lines {
     }
 
     public histDelete(id: string) {
-        let sortedKeys = Array.from(new Map([...this.lines].sort((a, b) => 
-            a[1].createdAt - b[1].createdAt
-        )).keys());
+        let strat = this.sortStrat();
+
+        let sortedKeys = Array.from(new Map([...this.lines].sort(strat)).keys());
 
         if (sortedKeys.length === 1) {
             alert("Cannot delete the only save");

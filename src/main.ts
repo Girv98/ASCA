@@ -32,6 +32,7 @@ export const smallScreenWidth = 640;
 export function createHistoryEvents(el: Element) {
 	let loadButton = el.querySelector<HTMLButtonElement>(".history-item-load")!;
 	let exportButton = el.querySelector<HTMLButtonElement>(".history-item-save")!;
+	let cloneButton = el.querySelector<HTMLButtonElement>(".history-item-clone")!;
 	let shareButton = el.querySelector<HTMLButtonElement>(".history-item-share")!;
 	let deleteButton = el.querySelector<HTMLButtonElement>(".history-item-delete")!;
 
@@ -62,13 +63,16 @@ export function createHistoryEvents(el: Element) {
 		LINES.histExport(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
 	});
 
+	cloneButton.addEventListener("click", function() {
+		LINES.histClone(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
+	});
+
 	shareButton.addEventListener("click", function() {
 		LINES.histShare(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText)
 	});
 
 	deleteButton.addEventListener("click", function(this: HTMLButtonElement) {
-		let item = this.closest(".history-item") as HTMLElement;
-		LINES.histDelete(item.querySelector<HTMLSpanElement>(".history-id")!.innerText);
+		LINES.histDelete(this.closest(".history-item")!.querySelector<HTMLSpanElement>(".history-id")!.innerText);
 	})
 }
 
