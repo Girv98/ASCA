@@ -691,23 +691,26 @@ function onLoadNew() {
 		}
 
 		if (LINES.contains(response.id)) {
+			let resId = response.id;
 			if (!LINES.sharedEq(response)) {
+				let newId = prompt(`The shared link's ID is "${resId}" which already exists.\nPlease enter a new ID or press Cancel to abort:`)
 				while (true) {
-					let new_id = prompt(`The shared link's ID is "${response.id}" which already exists.\nPlease enter a new ID or press Cancel to abort:`)
-					if (new_id === null) { 
+					if (newId === null) { 
 						window.history.pushState({}, document.title, window.location.pathname);
 						return
 					}
 
-					if (!new_id) {
+					if (!newId) {
 						alert("New ID cannot be empty");
 						continue;
 					}
 
-					if (!LINES.contains(new_id)) {
-						response.id = new_id;
+					if (!LINES.contains(newId)) {
+						response.id = newId;
 						break;
 					}
+					resId = newId;
+					newId = prompt(`"${resId}" already exists.\nPlease enter a new ID or press Cancel to abort:`)
 				}
 			}
 		}
