@@ -4,7 +4,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   optimizeDeps: {
     rolldownOptions: {
-      "target": 'esnext'
+       transform: {
+        target: 'esnext',
+      },
     }
   },
   build: {
