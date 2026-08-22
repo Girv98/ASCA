@@ -8,6 +8,10 @@ import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './
 import { InputView, Lines, type SaveDirection, type SaveStrategy } from './history.js';
 import { decode } from 'js-base64';
 
+// Vercel
+import { inject } from '@vercel/analytics'; inject();
+// ------
+
 let INLEX_WRAP = document.getElementById("lex-wrap") as HTMLDivElement;
 
 let INPUT_VIEW = new InputView(INLEX_WRAP);
