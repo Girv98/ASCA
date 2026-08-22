@@ -1,4 +1,5 @@
 import Sortable from 'sortablejs';
+import {diffLines, type ChangeObject} from 'diff';
 
 import { outlexTemplate } from "./templates";
 import init, { run_wasm, WasmResult } from '../libasca/asca.js'
@@ -7,10 +8,6 @@ import { type Rule } from './rules.js';
 import { checkMoveOrDup, ruleHandleKeyboardDown, ruleHandleKeyboardUp } from './hotkeys.js';
 import { InputView, Lines, type SaveDirection, type SaveStrategy } from './history.js';
 import { decode } from 'js-base64';
-
-// Vercel
-import { inject } from '@vercel/analytics'; inject();
-// ------
 
 let INLEX_WRAP = document.getElementById("lex-wrap") as HTMLDivElement;
 
@@ -267,15 +264,15 @@ function getSortStrategyState(): SaveStrategy {
 //     let traceBox = TRACE;
 //     // let traceText = [...traceBox.options].map(o => o.text);
 //     // let traceVals = [...traceBox.options].map(o => o.value);
-    
+//
 //     // let lexLines = lex.value.substr(0, lex.selectionStart).split("\n");
 //     // let lexLineNum = lexLines.length;
 //     // let lexColNum = lexLines[lexLines.length-1].length+1;
-
+//
 //     // let eLines = lex.value.substr(0, e.target.selectionStart).split("\n");
 //     // let eLineNum = eLines.length;
 //     // let eColNum = eLines[eLines.length-1].length+1;
-    
+//
 //     traceBox.length = 1;
 //     LEXICON.value.split('\n').forEach((w, i) => {
 // 		let x = w.trim()
@@ -286,39 +283,174 @@ function getSortStrategyState(): SaveStrategy {
 //             traceBox.append(opt);
 //         }
 //     })
-
+//
 //     traceBox.value = "-1";
 // 	FORMAT.disabled = TRACE.value !== "-1";
-
-
-//     // if (e.key === 'Enter') {
-//     // 	traceBox.length = 1;
-//     // 	lexList.map((w, i) => {
-//     // 		if (w !== "") {
-//     // 			let opt = document.createElement("option");
-//     // 			opt.value = i;
-//     // 			opt.innerHTML = w;
-//     // 			traceBox.append(opt);
-//     // 		}
-//     // 	})
-//     // } else if (e.key === 'Backspace') {
-//     // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-//     // } else if (e.key === 'Delete') { 
-//     // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-//     // } else if (lexList[lexLineNum-1].trim() !== "") {
-//     // 	if (traceText.length <= 1) {
-//     // 		let opt = document.createElement("option");
-//     // 		opt.value = lexLineNum;
-//     // 		opt.innerHTML = lexList[lexLineNum-1];
-//     // 		traceBox.append(opt);
-//     // 	} else {
-//     // 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
-//     // 	}
-//     // }
+//
+//
+    // if (e.key === 'Enter') {
+    // 	traceBox.length = 1;
+    // 	lexList.map((w, i) => {
+    // 		if (w !== "") {
+    // 			let opt = document.createElement("option");
+    // 			opt.value = i;
+    // 			opt.innerHTML = w;
+    // 			traceBox.append(opt);
+    // 		}
+    // 	})
+    // } else if (e.key === 'Backspace') {
+    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+    // } else if (e.key === 'Delete') { 
+    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
+    // } else if (lexList[lexLineNum-1].trim() !== "") {
+    // 	if (traceText.length <= 1) {
+    // 		let opt = document.createElement("option");
+    // 		opt.value = lexLineNum;
+    // 		opt.innerHTML = lexList[lexLineNum-1];
+    // 		traceBox.append(opt);
+    // 	} else {
+    // 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
+    // 	}
+    // }
+//
 // }
 
+// async function longJob(worker: Worker, data: any) {
+//   	const result = await new Promise((resolve: any, reject: any) => {
+// 		worker.postMessage(data);
+// 		worker.onerror = (event) => {
+// 			console.error('Error from Worker:', event.message);
+// 			reject(event)
+// 		}
+// 		worker.onmessage = (event) => {
+// 			if (event.data.error != undefined) {
+// 	   	 		console.error('Error from Worker:', event.data.error);
+// 				reject(event.data.error)
+// 	  		} else {
+// 				resolve(event.data);
+// 			}
+// 		};
+// 	});
+//   	return result;
+// }
+
+// async function timerSec(seconds: number) {
+//   	await new Promise((_, reject: any) => {
+//     	setTimeout(() => reject('hang'), seconds * 1000)
+// 	})
+// }
+
+// async function catchHang(worker: Worker, data: any) {
+// 	const result = await Promise.race([
+// 		timerSec(5),
+// 		longJob(worker, data),
+// 	]);
+
+// 	return result ?? null;
+// }
+
+// async function tryRunASCA(worker: Worker, data: any): Promise<any | null> {
+// 	let res = null;
+// 	try {
+// 		res = await catchHang(worker, data);
+// 	} catch(e: any) {
+// 		console.log(e)
+// 		if (e === 'hang') {
+// 			alert("Possible infinite loop: ASCA has been aborted after running for more than 5 seconds.\n\nPlease consider creating a bug report!")
+// 		} else {
+// 			alert("An uncaught error occurred: more information can be found in browser console.\n\nPlease consider creating a bug report!");
+// 		}
+// 		return null
+// 	}
+// 	return res
+// }
+
+// async function try_run(data: any): Promise<WasmResult | null> {
+// 	// let res = null;
+// 	console.log("hEre")
+// 	try {
+// 		let res = await run_wasm(data.ruleList, data.wordList, data.aliasInto, data.aliasFrom, data.traceNumber);
+// 		if (!res) {
+// 			alert("Possible infinite loop: ASCA has been aborted after running for more than 5 seconds.\n\nPlease consider creating a bug report!")
+// 			return null
+// 		} else {
+// 			return res
+// 		}
+// 	} catch (e: any) {
+// 		console.log(e)
+// 		alert("An uncaught error occurred: more information can be found in browser console.\n\nPlease consider creating a bug report!");
+// 		return null
+// 	}
+// }
+
+
+// async function slowOperation({ signal: AbortSignal }) {
+//   return setTimeout(10000, null, { signal });
+// }
+
+// async function doSomethingAsync() {
+
+
+//   try {
+//     await slowOperation({ signal });
+//     console.log("Completed slow operation");
+//   } catch (err) {
+//     if (err.name === "AbortError") {
+//       console.error("Operation aborted");
+//     } else {
+//       console.error("Failed to complete slow operation due to error:", err);
+//     }
+//   }
+// }
+// doSomethingAsync();
+
+function try_run(data: Data): WasmResult | null {
+	try {
+		return run_wasm(data.rules, data.phrases, data.into, data.from, data.traceNumber);		
+	} catch (e: any) {
+		console.log(e)
+		alert("An uncaught error occurred: more information can be found in browser console.\n\nPlease consider creating a bug report!");
+		return null
+	}
+}
+
+
+
+// type Result = {
+// 	was_ok: boolean,
+// 	input: string[],
+// 	output: string[],
+// 	traces: Uint32Array<ArrayBufferLike>,
+// 	unknowns: string[],
+// }
+
+// function createWorker(fn: any, init: any, run_wasm: any) {
+// 	// const js = `import init, { run_wasm } from ${JSON.stringify(new URL("../libasca/asca.js", import.meta.url))};`
+
+// 	var blob = new Blob([init.toString(), run_wasm.toString(), fn.toString()], { type: 'text/javascript' });
+// 	console.log(blob.text)
+// 	var url = URL.createObjectURL(blob);
+	
+// 	return new Worker(url, { type: "module" });
+// }
+
+// const workerURL = new URL('run.js', import.meta.url);
+// const masterWorker = new Worker(workerURL, { type: "module" });
+
+
+type Data = {
+	rules: Rule[],
+	phrases: string[],
+	into: string[],
+	from: string[],
+	traceNumber: number | null
+}
+
+
 // Run ASCA
-function runASCA() {
+async function runASCA() {
+	// const worker = new Worker(new URL('run.js', import.meta.url), { type: "module" });;
+
 	RulesClass.removeHighlights();
 
     LINES.updateActiveStorage();
@@ -331,21 +463,40 @@ function runASCA() {
 		return line.split(/#(.*)/s)
 	});
 
-	let wordList = wc.map(l => l[0].trimEnd());
+	let phrases = wc.map(l => l[0].trimEnd());
 	let comments = wc.map(l => l[1]);
 
-    // filter inactive rules
-    let ruleList = RULES_VIEW.getRules().filter((_val, index) => ruleActive[index]);
+	let traceNumber = (+traceState >= 0) ? +traceState : null;
 
-    let traceNumber = (+traceState >= 0) ? +traceState : null;
-    console.log("Running ASCA...");
-    let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), traceNumber);
-    console.log("Done");
+    // filter inactive rules
+
+	let data: Data =  {
+		rules: RULES_VIEW.getRules().filter((_, index) => ruleActive[index]), 
+		phrases,
+		into: aliasInto.split('\n'),
+		from: aliasFrom.split('\n'),
+		traceNumber
+	};
+
+    // let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), traceNumber);
+    
+	// let res: Result | null = await tryRunASCA(worker, data);
+	// worker.terminate();
+	const startTime = performance.now()
+	let res = try_run(data);
+	const endTime = performance.now()
+	console.log(`Done in ${endTime - startTime} milliseconds`);;
+	if (res === null) { return; }
 
     // handle result
     let outputJoined = res.was_ok() 
-	? (traceNumber === null ? createOutput(res, getFormatState(), comments) : createOutputTraced(res))
+	? (traceNumber === null ? createOutput(res, getFormatState(), comments, hasChanges(res)) : createOutputTraced(res))
 	: createError(res);
+
+	if (res.was_ok() && traceNumber == null) { 
+		localStorage.setItem("asca-last-ran", LINES.getActiveId());
+		localStorage.setItem("asca-last-output", res.get_output().join("\n"));
+	}
     
     OUTLEX.querySelector(".scroller")!.innerHTML = outlexTemplate;
     let outputArea = document.getElementById('output')!;
@@ -364,6 +515,70 @@ function runASCA() {
 			let num = +regRes[1];
 			RulesClass.traceError(num);
 		}
+	}
+}
+
+type DiffKind = '-+' | '+' | '-' | '='
+
+function getDiff(lastOutput: string, thisOutput: string): DiffKind[] {
+	let lineChanges: ChangeObject<string>[][]  = [];
+		
+	let diff = diffLines(lastOutput, thisOutput, {oneChangePerToken: true, newlineIsToken: true});
+
+	let asdf: ChangeObject<string>[] = []
+	diff.forEach(part => {
+		if (part.value == "\n") {
+			if (!part.added && !part.removed) {
+				lineChanges.push(asdf);
+				asdf = [];
+			} else
+			if (part.added || part.removed) {
+				asdf.push(part)
+				lineChanges.push(asdf);
+				asdf = [];
+			}
+		} else {
+			asdf.push(part)
+		}
+	});
+	if (asdf.length !== 0) { lineChanges.push(asdf) }
+
+	diff = diff.filter(part => { return part.added || part.removed })
+
+	let differ: DiffKind[] = [];
+	lineChanges.forEach(line => {
+		if (line.length > 1) {
+			differ.push('-+')
+		} else {
+			if (line.length === 0) {
+				differ.push('=')
+			} else if (line[0].added) {
+				// differ.push('+')
+			} else if (line[0].removed) {
+				// differ.push('-')
+			} else {
+				differ.push('=')
+			}
+		}
+	})
+
+	return differ
+}
+
+function hasChanges(res: WasmResult) {
+
+	if (!res.was_ok) return null;
+	
+	let lastRan = localStorage.getItem("asca-last-ran");
+	let lastOutput = localStorage.getItem("asca-last-output");
+
+	let currActive = LINES.getActiveId();
+	let thisOutput = res.get_output().join("\n");
+	
+	if (lastRan != null && lastRan == currActive && lastOutput != null && lastOutput != thisOutput) {
+		return getDiff(lastOutput, thisOutput)
+	} else {
+		return null
 	}
 }
 
@@ -396,16 +611,16 @@ function createError(res: WasmResult): string {
 
 	var rg = new RegExp('\\^(\\^| )*');
 	if (lines.length > 3) {
-		let maybe_carets = rg.exec(lines[lines.length-2]);
-		if (maybe_carets && maybe_carets.length) {
-			let carets = maybe_carets[0];
+		let maybeCarets = rg.exec(lines[lines.length-2]);
+		if (maybeCarets && maybeCarets.length) {
+			let carets = maybeCarets[0];
 			lines[lines.length-2] = lines[lines.length-2].replace(carets, `<span style="color: var(--error);">${carets}</span>`)
 			lines[lines.length-1] = lines[lines.length-1].replace('@', '<span style="color: var(--error-highlight);">@</span>');
 		}
 	} else {
-		let maybe_carets = rg.exec(lines[lines.length-1]);
-		if (maybe_carets && maybe_carets.length) {
-			let carets = maybe_carets[0];
+		let maybeCarets = rg.exec(lines[lines.length-1]);
+		if (maybeCarets && maybeCarets.length) {
+			let carets = maybeCarets[0];
 			lines[lines.length-1] = lines[lines.length-1].replace(carets, `<span style="color: var(--error);">${carets}</span>`)
 		}
 	}
@@ -492,41 +707,52 @@ function createOutputTraced(res: WasmResult) {
 	return outputJoined;
 }
 // →
-function formatLine(val: string, formatType: OutputFormat, input: string, align: number, comment: string | undefined): string {
+function formatLine(val: string, formatType: OutputFormat, input: string, align: number, comment: string | undefined, hasChanges: DiffKind | null): string {
 	let escapedInp = escapeHTML(input);
 	let escapedVal = escapeHTML(val);
+
+	let diff = "";
+	
+	switch (hasChanges) {
+		case "-+": diff += " change"; break;
+		case "-":  diff += " del"; break;
+		case "+":  diff += " add"; break;
+		
+		case "=": case null: break;
+	} 
+	
 	if (escapedVal) {
 		switch (formatType) {
-			case "out": return `<div class="out-line">${escapedVal}</div>`;
-			case "=>":  return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
-			case "->":  return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
-			case ">":   return `<div class="out-line">${escapedInp} <span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
+			case "out": return `<div class="out-line${diff}">${escapedVal}</div>`;
+			case "=>":  return `<div class="out-line${diff}">${escapedInp} <span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
+			case "->":  return `<div class="out-line${diff}">${escapedInp} <span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
+			case ">":   return `<div class="out-line${diff}">${escapedInp} <span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
 			case "+=>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
+				return`<div class="out-line${diff}">${escapedInp} ${pad}<span style="color: var(--format-arrow);">=&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+->": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
+				return`<div class="out-line${diff}">${escapedInp} ${pad}<span style="color: var(--format-arrow);">-&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+>": {
 				let pad = " ".repeat(align-input.length+fixUnicodePadding(input));
-				return`<div class="out-line">${escapedInp} ${pad}<span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
+				return`<div class="out-line${diff}">${escapedInp} ${pad}<span style="color: var(--format-arrow);">&gt;</span> ${escapedVal}</div>`;
 			}
 			case "+#": {
 				if (comment != undefined) {
 					let pad = " ".repeat(align-val.length+fixUnicodePadding(val));
 					comment = escapeHTML(comment);
-					return `<div class="out-line">${escapedVal} ${pad}<span style="color: var(--comment);">#${comment}</span></div>`;
+					return `<div class="out-line${diff}">${escapedVal} ${pad}<span style="color: var(--comment);">#${comment}</span></div>`;
 				} else {
-					return `<div class="out-line">${escapedVal}</div>`;
+					return `<div class="out-line${diff}">${escapedVal}</div>`;
 				}
 			}
 		}
 	} else if (formatType == "+#" && comment != undefined) {
-		return `<div class="out-line"><span style="color: var(--comment);">#${comment}</span></div>`;
+		return `<div class="out-line${diff}"><span style="color: var(--comment);">#${comment}</span></div>`;
 	} else {
-		return '<div class="out-line"><br></div>';
+		return `<div class="out-line${diff}"><br></div>`;
 	}
 }
 
@@ -577,7 +803,7 @@ function getOutputAlignment(res: WasmResult) {
 	return alignLength;
 }
 
-function createOutput(res: WasmResult, formatType: OutputFormat, comments: string[]) {
+function createOutput(res: WasmResult, formatType: OutputFormat, comments: string[], hasChanges: DiffKind[] | null) {
 	let outputJoined = "";
 	let input = res.get_input();
 	let output = res.get_output();
@@ -590,7 +816,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat, comments: strin
 	// If no unknowns
 	if (!unknowns.length) {
 		output.forEach((val, ind) => {
-			outputJoined += formatLine(val, formatType, input[ind], alignment, comments[ind])
+			outputJoined += formatLine(val, formatType, input[ind], alignment, comments[ind], hasChanges == null ? null : hasChanges[ind] )
 		});
 		return outputJoined;
 	}
@@ -607,7 +833,7 @@ function createOutput(res: WasmResult, formatType: OutputFormat, comments: strin
 
 	let occurence = -1;
 	output.forEach((line, ind) => {
-		line = formatLine(line, formatType, input[ind], alignment, comments[ind]);
+		line = formatLine(line, formatType, input[ind], alignment, comments[ind], hasChanges == null ? null : hasChanges[ind]);
 		let parts = line.split('�')
 		if (parts.length == 1) {
 			outputJoined += line;
