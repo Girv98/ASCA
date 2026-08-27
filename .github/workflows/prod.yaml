@@ -54,7 +54,7 @@ jobs:
           path: ./libasca/
 
       - name: Install Vercel CLI
-        run: npm install --global vercel@56.2.1
+        run: npm install --global vercel
 
       - name: Pull Vercel Env Info
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
