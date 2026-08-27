@@ -24,7 +24,6 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@lezer/generator": "^1.8.0",
-    "@vercel/analytics": "^2.0.1",
     "diff": "^9.0.0",
     "js-base64": "^3.7.8",
     "nanoid": "^5.1.9",
