@@ -53,7 +53,7 @@ VarAssign { "=" Number }
 @precedence { times @cut, plus}
 
 Params { "[" ArgList? "]" }
-ArgList { Arg ("," Arg)* ","? }
+ArgList { Arg (","? Arg)* ","? }
 Arg { 
   (ArgMod { !times ("+" | "-")?  ArgChar |  !plus  ("+" | "-") } String) 
   | 
