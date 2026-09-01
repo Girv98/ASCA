@@ -241,9 +241,6 @@ function loadExample() {
 		})
 }
 
-// TODO: see https://www.reddit.com/r/conlangs/comments/1h2ryxf/comment/m10lko8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-
-
 // + means aligned
 export type OutputFormat = "out" | "+#" | ">" | "+>" | "=>" | "+=>" | "->" | "+->";
 
@@ -258,151 +255,6 @@ function getTraceState(): string {
 function getSortStrategyState(): SaveStrategy {
 	return SORT.value as SaveStrategy
 }
-
-// export function updateTrace() {
-//     // console.log(e)
-//     let traceBox = TRACE;
-//     // let traceText = [...traceBox.options].map(o => o.text);
-//     // let traceVals = [...traceBox.options].map(o => o.value);
-//
-//     // let lexLines = lex.value.substr(0, lex.selectionStart).split("\n");
-//     // let lexLineNum = lexLines.length;
-//     // let lexColNum = lexLines[lexLines.length-1].length+1;
-//
-//     // let eLines = lex.value.substr(0, e.target.selectionStart).split("\n");
-//     // let eLineNum = eLines.length;
-//     // let eColNum = eLines[eLines.length-1].length+1;
-//
-//     traceBox.length = 1;
-//     LEXICON.value.split('\n').forEach((w, i) => {
-// 		let x = w.trim()
-//         if (x !== "" && !x.startsWith("#")) {
-//             let opt = document.createElement("option");
-//             opt.value = `${i}`;
-//             opt.innerHTML = w;
-//             traceBox.append(opt);
-//         }
-//     })
-//
-//     traceBox.value = "-1";
-// 	FORMAT.disabled = TRACE.value !== "-1";
-//
-//
-    // if (e.key === 'Enter') {
-    // 	traceBox.length = 1;
-    // 	lexList.map((w, i) => {
-    // 		if (w !== "") {
-    // 			let opt = document.createElement("option");
-    // 			opt.value = i;
-    // 			opt.innerHTML = w;
-    // 			traceBox.append(opt);
-    // 		}
-    // 	})
-    // } else if (e.key === 'Backspace') {
-    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-    // } else if (e.key === 'Delete') { 
-    // 	console.log(`lex {${lexLineNum},${lexColNum}}`)
-    // } else if (lexList[lexLineNum-1].trim() !== "") {
-    // 	if (traceText.length <= 1) {
-    // 		let opt = document.createElement("option");
-    // 		opt.value = lexLineNum;
-    // 		opt.innerHTML = lexList[lexLineNum-1];
-    // 		traceBox.append(opt);
-    // 	} else {
-    // 		traceBox.querySelector(`option[value='${lexLineNum}']`).text = lexList[lexLineNum-1]
-    // 	}
-    // }
-//
-// }
-
-// async function longJob(worker: Worker, data: any) {
-//   	const result = await new Promise((resolve: any, reject: any) => {
-// 		worker.postMessage(data);
-// 		worker.onerror = (event) => {
-// 			console.error('Error from Worker:', event.message);
-// 			reject(event)
-// 		}
-// 		worker.onmessage = (event) => {
-// 			if (event.data.error != undefined) {
-// 	   	 		console.error('Error from Worker:', event.data.error);
-// 				reject(event.data.error)
-// 	  		} else {
-// 				resolve(event.data);
-// 			}
-// 		};
-// 	});
-//   	return result;
-// }
-
-// async function timerSec(seconds: number) {
-//   	await new Promise((_, reject: any) => {
-//     	setTimeout(() => reject('hang'), seconds * 1000)
-// 	})
-// }
-
-// async function catchHang(worker: Worker, data: any) {
-// 	const result = await Promise.race([
-// 		timerSec(5),
-// 		longJob(worker, data),
-// 	]);
-
-// 	return result ?? null;
-// }
-
-// async function tryRunASCA(worker: Worker, data: any): Promise<any | null> {
-// 	let res = null;
-// 	try {
-// 		res = await catchHang(worker, data);
-// 	} catch(e: any) {
-// 		console.log(e)
-// 		if (e === 'hang') {
-// 			alert("Possible infinite loop: ASCA has been aborted after running for more than 5 seconds.\n\nPlease consider creating a bug report!")
-// 		} else {
-// 			alert("An uncaught error occurred: more information can be found in browser console.\n\nPlease consider creating a bug report!");
-// 		}
-// 		return null
-// 	}
-// 	return res
-// }
-
-// async function try_run(data: any): Promise<WasmResult | null> {
-// 	// let res = null;
-// 	console.log("hEre")
-// 	try {
-// 		let res = await run_wasm(data.ruleList, data.wordList, data.aliasInto, data.aliasFrom, data.traceNumber);
-// 		if (!res) {
-// 			alert("Possible infinite loop: ASCA has been aborted after running for more than 5 seconds.\n\nPlease consider creating a bug report!")
-// 			return null
-// 		} else {
-// 			return res
-// 		}
-// 	} catch (e: any) {
-// 		console.log(e)
-// 		alert("An uncaught error occurred: more information can be found in browser console.\n\nPlease consider creating a bug report!");
-// 		return null
-// 	}
-// }
-
-
-// async function slowOperation({ signal: AbortSignal }) {
-//   return setTimeout(10000, null, { signal });
-// }
-
-// async function doSomethingAsync() {
-
-
-//   try {
-//     await slowOperation({ signal });
-//     console.log("Completed slow operation");
-//   } catch (err) {
-//     if (err.name === "AbortError") {
-//       console.error("Operation aborted");
-//     } else {
-//       console.error("Failed to complete slow operation due to error:", err);
-//     }
-//   }
-// }
-// doSomethingAsync();
 
 function try_run(data: Data): WasmResult | null {
 	try {
@@ -424,19 +276,6 @@ function try_run(data: Data): WasmResult | null {
 // 	unknowns: string[],
 // }
 
-// function createWorker(fn: any, init: any, run_wasm: any) {
-// 	// const js = `import init, { run_wasm } from ${JSON.stringify(new URL("../libasca/asca.js", import.meta.url))};`
-
-// 	var blob = new Blob([init.toString(), run_wasm.toString(), fn.toString()], { type: 'text/javascript' });
-// 	console.log(blob.text)
-// 	var url = URL.createObjectURL(blob);
-	
-// 	return new Worker(url, { type: "module" });
-// }
-
-// const workerURL = new URL('run.js', import.meta.url);
-// const masterWorker = new Worker(workerURL, { type: "module" });
-
 
 type Data = {
 	rules: Rule[],
@@ -449,8 +288,6 @@ type Data = {
 
 // Run ASCA
 async function runASCA() {
-	// const worker = new Worker(new URL('run.js', import.meta.url), { type: "module" });;
-
 	RulesClass.removeHighlights();
 
     LINES.updateActiveStorage();
@@ -467,21 +304,15 @@ async function runASCA() {
 	let comments = wc.map(l => l[1]);
 
 	let traceNumber = (+traceState >= 0) ? +traceState : null;
-
-    // filter inactive rules
-
+	
 	let data: Data =  {
-		rules: RULES_VIEW.getRules().filter((_, index) => ruleActive[index]), 
+		rules: RULES_VIEW.getRules().filter((_, index) => ruleActive[index]), // filter inactive rules
 		phrases,
 		into: aliasInto.split('\n'),
 		from: aliasFrom.split('\n'),
 		traceNumber
 	};
-
-    // let res = run_wasm(ruleList, wordList, aliasInto.split('\n'), aliasFrom.split('\n'), traceNumber);
     
-	// let res: Result | null = await tryRunASCA(worker, data);
-	// worker.terminate();
 	const startTime = performance.now()
 	let res = try_run(data);
 	const endTime = performance.now()
