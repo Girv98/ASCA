@@ -107,6 +107,7 @@ function createState(initial: string) {
             closeBrackets(),
             syntax_colors,
             placeholder("Enter rule(s) here..."),
+            EditorView.contentAttributes.of({ "aria-label": "Rule block sound changes" }),
         ],
     });
 }

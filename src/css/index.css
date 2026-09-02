@@ -62,7 +62,7 @@ header {
 	right: -1.2rem;
 }
 
-section {
+main {
 	background-color: var(--primary-bg);
 	box-sizing:border-box;
 	/* padding: 1vh; */
@@ -877,7 +877,7 @@ footer {
 
 /* Move to vertical format */
 @media screen and (max-width: 920px) {
-	section {
+	main {
 		flex-direction: column;
 		padding: 1vw;
 		width: 100%;

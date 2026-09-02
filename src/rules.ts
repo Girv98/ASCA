@@ -244,13 +244,19 @@ export class Rules {
 
         if (this.toCollapse) {
             els.forEach(el => {
-                el.querySelector(".maxmin i")!.classList.replace('fa-minus', 'fa-plus')
+                let maxmin = el.querySelector(".maxmin") as HTMLElement;
+                maxmin.title = "Maximise Rule"
+                maxmin.setAttribute('aria-label', 'Maximise Rule');
+                maxmin.querySelector("i")!.classList.replace('fa-minus', 'fa-plus')
                 el.querySelector(".cont")!.classList.add('invisible');
             })
             this.updateCollapse(false)
         } else {
             els.forEach(el => {
-                el.querySelector(".maxmin i")!.classList.replace('fa-plus', 'fa-minus')
+                let maxmin = el.querySelector(".maxmin") as HTMLElement;
+                maxmin.title = "Minimise Rule"
+                maxmin.setAttribute('aria-label', 'Minimise Rule');
+                maxmin.querySelector("i")!.classList.replace('fa-plus', 'fa-minus')
                 el.querySelector(".cont")!.classList.remove('invisible');
             })
             this.updateCollapse(true)
@@ -396,7 +402,10 @@ export class Rules {
         resize(d);
 
         if (ruleClosed) {
-            ruleElement.querySelector(".maxmin i")!.classList.replace('fa-minus', 'fa-plus')
+            let maxmin = ruleElement.querySelector(".maxmin") as HTMLElement;
+            maxmin.title = "Maximise Rule"
+            maxmin.setAttribute('aria-label', 'Maximise Rule');
+            maxmin.querySelector("i")!.classList.replace('fa-minus', 'fa-plus')
             ruleElement.querySelector(".cont")!.classList.toggle('invisible');
         }
 

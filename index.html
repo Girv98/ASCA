@@ -12,15 +12,13 @@
 	<script defer type="module" src="src/main.ts"></script> 
 	<link href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 	<link href="node_modules/@fortawesome/fontawesome-free/css/solid.min.css" rel="stylesheet">
-	<script>
-	window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-	</script>
+	<script> window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); }; </script>
 	<script defer src="/growth/script.js"></script>
 </head>
 
 <body>
 	<header>
-		<h1 class="noto-sans">ASCA <a id="version-number" href="/changelog.html" title="View Changelog" target="_blank">0.20.3</a></h1>
+		<h1 class="noto-sans">ASCA <a id="version-number" href="/changelog.html" title="View Changelog" aria-label="View Changelog" target="_blank">0.20.3</a></h1>
 	</header>
 
 	<dialog id="alias-modal">
@@ -86,7 +84,7 @@
 		</div>
 	</dialog>
 
-	<section>
+	<main>
 		<div class="thirds inlex noto-sans">
 			<div class="title-wrapper">
 				<h1>Input</h1>
@@ -161,7 +159,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</main>
 
 	<footer>
 		ASCA is an easy to use, opinionated sound change applier designed for conlangers and linguists.
@@ -169,8 +167,8 @@
 		If you find any bugs/errors or have in mind any additions/changes, please consider creating an issue on <a href="https://github.com/Girv98/asca-rust/issues" target="_blank">github</a>.
 		<br><br>
 		<div class="icons">
-			<a class="icon" href="https://github.com/Girv98/asca-rust" target="_blank"><i class="fab fa-github"></i></a>
-			<a class="icon" href="https://buymeacoffee.com/girv" target="_blank"><i class="fas fa-mug-hot"></i></a>
+			<a class="icon" title="View source code on Github" href="https://github.com/Girv98/asca-rust" target="_blank"><i class="fab fa-github"></i></a>
+			<a class="icon" title="Support ASCA" href="https://buymeacoffee.com/girv" target="_blank"><i class="fas fa-mug-hot"></i></a>
 		</div>
 	</footer>
 

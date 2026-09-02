@@ -92,11 +92,15 @@ export function createRuleEvents(ruleEl: HTMLElement) {
         let i = this.querySelector('i')!;
         if (i.classList.contains('fa-minus')) {
             i.classList.replace('fa-minus', 'fa-plus');
+			this.title = "Maximise Rule";
+			this.setAttribute('aria-label', 'Maximise Rule');
             if (!RulesClass.getRuleClosedBoxes().some((e) => e == false)) {
                 RULES_VIEW.updateCollapse(false)
             }
         } else {
             i.classList.replace('fa-plus', 'fa-minus');
+			this.title = "Minimise Rule";
+			this.setAttribute('aria-label', 'Minimise Rule');
             RULES_VIEW.updateCollapse(true)
         }
         this.closest(".draggable-element")!.querySelector(".cont")!.classList.toggle('invisible')

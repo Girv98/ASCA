@@ -56,6 +56,7 @@ function createState(initial: string) {
                     document.dispatchEvent(InputViewUpdateEvent);
                 }
             }),
+            EditorView.contentAttributes.of({ "aria-label": "Input Lexicon" }),
         ]
     });
 }

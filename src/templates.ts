@@ -1,12 +1,12 @@
 export const blockTemplate = `
-	<div class="draggable-element" tabindex="0">
+	<div class="draggable-element" tabindex="0" aria-label="Rule block">
 		<div class="element-asdf">
 			<div class="grabber">
 				<i class="fas fa-grip-vertical"></i>
 			</div>
 			<div class="element-body">
 				<div class="title">
-				<input type="text" class="name" placeholder = "Sound Change Title...">
+				<input type="text" class="name" aria-label="Rule block title" name="Rule block title" placeholder="Sound Change Title...">
 					<div class="title-btns">
 						<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-up"></i></button>-->
 						<!--<button class="onoff" title="Toggle Rule" aria-label="Toggle Rule"><i class="fas fa-chevron-down"></i></button>-->
@@ -21,7 +21,7 @@ export const blockTemplate = `
 		<div class="cont">
 			<div class="rule-cont"></div>
 			<!--<textarea class="rule" spellcheck="false" autocapitalize="off" placeholder="Enter rule(s) here..."></textarea>-->
-			<textarea class="description" autocapitalize="off" placeholder="Rule description..."></textarea>
+			<textarea class="description" aria-label="Rule block description" name="Rule block description" autocapitalize="off" placeholder="Rule description..."></textarea>
 		</div>
 	</div>`;
 
