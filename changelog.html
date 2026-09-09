@@ -20,6 +20,59 @@
         <h1>What's new</h1>
     </header>
     <div class="change-body">
+        <div class="version"> <!-- 0.20.4 -->
+            <h2>0.20.4</h2>
+            <br>
+            <b>New Features</b>
+            <ul>
+                <li>Matrix Narrowing: Matrices and Groups can be modified to exclude segments they would normally match.</li>
+                <ul>
+                    <li>Exclude single segments:</li>
+                    <ul>
+                        <li>e.g. <code><span style="color: var(--group);">O</span><span style="color: var(--operator);">:-</span><span style="color: var(--literal);">s</span> 
+                            <span style="color: var(--delim);">=&gt;</span> 
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">voi</span><span style="color: var(--square);">]</span> 
+                            <span style="color: var(--comment)">;; Obstruents except /s/ become voiced</span></code></li>
+                        <ul><li><code>sa.ta.kam <span style="color: var(--delim);">=&gt;</span>  sa.da.gam</code></li></ul>
+                    </ul>
+
+                    <li>Exclude single group or matrix:</li>
+                    <ul>
+                        <li>e.g. <code><span style="color: var(--group);">O</span><span style="color: var(--operator);">:-</span><span style="color: var(--group);">F</span>
+                            <span style="color: var(--delim);">=&gt;</span>
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">voi</span><span style="color: var(--square);">]</span>
+                            <span style="color: var(--comment)">;; Obstruents that are not fricatives become voiced</span></code></li>
+                        <ul><li><code>sa.ta.kam <span style="color: var(--delim);">=&gt;</span>  sa.da.gam</code></li></ul>
+                    </ul>
+
+                    <li>Exclude multiple segments, groups, or matrices:</li>
+                    <ul>
+                        <li>e.g. <code><span style="color: var(--group);">O</span><span style="color: var(--operator);">:-</span><span style="color: var(--brace);">{</span><span style="color: var(--literal);">t</span><span style="color: var(--comma);">,</span> 
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">cont</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span> 
+                            <span style="color: var(--delim);">=&gt;</span>
+                            <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">voi</span><span style="color: var(--square);">]</span> 
+                            <span style="color: var(--comment)">;; Obstruents that are not /t/ or [+cont] become voiced</span></code></li>
+                        <ul><li><code>sa.ta.kam <span style="color: var(--delim);">=&gt;</span>  sa.ta.gam</code></li></ul>
+                    </ul>
+                </ul>
+                <li>Place Groupings</li>
+                <ul><li>Introduce <code style="color: var(--group);">K</code>, <code style="color: var(--group);">Q</code>, and <code style="color: var(--group);">J</code> to represent Velar, Uvular, and Palatal Consonants respectfully.</li></ul>
+            </ul>
+            <b>Fixes</b>
+            <ul>
+                <li>Prevent cases where suprasegmental features where being stolen by a neighbouring syllable in substitution rules with boundaries</li>
+                <li>Long segments in an input set are skipped correctly if they are not successfully matched</li>
+                <ul><li>e.g. <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">n</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span> 
+                    <span style="color: var(--delim);">&gt;</span> 
+                    <span style="color: var(--square);">[</span><span style="color: var(--arg);">+</span><span style="color: var(--feature);">sg</span><span style="color: var(--square);">]</span></code> 
+                    results in 
+                    <code>kanː <span style="color: var(--delim);">=&gt;</span> kanː</code> rather than 
+                    <code>kanː <span style="color: var(--delim);">=&gt;</span> kannʱ</code> in 0.20.3</li></ul>
+                <li>Add error for when a number is too large to be parsed i.e. exceeding 4294967295 (u32 max)</li>
+            </ul>
+            <b>Perf</b>
+            <ul><li>20% average reduction in both stack and heap memory usage (based on benchmarks of cli version)</li></ul>
+        </div>
         <div class="version"> <!-- 0.20.3 -->
             <h2>0.20.3</h2>
             <br>
