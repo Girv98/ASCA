@@ -42,7 +42,7 @@ OptionalTerm { Boundary | Syllable | Set | Segment | Reference }
 
 Segment { Ipa (":" Params)? | Matrix VarAssign? }
 Matrix { Group (":" Params)? | Params }
-Group { "C" | "O" | "S" | "P" | "F" | "L" | "N" | "G" | "V" }
+Group { "C" | "O" | "S" | "P" | "F" | "L" | "N" | "G" | "V" | "K" | "Q" | "J" }
 
 Reference { Number (":" Params)? }
 VarAssign { "=" Number }
