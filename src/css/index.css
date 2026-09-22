@@ -4,8 +4,7 @@
 
 @font-face {
     font-family: FontNoto;
-    /* src: url(/NotoSansMono-VariableFont_wdth_wght.ttf) format(truetype) tech(variations); */
-    src: url(../fonts/NotoSansMono-VariableFont_wdth_wght.ttf) format(truetype) tech(variations);
+    src: url(../fonts/NotoSansMono-VariableFont_wdth_wght.woff2) format(truetype) tech(variations);
 }
 
 
