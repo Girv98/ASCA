@@ -20,6 +20,8 @@ let ALIAS_INTO = document.getElementById("alias-into") as HTMLTextAreaElement;
 let ALIAS_FROM = document.getElementById("alias-from") as HTMLTextAreaElement;
 let ALIAS_OPEN = document.getElementById("alias-modal-open") as HTMLButtonElement;
 let ALIAS_TOGGLE = document.getElementById('alias-from-toggle') as HTMLButtonElement;
+let HAND_TOGGLE = document.getElementById("small-screen-direction") as HTMLButtonElement;
+let CLAMP_TOGGLE = document.getElementById('clamp') as HTMLButtonElement;
 let INLEX_CONTENT = INLEX_WRAP.querySelector(".cm-content") as HTMLTextAreaElement;
 let TRACE = document.getElementById("trace") as HTMLSelectElement;
 let FORMAT = document.getElementById("format") as HTMLSelectElement;
@@ -989,17 +991,17 @@ ALIAS_INTO.addEventListener("keydown", (e) => checkMoveOrDup(e));
 ALIAS_FROM.addEventListener("keydown", (e) => checkMoveOrDup(e));
 
 
-document.getElementById("small-screen-direction")!.addEventListener("click", () => {
-	let x = document.getElementById("small-screen-direction")!.querySelector('i')!;
+HAND_TOGGLE.addEventListener("click", () => {
+	let item = HAND_TOGGLE.querySelector('i')!;
 
-	if (x.classList.contains('fa-align-left')) {
-		x.classList.replace('fa-align-left', 'fa-align-right');
+	if (item.classList.contains('fa-align-left')) {
+		item.classList.replace('fa-align-left', 'fa-align-right');
 		document.getElementById("input-minimax")!.classList.add("right");
 		document.getElementById("rule-minimax")!.classList.add("right");
 		DEMO.querySelectorAll(".element-asdf").forEach(el => { el.classList.add("right"); });
 		localStorage.setItem("asca-handedness-right", "true")
 	} else {
-		x.classList.replace('fa-align-right', 'fa-align-left');
+		item.classList.replace('fa-align-right', 'fa-align-left');
 		document.getElementById("input-minimax")!.classList.remove("right");
 		document.getElementById("rule-minimax")!.classList.remove("right");
 		DEMO.querySelectorAll(".element-asdf").forEach(el => { el.classList.remove("right"); });
@@ -1007,6 +1009,22 @@ document.getElementById("small-screen-direction")!.addEventListener("click", () 
 	}
 })
 
+
+CLAMP_TOGGLE.addEventListener("click", () => {
+	if (CLAMP_TOGGLE.innerHTML === "&nbsp;Clamp&nbsp;") {
+		CLAMP_TOGGLE.innerHTML = "Release"
+		OUTLEX.classList.add("clamp")
+		INLEX_CONTENT.classList.add("clamp")
+		DEMO.classList.add("clamp")
+		localStorage.setItem("asca-clamp", "true")
+	} else {
+		CLAMP_TOGGLE.innerHTML = "&nbsp;Clamp&nbsp;"
+		OUTLEX.classList.remove("clamp")
+		INLEX_CONTENT.classList.remove("clamp")
+		DEMO.classList.remove("clamp")
+		localStorage.setItem("asca-clamp", "false")
+	}
+})
 
 // ------------ Resizing ------------
 // Mimicking field-sizing behaviour where if the user manually resizes a box, it no longer auto-resizes
@@ -1054,10 +1072,17 @@ function onResize() {
 }
 
 if (localStorage.getItem("asca-handedness-right") === "true") {
-	let x = document.getElementById("small-screen-direction")!.querySelector('i')!;
-	x.classList.replace('fa-align-left', 'fa-align-right');
+	let item = HAND_TOGGLE.querySelector('i')!;
+	item.classList.replace('fa-align-left', 'fa-align-right');
 	document.getElementById("input-minimax")!.classList.add("right");
 	document.getElementById("rule-minimax")!.classList.add("right");
+}
+
+if (localStorage.getItem("asca-clamp") === "true") {
+	CLAMP_TOGGLE.innerHTML = "Release"
+	OUTLEX.classList.add("clamp")
+	INLEX_CONTENT.classList.add("clamp")
+	DEMO.classList.add("clamp")
 }
 
 onLoadNew()

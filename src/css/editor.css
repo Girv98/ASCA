@@ -17,12 +17,14 @@
 	border: none;
     white-space: pre !important;
 
-    padding: 2px 0px !important;
-
     flex-grow: 1;
 	flex-shrink: 0;
+}
+
+.rule-cont .cm-editor {
     margin-bottom: 5px;
 }
+
 #lex-wrap .cm-editor { 
     font-size: 1.2rem;
     background: var(--xput-bg);
@@ -55,7 +57,16 @@
 .cm-content {
     caret-color: var(--caret-color) !important;
     min-height: 4lh  !important;
+
+    &.clamp {
+        height: 58lvh !important;
+    }
 }
+
+#outlex.clamp #output {
+    height: 58lvh !important;
+}
+
 #lex-wrap .cm-content { min-height: 18lh  !important; }
 
 .cm-line {

@@ -134,13 +134,16 @@ div.thirds.sounds {
 	}
 }
 
-#demo {
-	/* max-height: 75vh;
+#demo.clamp {
+	max-height: 59lvh;
 	overflow-y: auto;
 	scrollbar-width: thin;
 	overscroll-behavior: contain;
 	scrollbar-gutter: stable !important;
-	scrollbar-color: var(--accent)  var(--xput-scroll-bg) !important; */
+	scrollbar-color: var(--accent)  var(--xput-scroll-bg) !important;
+
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 .wrapper {
