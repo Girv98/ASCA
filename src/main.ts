@@ -1085,5 +1085,22 @@ if (localStorage.getItem("asca-clamp") === "true") {
 	DEMO.classList.add("clamp")
 }
 
+let VERSION_NUMBER = document.getElementById("version-number") as HTMLAnchorElement;
+
+
+if (!localStorage.getItem("asca-data")) {
+	localStorage.setItem("asca-last-changelog-viewed", VERSION_NUMBER.innerText)
+} else if (localStorage.getItem("asca-last-changelog-viewed") !== VERSION_NUMBER.innerText) {
+	VERSION_NUMBER.classList.add("unread")
+}
+
+VERSION_NUMBER.addEventListener("click", () => {
+	VERSION_NUMBER.classList.remove("unread")
+})
+
+VERSION_NUMBER.addEventListener("auxclick", () => {
+	VERSION_NUMBER.classList.remove("unread")
+})
+
 onLoadNew()
 onResize()

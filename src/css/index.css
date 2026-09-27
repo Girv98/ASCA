@@ -53,12 +53,13 @@ header {
 	position: relative;
 }
 
-#version-number::after {
+#version-number.unread::after {
 	position: absolute;
 	font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'Font Awesome' !important;
-	content: "\f35d";
+	content: "\f06a";
 	font-size: 1rem;
 	right: -1.2rem;
+	color: var(--error); 
 }
 
 main {
