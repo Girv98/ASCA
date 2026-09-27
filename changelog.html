@@ -13,6 +13,10 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/growth/script.js"></script>
+    <script type="module"> 
+        let x = document.querySelector(".version-number").innerText;
+        localStorage.setItem("asca-last-changelog-viewed", x)
+    </script>
 </head>
 <body class="change">
 <div class="change-wrapper">
@@ -21,7 +25,7 @@
     </header>
     <div class="change-body">
         <div class="version"> <!-- 0.20.4 -->
-            <h2>0.20.4</h2>
+            <h2 class="version-number">0.20.4</h2>
             <br>
             <b>New Features</b>
             <ul>
@@ -74,7 +78,7 @@
             <ul><li>20% average reduction in both stack and heap memory usage (based on benchmarks of cli version)</li></ul>
         </div>
         <div class="version"> <!-- 0.20.3 -->
-            <h2>0.20.3</h2>
+            <h2 class="version-number">0.20.3</h2>
             <br>
             <b>New Features</b>
             <ul>
@@ -88,7 +92,7 @@
             </ul>
         </div>
         <div class="version"> <!-- 0.20.2 -->
-            <h2>0.20.2</h2>
+            <h2 class="version-number">0.20.2</h2>
             <br>
             <b>Fixes</b>
             <ul>
@@ -106,7 +110,7 @@
             </ul>
         </div>
         <div class="version"> <!-- 0.20.1 -->
-            <h2>0.20.1</h2>
+            <h2 class="version-number">0.20.1</h2>
             <br>
             <b>New Features</b>
             <ul>
@@ -152,7 +156,7 @@
         </div>
 
         <div class="version"> <!-- 0.20.0 -->
-            <h2>0.20.0</h2>
+            <h2 class="version-number">0.20.0</h2>
             <br>
             <b>BREAKING CHANGES</b>
             <ul>
@@ -328,7 +332,7 @@
         </div>
 
         <div class="version"> <!-- 0.19 -->
-            <h2>0.19</h2>
+            <h2 class="version-number">0.19</h2>
             
             <h4>Web Changes</h4>
             <ul>
@@ -345,7 +349,7 @@
         </div>
 
         <div class="version"> <!-- 0.18 -->
-            <h2>0.18</h2>
+            <h2 class="version-number">0.18</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li><code>Structures</code> and <code>References</code> now allowed inside sets</li>
@@ -365,7 +369,7 @@
         </div>
 
         <div class="version"> <!-- 0.17 -->
-            <h2>0.17</h2>
+            <h2 class="version-number">0.17</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Cross Boundary Interactions with <code>##</code> allowing for External Sandhi, Rebracketing, and Affixation <a href="https://github.com/Girv98/asca-rust/blob/master/doc/doc.md#cross-word-boundary-operations" target="_blank" rel="noopener noreferrer">(see docs)</a>.</li>
@@ -383,7 +387,7 @@
         </div>
 
         <div class="version"> <!-- 0.16 -->
-            <h2>0.16</h2>
+            <h2 class="version-number">0.16</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li><code>[-long]</code> matrices match correctly after an ellipsis.</li>
@@ -399,7 +403,7 @@
         </div>
 
         <div class="version"> <!-- 0.15 -->
-            <h2>0.15</h2>
+            <h2 class="version-number">0.15</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Diacritic aliases are now preceded by <code>"</code> instead of <code>^</code> to remove ambiguity between <code>ʔ͡h</code> and <code>ʔʰ</code> which are now <code>?^h</code> and <code>?"h</code> respectively.</li>
@@ -418,7 +422,7 @@
         </div>
 
         <div class="version"> <!-- 0.14 -->
-            <h2>0.14</h2>
+            <h2 class="version-number">0.14</h2>
             <h4>Web Changes</h4>
             <ul>
                 <li>Brand-new saving system allowing for multiple files to be loaded at once.</li>
@@ -426,7 +430,7 @@
         </div>
 
         <div class="version"> <!-- 0.13 -->
-            <h2>0.13</h2>
+            <h2 class="version-number">0.13</h2>
             <h4>Web Changes</h4>
             <ul>
                 <li>Move(ing) to CodeMirror inputs and added syntax highlighting.<br>
@@ -437,7 +441,7 @@
         </div>
 
         <div class="version"> <!-- 0.12 -->
-            <h2>0.12</h2>
+            <h2 class="version-number">0.12</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Inbuilt aliases for common diacritics.</li>
@@ -455,7 +459,7 @@
         </div>
 
         <div class="version"> <!-- 0.11 -->
-            <h2>0.11</h2>
+            <h2 class="version-number">0.11</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>A given word or phrase can now be traced throughout its evolution.</li>
@@ -471,7 +475,7 @@
         </div>
 
         <div class="version"> <!-- 0.10 -->
-            <h2>0.10</h2>
+            <h2 class="version-number">0.10</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Rules can now have single-line comments delimited by <code>;;</code></li>
@@ -488,7 +492,7 @@
         </div>
 
         <div class="version"> <!-- 0.09 -->
-            <h2>0.9</h2>
+            <h2 class="version-number">0.9</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Various alias fixes, see releases <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.4.3">0.4.3</a> and <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.4.4">0.4.4</a></li>
@@ -499,7 +503,7 @@
         </div>
 
         <div class="version"> <!-- 0.08 -->
-            <h2>0.8</h2>
+            <h2 class="version-number">0.8</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Added "voiced stridentised" diacritic. <a target="_blank" href="https://github.com/Girv98/asca-rust/releases/tag/0.3.1">(release 0.3.1)</a></li>
@@ -517,7 +521,7 @@
         </div>
 
         <div class="version"> <!-- 0.07 -->
-            <h2>0.7</h2>
+            <h2 class="version-number">0.7</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Some common Americanist characters such as <code>ƛ</code> can now be used <b>(no longer supported as of v0.15)</b></li>
@@ -530,7 +534,7 @@
         </div>
 
         <div class="version"> <!-- < 0.07-->
-            <h2>Before 0.7</h2>
+            <h2 class="version-number">Before 0.7</h2>
             <h4>Library Changes</h4>
             <ul>
                 <li>Palatal lateral fricatives and affricates now use ExtIPA characters, matching their retroflex and velar counterparts</li>
