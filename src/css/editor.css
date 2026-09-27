@@ -59,12 +59,12 @@
     min-height: 4lh  !important;
 
     &.clamp {
-        height: 58lvh !important;
+        height: 60lvh !important;
     }
 }
 
 #outlex.clamp #output {
-    height: 58lvh !important;
+    height: 60lvh !important;
 }
 
 #lex-wrap .cm-content { min-height: 18lh  !important; }
