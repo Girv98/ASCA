@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCA - Values</title>
+    <meta name="description" content="A linguistic sound change applier for conlangers">
+	<meta name="author" content="James Girven">
+    <link rel="icon" href="data:;base64,=">
+	<link rel="stylesheet" href="src/css/values.css">
+
+    <link href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+	<link href="node_modules/@fortawesome/fontawesome-free/css/solid.min.css" rel="stylesheet">
+
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script defer src="/growth/script.js"></script>
+</head>
+<body class="change">
+    <div class="change-wrapper">
+        <header><h1>Values</h1></header>
+
+    <!-- ==============<br>
+    = Cheatsheet =<br>
+    ==============<br>
+
+    Class <br>
+    ==============<br>
+    Stop<br>
+    Fricative<br>
+    Affricate<br>
+    Nasal<br>
+    Liquid<br>
+    Lateral<br>
+    Glide<br>
+    Voiced<br>
+    Voiceless<br>
+    Ejective<br>
+    Implosive<br>
+    Click<br>
+
+
+    Place<br>
+    ==============<br>
+    Bilabial<br>
+    Labiodental<br>
+    Dental<br>
+    Alveolar<br>
+    Postalveolar<br>
+    Retroflex<br>
+    Palatal<br>
+    Velar<br>
+    Labiovelar<br>
+    Uvular<br>
+    Pharyngeal<br>
+    Epiglottal<br>
+    Glottal<br> -->
+
+
+<p>Blank spaces are not necessarily unrepresentable, but are not predefined values. The old values spreadsheet can be viewed <a title="View feature values spreadsheet" href="https://docs.google.com/spreadsheets/d/1TTfNy1aKE7KxX0LBhIE6Zacx3GU-BVTM1l7wDKah4zM/edit?usp=sharing" target="_blank">here</a>.</p>
+
+<div class="collector">
+    <input id="ipa-input" type="text" placeholder="Enter segments or click chart items to add here">
+    <button class="ipa-collector-run" title="Run symbols">Run</button>
+</div>
+
+<div id="result"></div>
+
+<div class="change-body">
+<div class="version">
+<div class="title-wrapper">
+    <button id="cons-minimax" class="minimax"><i class="fa-solid fa-minus"></i></button>
+    <h2 class="table-title">Consonants</h2>
+</div>
+        
+<div class="table-scroll"><table class="cons-chart">
+    <thead>
+        <tr>
+            <th rowspan="2"></th>
+            <th colspan="2">Labial</th>
+            <th colspan="5">Coronal</th>
+            <th colspan="3">Dorsal</th>
+            <th colspan="2">Radical</th>
+            <th colspan="2">Glottal</th>
+        </tr>
+        <tr>
+            <th>Bilabial</th>
+            <th>Labiodental</th>
+            <th>Alveolar/Dental</th>
+            <th>Retracted/Post-Alv.</th>
+            <th>Dentoalveolar</th>
+            <th>Retroflex</th>
+            <th colspan="2">Palatal</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Epiglottal</th>
+            <th>Pharyngeal</th>
+            <th>Creaky</th>
+            <th>Breathy</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="row-header">Stop</td>
+            <!-- Bilabial -->         <td><span class="ipa">p</span><span class="ipa">b</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">p̪</span> <span class="ipa">b̪</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t</span> <span class="ipa">d</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t̠</span> <span class="ipa">d̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t̪</span> <span class="ipa">d̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈ</span> <span class="ipa">ɖ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">c</span> <span class="ipa">ɟ</span></td>
+            <!-- Velar -->            <td><span class="ipa">k</span> <span class="ipa">ɡ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">q</span> <span class="ipa">ɢ</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa">ʡ</span> <span class="ipa">ʡ̬</span></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal Creaky -->   <td><span class="ipa">ʔ</span> <span class="ipa">ʔ̬</span></td> <!-- TODO: ʔ̰ not encoded  -->
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Ejective/Implosive</td>
+            <!-- Bilabial -->         <td><span class="ipa">pʼ</span> <span class="ipa">ɓ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">p̪ʼ</span> <span class="ipa">ɓ̪</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">tʼ</span> <span class="ipa">ɗ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t̠ʼ</span> <span class="ipa">ɗ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t̪ʼ</span> <span class="ipa">ɗ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈʼ</span> <span class="ipa">ᶑ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">cʼ</span> <span class="ipa">ʄ</span></td>
+            <!-- Velar -->            <td><span class="ipa">kʼ</span><span class="ipa">ɠ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">qʼ</span><span class="ipa">ʛ</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+
+
+
+
+
+
+
+
+
+        </tr>
+
+        <tr>
+            <td class="row-header" style="background: black;" >Non-rhotic Trilled Affricate</td>
+            <!-- Bilabial -->         <td><span class="ipa">p͡ʙ̥</span> <span class="ipa">b͡ʙ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">p̪͡ʙ̪̥</span> <span class="ipa">b̪͡ʙ̪</span></td>
+            <!-- Alveolar/Dental -->  <td></td> 
+            <!-- Retracted/Post-A --> <td></td> 
+            <!-- Denti-Alveolar -->   <td></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Non-rhotic Trill</td>
+            <!-- Bilabial -->         <td><span class="ipa">ʙ̥</span> <span class="ipa">ʙ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ʙ̪̊</span> <span class="ipa">ʙ̪</span></td>
+            <!-- Alveolar/Dental -->  <td></td>
+            <!-- Retracted/Post-A --> <td></td>
+            <!-- Denti-Alveolar -->   <td></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Non-rhotic Tap</td>
+            <!-- Bilabial -->         <td><span class="ipa">ⱱ̟̊</span> <span class="ipa">ⱱ̟</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ⱱ̥</span> <span class="ipa">ⱱ</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa non">t̆</span> <span class="ipa non">d̆</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa non">t̠̆</span><span class="ipa non">d̠̆</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa non">t̪̆</span> <span class="ipa non">d̪̆</span></td>
+            <!-- Retroflex -->        <td><span class="ipa non">ʈ̆</span> <span class="ipa non">ɖ̆</span></td>
+          <!-- Palatal --><td colspan="2"><span class="ipa non">c̆</span> <span class="ipa non">ɟ̆</span></td>
+            <!-- Velar -->            <td><span class="ipa non">k̆</span> <span class="ipa non">ɡ̆</span></td>
+            <!-- Uvular -->           <td><span class="ipa non">q̆</span> <span class="ipa non">ɢ̆</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa">ʡ̥̆</span> <span class="ipa">ʡ̆</span></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+
+        <tr>
+            <td class="row-header">Affricate</td>
+            <!-- Bilabial -->         <td><span class="ipa">p͡ɸ</span> <span class="ipa">b͡β</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">p͡f</span> <span class="ipa">b͡v</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t͡θ</span> <span class="ipa">d͡ð</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t͡θ̠</span> <span class="ipa">d͡ð̠</span></td> <!-- NOT ENCODED -->
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t͡θ̪</span> <span class="ipa">d͡ð̪</span></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">c͡ç</span> <span class="ipa">ɟ͡ʝ</span></td>
+            <!-- Velar -->            <td><span class="ipa">k͡x</span> <span class="ipa">ɡ͡ɣ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">q͡χ</span> <span class="ipa">ɢ͡ʁ</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa">ʡ͡ʜ</span> <span class="ipa">ʡ͡ʢ</span></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal Creaky -->   <td></td>
+            <!-- Glottal Breathy -->  <td><span class="ipa">ʔ͡h</span> <span class="ipa">ʔ͡ɦ</span></td>
+        </tr>
+        <tr>
+            <td class="row-header">Fricative</td>
+            <!-- Bilabial -->         <td><span class="ipa">ɸ</span> <span class="ipa">β</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">f</span> <span class="ipa">v</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">θ</span> <span class="ipa">ð</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">θ̠</span> <span class="ipa">ð̠</span></td> <!-- Not technically correct --> <!--<td><span class="ipa">t̠̝</span><span class="ipa">d̠̝</span></td> --> 
+            <!-- Denti-Alveolar -->   <td><span class="ipa">θ̪</span> <span class="ipa">ð̪</span></td>
+            <!-- Retroflex -->        <td><!--ʈ̞ θʵ ðʵ--></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ç</span> <span class="ipa">ʝ</span></td>
+            <!-- Velar -->            <td><span class="ipa">x</span> <span class="ipa">ɣ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">χ</span> <span class="ipa">ʁ</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa">ʜ</span> <span class="ipa">ʢ</span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa">ħ</span> <span class="ipa">ʕ</span></td>
+            <!-- Glottal Creaky -->   <td><span class="ipa">ʔ̝</span> <span class="ipa">ʔ̰̝</span></td>
+            <!-- Glottal Breathy -->  <td><span class="ipa">h</span> <span class="ipa">ɦ</span></td>
+        </tr>
+
+        <tr>
+            <td class="row-header">Approximant</td>
+            <!-- Bilabial -->         <td><span class="ipa">ɸ̞</span> <span class="ipa">β̞</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ʋ̥</span> <span class="ipa">ʋ</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">θ̞</span> <span class="ipa">ð̞</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">θ̠̞</span> <span class="ipa">ð̠̞</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">θ̪̞</span> <span class="ipa">ð̪̞</span></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ç̞</span> <span class="ipa">ʝ̞</span></td>
+            <!-- Velar -->            <td><span class="ipa">x̞</span> <span class="ipa">ɣ̞</span></td>
+            <!-- Uvular -->           <td><snap class="ipa">χ̞</snap> <span class="ipa">ʁ̞</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa">ʜ̞</span> <span class="ipa">ʢ̞</span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa">ħ̞</span> <span class="ipa">ʕ̞</span></td>
+            <td><span class="ipa">ʔ̞</span> <span class="ipa">ʔ̰</span></td>
+            <!-- Glottal -->          <td><span class="ipa">h̞</span> <span class="ipa">ɦ̞</span> </td> 
+        </tr>
+        <tr><td></td></tr>
+
+        <tr>
+            <td class="row-header">Strident Affricate</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t͡s</span> <span class="ipa">d͡z</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t͡ʃ</span> <span class="ipa">d͡ʒ</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t͡s̪</span> <span class="ipa">d͡z̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈ͡ʂ</span> <span class="ipa">ɖ͡ʐ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">t͡ɕ</span> <span class="ipa">d͡ʑ</span></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Strident Fricative</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">s</span> <span class="ipa">z</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ʃ</span> <span class="ipa">ʒ</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">s̪</span> <span class="ipa">z̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʂ</span> <span class="ipa">ʐ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ɕ</span> <span class="ipa">ʑ</span></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Strident Approximant</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">s̞</span> <span class="ipa">z̞</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ʃ̞</span> <span class="ipa">ʒ̞</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">s̪̞</span> <span class="ipa">z̪̞</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʂ̞</span> <span class="ipa">ʐ̞</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ɕ̞</span> <span class="ipa">ʑ̞ <!-- TODO: NEEDS ENCODING --></span></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr><td></td></tr>
+        <tr>
+            <td class="row-header" style="background: black;">Rhotic Trilled Affricate</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+                                      <!-- TODO: NOT ENCODED, +dl, +cont, +rho --> 
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t͡r̥</span> <span class="ipa">d͡r</span></td> 
+            <!-- Retracted/Post-A --> <td><span class="ipa">t͡r̠̊</span> <span class="ipa">d͡r̠</span></td> 
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t͡r̪̊</span> <span class="ipa">d͡r̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈ͡ɽ̊</span> <span class="ipa">ɖ͡ɽ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa"></span></td>
+            <!-- Velar -->            <td><span class="ipa"></span></td>
+            <!-- Uvular -->           <td><span class="ipa">q͡ʀ̥</span> <span class="ipa"><span class="ipa">ɢ͡ʀ</span></span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Rhotic Trill</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">r̥</span> <span class="ipa">r</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">r̠̊</span> <span class="ipa">r̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">r̪̊</span> <span class="ipa">r̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɽ͡r̥</span> <span class="ipa">ɽ͡r</span></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td><span class="ipa">ʀ̥</span> <span class="ipa">ʀ</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Rhotic Tap</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ɾ̥</span> <span class="ipa">ɾ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ɾ̠̊</span><span class="ipa">ɾ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ɾ̪̊</span> <span class="ipa">ɾ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɽ̊</span> <span class="ipa">ɽ</span></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td><span class="ipa">ʀ̥̆</span> <span class="ipa">ʀ̆</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Rhotic Affricate</td>
+            <!-- Bilabial -->         <td><span class="ipa"></span></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t͡ɹ̝̊</span> <span class="ipa">d͡ɹ̝</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t͡ɹ̠̝̊</span> <span class="ipa">d͡ɹ̠̝</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t͡ɹ̪̝̊</span> <span class="ipa"> d͡ɹ̪̝</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈ͡ɻ̝̊</span> <span class="ipa">ɖ͡ɻ̝</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa"></span></td>
+            <!-- Velar -->            <td><span class="ipa"></span></td>
+            <!-- Uvular -->           <td><span class="ipa"></span></td>
+            <!-- Epiglottal -->       <td><span class="ipa"></span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa"></span></td>
+            <!-- Glottal -->          <td><span class="ipa"></span></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Rhotic Fricative</td>
+            <!-- Bilabial -->         <td><span class="ipa"></span></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ɹ̝̊</span> <span class="ipa">ɹ̝</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ɹ̠̝̊</span> <span class="ipa">ɹ̠̝</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ɹ̪̝̊</span> <span class="ipa">ɹ̪̝</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɻ̝̊</span> <span class="ipa">ɻ̝</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa"></span></td>
+            <!-- Velar -->            <td><span class="ipa"></span></td>
+            <!-- Uvular -->           <td><span class="ipa"></span></td>
+            <!-- Epiglottal -->       <td><span class="ipa"></span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa"></span></td>
+            <!-- Glottal -->          <td><span class="ipa"></span></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Rhotic Approximant</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ɹ̥</span> <span class="ipa">ɹ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ɹ̠̊</span> <span class="ipa">ɹ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ɹ̪̊</span> <span class="ipa">ɹ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɻ̊</span> <span class="ipa">ɻ</span></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr><td></td></tr>
+        <tr>
+            <td class="row-header">Lateral Affricate</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">t͡ɬ</span> <span class="ipa">d͡ɮ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">t͡ɬ̠</span> <span class="ipa">d͡ɮ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">t͡ɬ̪</span> <span class="ipa">d͡ɮ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ʈ͡ꞎ</span> <span class="ipa">ɖ͡𝼅</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">c͡𝼆</span> <span class="ipa">ɟ͡𝼆̬</span></td>
+            <!-- Velar -->            <td><span class="ipa">k͡𝼄</span> <span class="ipa">ɡ͡𝼄̬</span></td>
+            <!-- Uvular -->           <td><span class="ipa">q͡𝼄̠</span> <span class="ipa">ɢ͡𝼄̠</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Lateral Fricative</td>
+            <!-- Bilabial -->         <td>   </td>
+            <!-- Labiodental -->      <td>   </td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ɬ</span> <span class="ipa">ɮ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ɬ̠</span> <span class="ipa">ɮ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ɬ̪</span> <span class="ipa">ɮ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ꞎ</span> <span class="ipa">𝼅</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">𝼆</span> <span class="ipa">𝼆̬</span></td>
+            <!-- Velar -->            <td><span class="ipa">𝼄</span> <span class="ipa">𝼄̬</span></td>
+            <!-- Uvular -->           <td><span class="ipa">𝼄̠</span> <span class="ipa">𝼄̠̬</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Lateral Approximant</td>
+            <!-- Bilabial -->         <td></td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">l̥</span> <span class="ipa">l</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">l̠̥</span> <span class="ipa">l̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">l̪̥</span> <span class="ipa">l̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɭ̥</span> <span class="ipa">ɭ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ʎ̥</span> <span class="ipa">ʎ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ʟ̥</span> <span class="ipa">ʟ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ʟ̠̥</span> <span class="ipa">ʟ̠</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Lateral Tap</td>
+            <!-- Bilabial -->           <td></td>
+            <!-- Labiodental -->        <td></td>
+            <!-- Alveolar/Dental -->    <td><span class="ipa">ɺ̥</span> <span class="ipa">ɺ</span></td>
+            <!-- Retracted/Post-A -->   <td><span class="ipa">ɺ̠̊</span> <span class="ipa">ɺ̠</span></td>
+            <!-- Denti-Alveolar -->     <td><span class="ipa">ɺ̪̊</span> <span class="ipa">ɺ̪</span></td>
+            <!-- Retroflex -->          <td><span class="ipa">ɭ̥̆</span> <span class="ipa">ɭ̆</span></td>
+            <!-- Palatal --><td colspan="2"><span class="ipa">ʎ̥̆</span> <span class="ipa">ʎ̆</span></td>
+            <!-- Velar -->              <td><span class="ipa">ʟ̥̆</span> <span class="ipa">ʟ̆</span></td>
+            <!-- Uvular -->             <td><span class="ipa">ʟ̠̥̆</span> <span class="ipa">ʟ̠̆</span></td>
+            <!-- Epiglottal -->         <td></td>
+            <!-- Pharyngeal -->         <td></td>
+            <!-- Glottal -->            <td></td>
+            <!-- Glottal Breathy -->    <td></td>
+        </tr>
+        <tr><td></td></tr>
+        <tr>
+            <td class="row-header">Nasal</td> <!-- TODO: Encode RingAbove -->
+            <!-- Bilabial -->         <td><span class="ipa">m̥</span> <span class="ipa">m</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ɱ̊</span> <span class="ipa">ɱ</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">n̥</span> <span class="ipa">n</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">n̠̊</span> <span class="ipa">n̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">n̪̊</span> <span class="ipa">n̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ɳ̊</span> <span class="ipa">ɳ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ɲ̊</span> <span class="ipa">ɲ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ŋ̊</span> <span class="ipa">ŋ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ɴ̥</span> <span class="ipa">ɴ</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Stop</td>
+            <!-- Bilabial -->         <td><span class="ipa">ᵐp</span> <span class="ipa">ᵐb</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ᵐp̪</span> <span class="ipa">ᵐb̪</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ⁿt</span> <span class="ipa">ⁿd</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ⁿt̠</span> <span class="ipa">ⁿd̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ⁿt̪</span> <span class="ipa">ⁿd̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ᶯʈ</span> <span class="ipa">ᶯɖ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ᶮc</span> <span class="ipa">ᶮɟ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ᵑk</span> <span class="ipa">ᵑɡ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ᶰq</span> <span class="ipa">ᶰɢ</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td><span class="ipa">ᵑʔ</span><span class="ipa">ᵑʔ̬</span></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header" style="background: black;">Prenasal. Implosive</td> <!-- TODO: THESE DONT EXIST YET-->
+            <!-- Bilabial -->         <td><span class="ipa">ᵐɓ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ᵐɓ̪</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ⁿɗ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ⁿɗ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ⁿɗ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ᶯᶑ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ᶮʄ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ᵑɠ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ᶰʛ</span></td>
+            <!-- Epiglottal -->       <td><span class="ipa"></span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa"></span></td>
+            <!-- Glottal -->          <td><span class="ipa"></span></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Trill</td>
+            <!-- Bilabial -->         <td><span class="ipa">ᵐʙ̥</span> <span class="ipa">ᵐʙ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ᵐʙ̪̥</span> <span class="ipa">ᵐʙ̪</span></td>
+            <!-- Alveolar/Dental -->  <td></td>
+            <!-- Retracted/Post-A --> <td></td>
+            <!-- Denti-Alveolar -->   <td></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Trilled Affricate</td>
+            <!-- Bilabial -->         <td><span class="ipa">ᵐp͡ʙ̥</span> <span class="ipa">ᵐb͡ʙ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ᵐp̪͡ʙ̪̥</span> <span class="ipa">ᵐb̪͡ʙ̪</span></td>
+            <!-- Alveolar/Dental -->  <td></td>
+            <!-- Retracted/Post-A --> <td></td>
+            <!-- Denti-Alveolar -->   <td></td>
+            <!-- Retroflex -->        <td></td>
+            <!-- Palatal -->          <td colspan="2"></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Affricate</td>
+            <!-- Bilabial -->         <td><span class="ipa">ᵐp͡ɸ</span> <span class="ipa">ᵐb͡β</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ᵐp͡f</span> <span class="ipa">ᵐb͡v</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ⁿt͡θ</span> <span class="ipa">ⁿd͡ð</span></td>
+            <!-- Retracted/Post-A --> <td></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ⁿt͡θ̪</span> <span class="ipa">ⁿd͡ð̪</span></td>
+            <!-- Retroflex -->        <td><!--ⁿt͡θʵ ⁿd͡ðʵ--></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ᶮc͡ç</span> <span class="ipa">ᶮɟ͡ʝ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ᵑk͡x</span> <span class="ipa">ᵑɡ͡ɣ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ᶰq͡χ</span> <span class="ipa">ᶰɢ͡ʁ</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Strident Affricate</td>
+            <!-- Bilabial -->         <td>       </td>
+            <!-- Labiodental -->      <td></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ⁿt͡s</span> <span class="ipa">ⁿd͡z</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ⁿt͡ʃ</span> <span class="ipa">ⁿd͡ʒ</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ⁿt͡s̪</span> <span class="ipa">ⁿd͡z̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ᶯʈ͡ʂ</span> <span class="ipa">ᶯɖ͡ʐ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ᶮt͡ɕ</span> <span class="ipa">ᶮd͡ʑ</span></td>
+            <!-- Velar -->            <td></td>
+            <!-- Uvular -->           <td></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Lateral Affricate</td>
+            <!-- Bilabial -->         <td></td> 
+            <!-- Labiodental -->      <td></td> 
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ⁿt͡ɬ</span> <span class="ipa">ⁿd͡ɮ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ⁿt͡ɬ̠</span> <span class="ipa">ⁿd͡ɮ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ⁿt͡ɬ̪</span> <span class="ipa">ⁿd͡ɮ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ᶯʈ͡ꞎ</span> <span class="ipa">ᶯɖ͡𝼅</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ᶮc͡𝼆</span> <span class="ipa">ᶮɟ͡𝼆̬</span></td>
+            <!-- Velar -->            <td><span class="ipa">ᵑk͡𝼄</span> <span class="ipa">ᵑɡ͡𝼄̬</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ᶰq͡𝼄̠</span> <span class="ipa">ᶰɢ͡𝼄̠</span></td>
+            <!-- Epiglottal -->       <td></td>
+            <!-- Pharyngeal -->       <td></td>
+            <!-- Glottal -->          <td></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+        <tr>
+            <td class="row-header">Prenasal. Fricative</td>
+            <!-- Bilabial -->         <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Labiodental -->      <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Retroflex -->        <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Velar -->            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Uvular -->           <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Epiglottal -->       <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Pharyngeal -->       <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Glottal -->          <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <!-- Glottal Breathy -->  <td></td>
+        </tr>
+    </tbody>
+</table></div>
+
+<div class="title-wrapper">
+    <button id="click-minimax" class="minimax"><i class="fa-solid fa-minus"></i></button>
+    <h2 class="table-title">Clicks</h2>
+</div>
+
+<div class="table-scroll"><table class="click-chart">
+    <thead>
+        <tr>
+            <th rowspan="2"></th>
+            <th colspan="2">Bilabial</th>
+            <th colspan="2">Labiodental</th>
+            <th colspan="2">Dental</th>
+            <th colspan="2">Alveolar</th>
+            <th colspan="2">Lateral</th>
+            <th colspan="2">Retroflex</th>
+            <th colspan="2">Palatal</th>
+        </tr>
+        <tr>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+            <th>Velar</th>
+            <th>Uvular</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="row-header">Oral</td>
+            <td><span class="ipa">kʘ</span> <span class="ipa">ɡʘ</span></td>
+            <td><span class="ipa">qʘ</span> <span class="ipa">ɢʘ</span></td>
+            <td><span class="ipa">kʘ̪</span> <span class="ipa">ɡʘ̪</span></td>
+            <td><span class="ipa">qʘ̪</span> <span class="ipa">ɢʘ̪</span></td>
+            <td><span class="ipa">kǀ</span> <span class="ipa">ɡǀ</span></td>
+            <td><span class="ipa">qǀ</span> <span class="ipa">ɢǀ</span></td>
+            <td><span class="ipa">kǃ</span> <span class="ipa">ɡǃ</span></td>
+            <td><span class="ipa">qǃ</span> <span class="ipa">ɢǃ</span></td>
+            <td><span class="ipa">kǁ</span> <span class="ipa">ɡǁ</span></td>
+            <td><span class="ipa">qǁ</span> <span class="ipa">ɢǁ</span></td>
+            <td><span class="ipa">k‼</span> <span class="ipa">ɡ‼</span></td>
+            <td><span class="ipa">q‼</span> <span class="ipa">ɢ‼</span></td>
+            <td><span class="ipa">kǂ</span> <span class="ipa">ɡǂ</span></td>
+            <td><span class="ipa">qǂ</span> <span class="ipa">ɢǂ</span></td>
+        </tr>
+        <tr>
+            <td class="row-header">Nasal</td>
+            <td><span class="ipa">ŋʘ̥</span> <span class="ipa">ŋʘ</span></td>
+            <td><span class="ipa">ɴʘ̥</span> <span class="ipa">ɴʘ</span></td>
+            <td><span class="ipa">ŋʘ̪̥</span> <span class="ipa">ŋʘ̪</span></td>
+            <td><span class="ipa">ɴʘ̪̥</span> <span class="ipa">ɴʘ̪</span></td>
+            <td><span class="ipa">ŋǀ̥</span> <span class="ipa">ŋǀ</span></td>
+            <td><span class="ipa">ɴǀ̥</span> <span class="ipa">ɴǀ</span></td>
+            <td><span class="ipa">ŋǃ̥</span> <span class="ipa">ŋǃ</span></td>
+            <td><span class="ipa">ɴǃ̥</span> <span class="ipa">ɴǃ</span></td>
+            <td><span class="ipa">ŋǁ̥</span> <span class="ipa">ŋǁ</span></td>
+            <td><span class="ipa">ɴǁ̥</span> <span class="ipa">ɴǁ</span></td>
+            <td><span class="ipa">ŋ‼̥</span> <span class="ipa">ŋ‼</span></td>
+            <td><span class="ipa">ɴ‼̥</span> <span class="ipa">ɴ‼</span></td>
+            <td><span class="ipa">ŋǂ̥</span> <span class="ipa">ŋǂ</span></td>
+            <td><span class="ipa">ɴǂ̥</span> <span class="ipa">ɴǂ</span></td>
+        </tr>
+        <tr>
+            <td class="row-header">Contour Oral</td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ʘq</span> <span class="ipa">ʘɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ʘ̪q</span> <span class="ipa">ʘ̪ɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǀq</span> <span class="ipa">ǀɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǃq</span> <span class="ipa">ǃɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǁq</span> <span class="ipa">ǁɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">‼q</span> <span class="ipa">‼ɢ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǂq</span> <span class="ipa">ǂɢ</span></td>
+        </tr>
+        <tr>
+            <td class="row-header">Contour Fricative</td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ʘχ</span> <span class="ipa">ʘʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ʘ̪χ</span> <span class="ipa">ʘ̪ʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǀχ</span> <span class="ipa">ǀʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǃχ</span> <span class="ipa">ǃʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǁχ</span> <span class="ipa">ǁʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">‼χ</span> <span class="ipa">‼ʁ</span></td>
+            <td><span class="ipa"></span> <span class="ipa"></span></td>
+            <td><span class="ipa">ǂχ</span> <span class="ipa">ǂʁ</span></td>
+        </tr>
+        <tr>
+            <td class="row-header">Contour Nasal</td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ʘɴ̥</span> <span class="ipa">ʘɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ʘ̪ɴ̥</span> <span class="ipa">ʘ̪ɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ǀɴ̥</span> <span class="ipa">ǀɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ǃɴ̥</span> <span class="ipa">ǃɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ǁɴ̥</span> <span class="ipa">ǁɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">‼ɴ̥</span> <span class="ipa">‼ɴ</span></td>
+            <td><span class="ipa"></span></td>
+            <td><span class="ipa">ǂɴ̥</span> <span class="ipa">ǂɴ</span></td>
+        </tr>
+    </tbody>
+</table></div>
+
+<div class="title-wrapper">
+    <button id="vowel-minimax" class="minimax"><i class="fa-solid fa-minus"></i></button>
+    <h2 class="table-title">Vowels, Semi-vowels, and Misc.</h2>
+</div>
+<div class="table-scroll vowels"><table class="vowel-chart">
+    <thead>
+        <tr>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="3">-reduced</th>
+            <th colspan="3">+reduced</th>
+        </tr>
+        <tr>
+            <!-- <th colspan="2" rowspan="2"></th> -->
+            <th>+front, -back</th>
+            <th>-front, -back</th>
+            <th>-front, +back</th>
+            <th>+front, -back</th>
+            <th>-front, -back</th>
+            <th>-front, +back</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th rowspan="2" >+high, -low</th>
+            <th>+tense</th>
+            <td><span class="ipa">i</span> <span class="ipa">y</span></td>
+            <td><span class="ipa">ɨ</span> <span class="ipa">ʉ</span></td>
+            <td><span class="ipa">ɯ</span> <span class="ipa">u</span></td>
+
+            <td><span class="ipa">iᵊ</span> <span class="ipa">yᵊ</span></td>
+            <td><span class="ipa">ɨᵊ</span> <span class="ipa">ʉᵊ</span></td>
+            <td><span class="ipa">ɯᵊ</span> <span class="ipa">uᵊ</span></td>
+        </tr>
+        <tr>
+            <th>-tense</th>
+            <td><span class="ipa">ɪ</span> <span class="ipa">ʏ</span></td>
+            <td><span class="ipa">ɪ̈</span> <span class="ipa">ʊ̈</span></td>
+            <td><span class="ipa">ɯ̽</span> <span class="ipa">ʊ</span></td>
+
+            <td><span class="ipa">ɪᵊ</span> <span class="ipa">ʏᵊ</span></td>
+            <td><span class="ipa">ɪ̈ᵊ</span> <span class="ipa">ʊ̈ᵊ</span></td>
+            <td><span class="ipa">ɯ̽ᵊ</span> <span class="ipa">ʊᵊ</span></td>
+        </tr>
+        <tr>
+            <th rowspan="2">-high, -low</th>
+            <th>+tense</th>
+            <td><span class="ipa">e</span> <span class="ipa">ø</span></td>
+            <td><span class="ipa">ɘ</span> <span class="ipa">ɵ</span></td>
+            <td><span class="ipa">ɤ</span> <span class="ipa">o</span></td>
+
+            <td><span class="ipa">eᵊ</span> <span class="ipa">øᵊ</span></td>
+            <td><span class="ipa">ɘᵊ</span> <span class="ipa">ɵᵊ</span></td>
+            <td><span class="ipa">ɤᵊ</span> <span class="ipa">oᵊ</span></td>
+        </tr>
+        <tr>
+            <th>-tense</th>
+            <td><span class="ipa">ɛ</span> <span class="ipa">œ</span></td>
+            <td><span class="ipa">ɜ</span> <span class="ipa">ɞ</span></td>
+            <td><span class="ipa">ʌ</span> <span class="ipa">ɔ</span></td>
+
+            <td><span class="ipa">ɛᵊ</span> <span class="ipa">œᵊ</span></td>
+            <td><span class="ipa">ə</span> <span class="ipa">əʷ</span></td>
+            <td><span class="ipa">ʌᵊ</span> <span class="ipa">ɔᵊ</span></td>
+        </tr>
+        <tr>
+            <th rowspan="2">-high, +low</th>
+            <th>+tense</th>
+            <td><span class="ipa">æ</span> <span class="ipa">æʷ</span></td>
+            <td><span class="ipa">ɐ</span> <span class="ipa">ɐʷ</span></td>
+            <td><span class="ipa">ɑ̝</span> <span class="ipa">ɒ̝</span></td>
+
+            <td><span class="ipa">æᵊ</span> <span class="ipa">æʷᵊ</span></td>
+            <td><span class="ipa">ɐᵊ</span> <span class="ipa">ɐʷᵊ</span></td>
+            <td><span class="ipa">ɑ̝ᵊ</span> <span class="ipa">ɒ̝ᵊ</span></td>
+        </tr>
+        <tr>
+            <th>-tense</th>
+            <td><span class="ipa">æ̞</span> <span class="ipa">ɶ</span></td>
+            <td><span class="ipa">a</span> <span class="ipa">ɒ̈</span></td>
+            <td><span class="ipa">ɑ</span> <span class="ipa">ɒ</span></td>
+
+            <td><span class="ipa">æ̞ᵊ</span> <span class="ipa">ɶᵊ</span></td>
+            <td><span class="ipa">aᵊ</span> <span class="ipa">ɒ̈ᵊ</span></td>
+            <td><span class="ipa">ɑᵊ</span> <span class="ipa">ɒᵊ</span></td>
+        </tr>
+    </tbody>
+</table>
+<table class="semi-chart">
+    <thead>
+        <tr>
+            <th>Unrounded</th>
+            <th>Rounded</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><span class="ipa">ɰ̊</span> <span class="ipa">ɰ</span></td>
+            <td><span class="ipa">ʍ</span> <span class="ipa">w</span></td>
+        </tr>
+        <tr>
+            <td><span class="ipa">ȷ̊</span> <span class="ipa">j</span></td>
+            <td><span class="ipa">ɥ̊</span> <span class="ipa">ɥ</span></td>
+        </tr>
+        <tr>
+            <td><span class="ipa">ɧ</span></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><span class="ipa">ɫ</span></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table></div>
+
+<br>
+<br>
+
+
+<!-- Retracted -->
+<!-- ɹ̠̝̊ ɹ̠̝
+t͡ɹ̠̝̊ d͡ɹ̠̝ -->
+ⁿt͡ɹ̠̝̊ ⁿd͡ɹ̠̝
+
+</div>
+</div>
+</div>
+</body>
+
+<script> 
+    let ipaInput = document.getElementById("ipa-input");
+    document.querySelectorAll(".ipa").forEach(el => {
+        el.addEventListener("click", () => {
+            if (ipaInput.value !== "") {
+                ipaInput.value += " "
+            }
+            ipaInput.value += el.innerText;
+        })
+    })
+
+    let consChart = document.querySelector(".cons-chart");
+    let clickChart = document.querySelector(".click-chart");
+    let vowelChart = document.querySelector(".vowel-chart");
+    let semiChart = document.querySelector(".semi-chart");
+
+    document.getElementById("cons-minimax").addEventListener("click", function() {
+        let i = this.querySelector("i");
+
+        if (i.classList.contains('fa-minus')) {
+            i.classList.replace('fa-minus', 'fa-plus');
+			this.title = "Maximise Consonant Table";
+			this.setAttribute('aria-label', 'Maximise Consonant Table');
+        } else {
+            i.classList.replace('fa-plus', 'fa-minus');
+            this.title = "Minimise Consonant Table";
+			this.setAttribute('aria-label', 'Minimise Consonant Table');
+        }
+
+        consChart.classList.toggle('invisible');
+    })
+
+    let clickMinMax = document.getElementById("click-minimax");
+    document.getElementById("click-minimax").addEventListener("click", function() {
+        let i = this.querySelector("i");
+
+        if (i.classList.contains('fa-minus')) {
+            i.classList.replace('fa-minus', 'fa-plus');
+			this.title = "Maximise Click Table";
+			this.setAttribute('aria-label', 'Maximise Click Table');
+        } else {
+            i.classList.replace('fa-plus', 'fa-minus');
+            this.title = "Minimise Click Table";
+			this.setAttribute('aria-label', 'Minimise Click Table');
+        }
+
+        clickChart.classList.toggle('invisible');
+    })
+
+    let vowelMinMax = document.getElementById("vowel-minimax");
+
+    document.getElementById("vowel-minimax").addEventListener("click", function() {
+        let i = this.querySelector("i");
+
+        if (i.classList.contains('fa-minus')) {
+            i.classList.replace('fa-minus', 'fa-plus');
+			this.title = "Maximise Vowel and Misc. Tables";
+			this.setAttribute('aria-label', 'Maximise Vowel and Misc. Tables');
+        } else {
+            i.classList.replace('fa-plus', 'fa-minus');
+            this.title = "Minimise Vowel and Misc. Tables";
+			this.setAttribute('aria-label', 'Minimise Vowel and Misc. Tables');
+        }
+
+        vowelChart.classList.toggle('invisible');
+        semiChart.classList.toggle('invisible');
+    })
+</script>
+</html>
