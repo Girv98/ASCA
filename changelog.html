@@ -23,7 +23,46 @@
     <header>
         <h1>What's new</h1>
     </header>
+    <aside>
+        <div>
+            <h2>Notice of coming changes</h2>
+            <div class="content">
+                <p> 
+                    I've been messing with the idea of an interactive chart to replace the values spreadsheet (thanks b5scheuert on discord for the idea).
+                    While doing so, I've come across some inconsistencies in the definitions of some segments and as such, I will be updating these values. 
+                </p>
+                <p>
+                    The change that will have the most impact will be updating <code>/p͡f, b͡v, f, v/</code> to be <code>-strident</code>. This is a relic of the time 
+                    before the labiodental feature was added and should have been change then. This will make, for example, <code>ɸ > f</code> a change of just 
+                    <code>[+labiodental]</code>. Hopefully this won't be too much of a issue for you.
+                </p>
+                <p>
+                    Additionally, I will be "canonising" some segments that were previously calculated from other base segments with diacritics (such as voiceless nasals). 
+                    There are also many currently invalid segments that I will be taking the opportunity to define. I will provide a full list of changes when things are
+                    more certain.
+                </p>
+            </div>
+        </div>
+    </aside>
     <main class="change-body">
+        <!-- <div class="version">
+            <h2 class="version-number">0.21.0</h2>
+            <br>
+            <b>BREAKING CHANGES</b>
+             <ul>
+                <li>Segment changes</li>
+                <ul>
+                <li>Labiodentals <code>p͡f, b͡v, f, v</code> are now <code>[-strident]</code></li>
+                <ul><li>This makes <code>ɸ > f</code> just a change of <code>[+labiodental]</code></li></ul>
+                </ul>
+                <li>Approximant diacritic now has a payload of <code>[+son, +approx, +cont]</code> from just <code>[+approx]</code></li>
+             </ul>
+            <b>New Features</b>
+             <ul>
+                <li><code>@</code> can be used to alias schwa in input list</li>
+             </ul>
+        </div> -->
+
         <div class="version">
             <h2 class="version-number">0.20.5</h2>
             <br>
@@ -78,7 +117,7 @@
             </ul>
             <b>Fixes</b>
             <ul>
-                <li>Prevent cases where suprasegmental features where being stolen by a neighbouring syllable in substitution rules with boundaries</li>
+                <li>Prevent cases where suprasegmental features were being stolen by a neighbouring syllable in substitution rules with boundaries</li>
                 <li>Long segments in an input set are skipped correctly if they are not successfully matched</li>
                 <ul><li>e.g. <code><span style="color: var(--brace);">{</span><span style="color: var(--literal);">n</span><span style="color: var(--operator);">:</span><span style="color: var(--square);">[</span><span style="color: var(--arg);">-</span><span style="color: var(--feature);">long</span><span style="color: var(--square);">]</span><span style="color: var(--brace);">}</span> 
                     <span style="color: var(--delim);">&gt;</span> 
@@ -562,7 +601,7 @@
                 <li>Added collapse and clear buttons</li>
             </ul>
         </div>
-    </div>
+    </main>
 </div>
 </body>
 </html>
