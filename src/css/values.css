@@ -279,6 +279,28 @@ table tr:hover td {
 	}
 }
 
+
+
+#result {
+	display: flex;
+	flex-direction: column;
+	justify-self: center;
+	align-items: center;
+	width: max-content;
+
+	.res-row {
+		display: flex;
+		gap: 1rem;
+		/* justify-self: center; */
+		/* justify-content: flex-end; */
+		margin-left: auto;
+
+		&:last-child {
+			padding-bottom: 1rem;
+		}
+	}
+}
+
 footer { margin: 2vh; }
 
 /* Firefox */

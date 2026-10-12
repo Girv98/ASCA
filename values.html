@@ -61,7 +61,7 @@
 
 <div class="collector">
     <input id="ipa-input" type="text" placeholder="Enter segments or click chart items to add here">
-    <button class="ipa-collector-run" title="Run symbols">Run</button>
+    <button id="run" class="ipa-collector-run" title="Run symbols">Run</button>
 </div>
 
 <div id="result"></div>
@@ -117,16 +117,16 @@
             <!-- Glottal Breathy -->  <td></td>
         </tr>
         <tr>
-            <td class="row-header">Ejective/Implosive</td>
-            <!-- Bilabial -->         <td><span class="ipa">pʼ</span> <span class="ipa">ɓ</span></td>
-            <!-- Labiodental -->      <td><span class="ipa">p̪ʼ</span> <span class="ipa">ɓ̪</span></td>
-            <!-- Alveolar/Dental -->  <td><span class="ipa">tʼ</span> <span class="ipa">ɗ</span></td>
-            <!-- Retracted/Post-A --> <td><span class="ipa">t̠ʼ</span> <span class="ipa">ɗ̠</span></td>
-            <!-- Denti-Alveolar -->   <td><span class="ipa">t̪ʼ</span> <span class="ipa">ɗ̪</span></td>
-            <!-- Retroflex -->        <td><span class="ipa">ʈʼ</span> <span class="ipa">ᶑ</span></td>
-            <!-- Palatal -->          <td colspan="2"><span class="ipa">cʼ</span> <span class="ipa">ʄ</span></td>
-            <!-- Velar -->            <td><span class="ipa">kʼ</span><span class="ipa">ɠ</span></td>
-            <!-- Uvular -->           <td><span class="ipa">qʼ</span><span class="ipa">ʛ</span></td>
+            <td class="row-header">Implosive</td>
+            <!-- Bilabial -->         <td><span class="ipa">ɓ</span></td>
+            <!-- Labiodental -->      <td><span class="ipa">ɓ̪</span></td>
+            <!-- Alveolar/Dental -->  <td><span class="ipa">ɗ</span></td>
+            <!-- Retracted/Post-A --> <td><span class="ipa">ɗ̠</span></td>
+            <!-- Denti-Alveolar -->   <td><span class="ipa">ɗ̪</span></td>
+            <!-- Retroflex -->        <td><span class="ipa">ᶑ</span></td>
+            <!-- Palatal -->          <td colspan="2"><span class="ipa">ʄ</span></td>
+            <!-- Velar -->            <td><span class="ipa">ɠ</span></td>
+            <!-- Uvular -->           <td><span class="ipa">ʛ</span></td>
             <!-- Epiglottal -->       <td></td>
             <!-- Pharyngeal -->       <td></td>
             <!-- Glottal -->          <td></td>
@@ -852,8 +852,14 @@ t͡ɹ̠̝̊ d͡ɹ̠̝ -->
 </div>
 </body>
 
-<script> 
+<script type="module"> 
+    import init, { get_asdasd, ValueResult } from './libasca/asca.js'
+    await init()
+
     let ipaInput = document.getElementById("ipa-input");
+    let resDiv = document.getElementById("result");
+
+
     document.querySelectorAll(".ipa").forEach(el => {
         el.addEventListener("click", () => {
             if (ipaInput.value !== "") {
@@ -918,6 +924,50 @@ t͡ɹ̠̝̊ d͡ɹ̠̝ -->
 
         vowelChart.classList.toggle('invisible');
         semiChart.classList.toggle('invisible');
+    })
+
+    document.getElementById("run").addEventListener("click", function() {
+        
+
+        console.log(ipaInput.value)
+
+        let res = get_asdasd(ipaInput.value.trim());
+        console.log(res.was_ok())
+
+        let inp = res.get_input();
+        let out = res.get_output();
+
+        resDiv.innerHTML = ""; 
+
+        let x = '<div class="res-row"><div class="res-seg"></div><div class="res-val">rut| manner |lar|lb|cr|dorsal|pr</div></div>';
+        out.forEach((o, i) => {
+
+            const cols = [
+                "cons", "son", "syll", "", 
+                "cont", "app", "lat", "nas", "dr", "stri", "rho", "clk", "", 
+                "voi", "sg", "cg", "",
+                "ldent", "rnd", "",
+                "ant", "dist", "",
+                "fr", "bk", "hi", "lo", "tens", "red", "",
+                "atr", "rtr"
+            ]
+
+            let chars = o.split("");
+
+
+            let v = chars.map((el, i) => {
+                return `<span title="${cols[i]}">${el}</span>`
+            }).join("");
+
+            console.log(v)
+
+
+            x += `<div class="res-row"><div class="res-seg">${inp[i]}</div><div class="res-val">${v}</div></div>`
+            // console.log(inp[i] + " :: " + o)
+        });
+
+        resDiv.innerHTML = x;
+        // console.log(res.get_output())
     })
 </script>
 </html>
