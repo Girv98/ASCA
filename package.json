@@ -14,7 +14,7 @@
   "devDependencies": {
     "@types/sortablejs": "^1.15.9",
     "typescript": "~6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.3.4"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.1",
