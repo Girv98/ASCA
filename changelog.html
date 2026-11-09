@@ -41,6 +41,35 @@
                     There are also many currently invalid segments that I will be taking the opportunity to define. I will provide a full list of changes when things are
                     more certain.
                 </p>
+
+                <b>Update: Changes so far</b>
+                <ul>
+                    <li>New Segments</li>
+                    <ul>
+                        <li>Doubly articulated consonants are here!</li>
+                        <ul>
+                            <li>New <code>double</code> feature to encode doubly articulated stops, implosives, fricatives etc. such as <code>/t͡p/</code>, <code>/q͜ʡ/</code> and even <code>ʃ͜x</code></li>
+                        </ul>
+                        <li>Trilled affricates, rhotic fricatives, and rhotic affricates such as <code>d͡r</code> and <code>d͡ɻ̝</code></li>
+                        <li>Non-rhotic taps such as <code>t̆</code></li>
+                        <!-- <li>Sibilant approximants such as </li> -->
+                    </ul>
+                    <li>Segment Changes</li>
+                    <ul>
+                        <li>Labiodentals <code>p͡f, b͡v, f, v</code> are now <code>[-strident]</code></li>
+                            <ul><li>This makes <code>ɸ > f</code> just a change of <code>[+labiodental]</code></li></ul>
+                        <li><code>[+nasal]</code> to fricatives, trills, and implosives to produce pre-nasalisation instead of nasalisation</li>
+                    </ul>
+                    <li>Other Changes</li>
+                    <ul>
+                        <li><code>strident</code> to be renamed <code>sibilant</code></li>
+                        <ul>
+                            <li>As <code>strident</code> now only encodes s-like segments, this new name is more accurate</li>
+                            <li><code>strident</code> will still be valid, so this is a non-breaking change</li>
+                        </ul>
+                        <li>Approximant diacritic now has a payload of <code>[+son, +approx, +cont]</code> from just <code>[+approx]</code></li>
+                    </ul>
+                </ul>
             </div>
         </div>
     </aside>
